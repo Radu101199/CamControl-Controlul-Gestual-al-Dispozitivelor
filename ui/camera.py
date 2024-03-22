@@ -21,7 +21,13 @@ class Camera:
             msg.exec_()
 
         if self.part == 'Face':
-            self.mod = FaceModule()
+            move = self.main_window.ui.moveCursorCheckBox.isChecked()
+            speedX = self.main_window.ui.speedSlider_X.value()
+            speedY = self.main_window.ui.speedSlider_Y.value()
+            filter = self.main_window.ui.filterSlider.value()
+            filterX = self.main_window.ui.filterSlider_X.value()
+            filterY = self.main_window.ui.filterSlider_Y.value()
+            self.mod = FaceModule(move, speedX, speedY, filter, filterX, filterY)
         else:
             self.mod = HandModule()
 

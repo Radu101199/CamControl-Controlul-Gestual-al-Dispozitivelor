@@ -3,3 +3,6 @@ opencv_python==4.5.2.52
 PyQt5~=5.15.4
 PyQt5_sip==12.11.0
 mediapipe~=0.9.1.0
+opencv-python~=4.5.2.52
+numpy~=1.26.4
+pyautogui~=0.9.52
