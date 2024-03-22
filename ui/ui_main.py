@@ -261,6 +261,7 @@ class Ui_MainWindow(object):
         self.btn_toggle_menu.setSizePolicy(sizePolicy)
         self.btn_toggle_menu.setMinimumSize(QtCore.QSize(70, 65))
         self.btn_toggle_menu.setStyleSheet("QPushButton {\n"
+"    background-image: url();\n"
 "    background-position: center;\n"
 "    background-repeat: no-reperat;\n"
 "    border: none;\n"
@@ -401,7 +402,7 @@ class Ui_MainWindow(object):
         self.btn_home = QtWidgets.QPushButton(self.frame_menu)
         self.btn_home.setMinimumSize(QtCore.QSize(70, 60))
         self.btn_home.setStyleSheet("QPushButton {\n"
-
+"\n"
 "    background-position: center;\n"
 "    background-repeat: no-reperat;\n"
 "    border: none;\n"
@@ -418,7 +419,7 @@ class Ui_MainWindow(object):
         self.btn_face = QtWidgets.QPushButton(self.frame_menu)
         self.btn_face.setMinimumSize(QtCore.QSize(70, 60))
         self.btn_face.setStyleSheet("QPushButton {\n"
-
+"\n"
 "    background-position: center;\n"
 "    background-repeat: no-reperat;\n"
 "    border: none;\n"
@@ -435,7 +436,7 @@ class Ui_MainWindow(object):
         self.btn_hands = QtWidgets.QPushButton(self.frame_menu)
         self.btn_hands.setMinimumSize(QtCore.QSize(70, 60))
         self.btn_hands.setStyleSheet("QPushButton {\n"
-
+"\n"
 "    background-position: center;\n"
 "    background-repeat: no-reperat;\n"
 "    border: none;\n"
@@ -467,6 +468,7 @@ class Ui_MainWindow(object):
         self.btn_settings.setMinimumSize(QtCore.QSize(0, 60))
         self.btn_settings.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.btn_settings.setStyleSheet("QPushButton {\n"
+"\n"
 "    background-position: center;\n"
 "    background-repeat: no-reperat;\n"
 "    border: none;\n"
@@ -579,6 +581,21 @@ class Ui_MainWindow(object):
         self.imageFrameHands.setObjectName("imageFrameHands")
         self.horizontalLayout_6.addWidget(self.imageFrameHands)
         self.stackedWidget.addWidget(self.page_hands)
+        self.page_settings = QtWidgets.QWidget()
+        self.page_settings.setObjectName("page_settings")
+        self.label_4 = QtWidgets.QLabel(self.page_settings)
+        self.label_4.setGeometry(QtCore.QRect(140, 50, 60, 16))
+        self.label_4.setObjectName("label_4")
+        self.label_5 = QtWidgets.QLabel(self.page_settings)
+        self.label_5.setGeometry(QtCore.QRect(490, 50, 60, 16))
+        self.label_5.setObjectName("label_5")
+        self.moveCursorCheckBox = QtWidgets.QCheckBox(self.page_settings)
+        self.moveCursorCheckBox.setGeometry(QtCore.QRect(90, 110, 111, 21))
+        self.moveCursorCheckBox.setObjectName("moveCursorCheckBox")
+        self.moveHandsCheckBox = QtWidgets.QCheckBox(self.page_settings)
+        self.moveHandsCheckBox.setGeometry(QtCore.QRect(450, 110, 111, 21))
+        self.moveHandsCheckBox.setObjectName("moveHandsCheckBox")
+        self.stackedWidget.addWidget(self.page_settings)
         self.horizontalLayout_4.addWidget(self.stackedWidget)
         self.horizontalLayout_3.addWidget(self.frame_content)
         self.horizontalLayout_2.addWidget(self.frame_content_right)
@@ -590,7 +607,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -609,6 +626,10 @@ class Ui_MainWindow(object):
         self.label_3.setText(_translate("MainWindow", "Paun Raducu"))
         self.imageFrameFace.setText(_translate("MainWindow", "Camera not availalable!"))
         self.imageFrameHands.setText(_translate("MainWindow", "Camera not availalable!"))
+        self.label_4.setText(_translate("MainWindow", "Face"))
+        self.label_5.setText(_translate("MainWindow", "Hands"))
+        self.moveCursorCheckBox.setText(_translate("MainWindow", "Move Cursor"))
+        self.moveHandsCheckBox.setText(_translate("MainWindow", "Move Cursor"))
 
 
 if __name__ == "__main__":

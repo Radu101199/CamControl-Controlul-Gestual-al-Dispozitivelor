@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
+from PyQt5.QtCore import QSettings
 from .ui_modules import *
 from .camera import *
 import time
@@ -13,9 +14,11 @@ class MainWindow(QMainWindow):
         UIFunctions.clickBtnCon(self,'btn_home')
         UIFunctions.clickBtnCon(self, 'btn_face')
         UIFunctions.clickBtnCon(self, 'btn_hands')
+        UIFunctions.clickBtnCon(self, 'btn_settings')
+
+        UIFunctions.load_settings(self)
 
         self.camera = None
-
         self.show()
 
     def Button(self):
@@ -46,6 +49,14 @@ class MainWindow(QMainWindow):
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_hands)
             self.camera = Camera(self, 'Hands')
             self.frame_timer()
+
+        # PAGE SETTINGS
+        if btn_widget.objectName() == "btn_settings":
+            print(1)
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_settings)
+            if self.camera is not None:
+                if self.camera.is_opened():
+                    self.camera.close()
 
 
     def display_image(self, qimage, part):

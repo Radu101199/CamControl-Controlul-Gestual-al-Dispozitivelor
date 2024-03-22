@@ -22,6 +22,8 @@ class FaceModule:
         # reducerea miscarii cursorului pentru miscari mici
         self.fine_control_X = np.zeros(2)
         self.fine_control_Y = np.zeros(2)
+        #  self.fine_control_X = np.zeros(4)
+        #  self.fine_control_Y = np.zeros(4)
 
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
@@ -34,7 +36,11 @@ class FaceModule:
                 # desenarea unui dreptunghi in jurul fetei
                 bounding_box = calculate_bounding_box(rgb_frame, face_landmarks)
                 frame_markers = cv2.rectangle(frame, bounding_box[0], bounding_box[1], (0, 255, 0), 3)
-                print(frame_markers)
+                ###
+                move = 0
+
         else:
             frame_markers = frame
         return frame_markers
+
+

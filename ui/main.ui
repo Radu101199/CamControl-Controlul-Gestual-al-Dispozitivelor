@@ -865,7 +865,7 @@ QPushButton:pressed {
                    </size>
                   </property>
                   <property name="currentIndex">
-                   <number>2</number>
+                   <number>3</number>
                   </property>
                   <widget class="QWidget" name="page_home">
                    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -985,6 +985,60 @@ QPushButton:pressed {
                      </widget>
                     </item>
                    </layout>
+                  </widget>
+                  <widget class="QWidget" name="page_settings">
+                   <widget class="QLabel" name="label_4">
+                    <property name="geometry">
+                     <rect>
+                      <x>140</x>
+                      <y>50</y>
+                      <width>60</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Face</string>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="label_5">
+                    <property name="geometry">
+                     <rect>
+                      <x>490</x>
+                      <y>50</y>
+                      <width>60</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Hands</string>
+                    </property>
+                   </widget>
+                   <widget class="QCheckBox" name="moveCursorCheckBox">
+                    <property name="geometry">
+                     <rect>
+                      <x>90</x>
+                      <y>110</y>
+                      <width>111</width>
+                      <height>21</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Move Cursor</string>
+                    </property>
+                   </widget>
+                   <widget class="QCheckBox" name="moveHandsCheckBox">
+                    <property name="geometry">
+                     <rect>
+                      <x>450</x>
+                      <y>110</y>
+                      <width>111</width>
+                      <height>21</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Move Cursor</string>
+                    </property>
+                   </widget>
                   </widget>
                  </widget>
                 </item>
