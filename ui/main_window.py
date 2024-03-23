@@ -9,14 +9,16 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
 
+        self.ui.setupUi(self)
+        UIFunctions.load_settings(self)
         UIFunctions.clickBtnCon(self,'btn_home')
         UIFunctions.clickBtnCon(self, 'btn_face')
         UIFunctions.clickBtnCon(self, 'btn_hands')
         UIFunctions.clickBtnCon(self, 'btn_settings')
+        UIFunctions.clickBtnCon(self, 'btn_save')
 
-        UIFunctions.load_settings(self)
+
 
         self.camera = None
         self.show()
@@ -52,11 +54,16 @@ class MainWindow(QMainWindow):
 
         # PAGE SETTINGS
         if btn_widget.objectName() == "btn_settings":
-            print(1)
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_settings)
             if self.camera is not None:
                 if self.camera.is_opened():
                     self.camera.close()
+
+        # SAVE BTN
+        if btn_widget.objectName() == "btn_save":
+            UIFunctions.save_settings(self)
+            self.repaint()
+            UIFunctions.load_settings(self)
 
 
     def display_image(self, qimage, part):

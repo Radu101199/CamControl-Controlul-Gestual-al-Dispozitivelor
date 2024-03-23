@@ -1208,6 +1208,19 @@ QPushButton:pressed {
                      <string>Filter</string>
                     </property>
                    </widget>
+                   <widget class="QPushButton" name="btn_save">
+                    <property name="geometry">
+                     <rect>
+                      <x>690</x>
+                      <y>510</y>
+                      <width>81</width>
+                      <height>26</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Save</string>
+                    </property>
+                   </widget>
                   </widget>
                  </widget>
                 </item>

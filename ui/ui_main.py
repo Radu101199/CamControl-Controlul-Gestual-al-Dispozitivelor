@@ -643,6 +643,9 @@ class Ui_MainWindow(object):
         self.label_17 = QtWidgets.QLabel(self.page_settings)
         self.label_17.setGeometry(QtCore.QRect(20, 390, 60, 16))
         self.label_17.setObjectName("label_17")
+        self.btn_save = QtWidgets.QPushButton(self.page_settings)
+        self.btn_save.setGeometry(QtCore.QRect(690, 510, 81, 26))
+        self.btn_save.setObjectName("btn_save")
         self.stackedWidget.addWidget(self.page_settings)
         self.horizontalLayout_4.addWidget(self.stackedWidget)
         self.horizontalLayout_3.addWidget(self.frame_content)
@@ -683,6 +686,7 @@ class Ui_MainWindow(object):
         self.label_15.setText(_translate("MainWindow", "Filter Y"))
         self.label_16.setText(_translate("MainWindow", "Filter X"))
         self.label_17.setText(_translate("MainWindow", "Filter"))
+        self.btn_save.setText(_translate("MainWindow", "Save"))
 
 
 if __name__ == "__main__":

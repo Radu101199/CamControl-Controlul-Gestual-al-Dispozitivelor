@@ -4,15 +4,27 @@ import cv2
 import pyautogui
 from .app_utils import *
 from scipy import signal
+from PyQt5.QtCore import QSettings
 
 NK_DWELL_MOVE_THRESH = 10
 # anuleaza inchiderea aplicatiei cand coltul din stanga sus este atins
 pyautogui.FAILSAFE = False
 # mareste viteza
 pyautogui.PAUSE = 0
+
 class FaceModule:
-    def __init__(self, move, speedX, speedY, filter, filterX, filterY):
+    def __init__(self):
         self.face_mesh = face_mesh.FaceMesh(refine_landmarks=True)
+
+        settings = QSettings("Licenta", "CamControl")
+        self.move = settings.value("moveCursorCheckBox", type=bool)
+        slider_values = settings.value("slider_values", type=list)
+
+        self.speedX = slider_values[0]
+        self.speedY = slider_values[1]
+        self.filter = slider_values[4]
+        self.filterX = slider_values[2]
+        self.filterY = slider_values[3]
 
         # initializare variabile
         # miscare cursor
@@ -30,12 +42,6 @@ class FaceModule:
         #  self.fine_control_X = np.zeros(4)
         #  self.fine_control_Y = np.zeros(4)
 
-        self.move = move
-        self.speedX = speedX
-        self.speedY = speedY
-        self.filter = filter
-        self.filterX = filterX
-        self.filterY = filterY
 
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
@@ -51,7 +57,7 @@ class FaceModule:
 
                 x = (bounding_box[0][0] + bounding_box[1][0]) / 2
                 y = (bounding_box[0][1] + bounding_box[1][1]) / 2
-                self.move_cursor(self.move, x, y)
+                self.move_cursor(x, y)
 
 
         else:
@@ -59,11 +65,7 @@ class FaceModule:
         return frame_markers
 
         # misca cursor
-    def move_cursor(self, move, cX, cY):
-        # valori din GUI
-        # filter_move = self.filterSliderBox.value()
-         # = self.speedSpinBox_X.value()
-        # speed_Y = self.speedSpinBox_Y.value()
+    def move_cursor(self, cX, cY):
 
         # variabile pentru reducerea miscarilor mici
         noise_X = self.filter
@@ -93,7 +95,7 @@ class FaceModule:
             move_Y = delta_Y - noise_Y
 
         # daca este bifata realizarea miscarii
-        if (move == 1):
+        if self.move is True:
             # misca cursorul pe axa x
             move_X_final, move_x = self.digital_filter_cursor_X(move_X, self.speedX)
             pyautogui.moveRel(int(round(move_X_final)), 0)
@@ -101,7 +103,6 @@ class FaceModule:
             # misca cursorul pe axa y
             move_Y_final, move_y = self.digital_filter_cursor_Y(move_Y, self.speedY)
             pyautogui.moveRel(0, int(round(move_Y_final)))
-
             # detectare miscare pentru dwell click
             if move_x or move_y:
                 self.move_detected = 1
@@ -113,7 +114,7 @@ class FaceModule:
     def digital_filter_cursor_X(self, dx, speed):
         # numtaps = self.filterSpinBox_X.value()
         numtaps = self.filterX
-
+        print(numtaps)
         # fara filtru
         if (numtaps == 0):
             x_out = dx
