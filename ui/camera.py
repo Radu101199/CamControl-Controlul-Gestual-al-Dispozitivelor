@@ -23,18 +23,23 @@ class Camera:
         if self.part == 'Face':
             self.mod = FaceModule()
         else:
-            self.mod = HandModule()
+            self.mod = HandModule(self)
 
     def select_camera(self, id):
         camera = id
         self.cap = cv2.VideoCapture(int(camera))
         return self.cap
 
+    def get_fps(self):
+        fps = self.cap.get(cv2.CAP_PROP_FPS)
+        return fps
+
     def close(self):
         if self.cap and self.cap.isOpened():
             self.cap.release()
             self.cap = None
 
+    #hands
     def get_frame(self):
         # daca camera nu este disponibila returneaza eroare
         if self.cap is None or not self.cap.isOpened():
@@ -43,15 +48,36 @@ class Camera:
         _, frame = self.cap.read()
 
         # detectare modul
+
+        frame = cv2.flip(frame, 1)
         image = self.mod.detect(frame)
         if image is not None:
-            frame_to_show = cv2.flip(frame, 1)
-            image = cv2.cvtColor(frame_to_show, cv2.COLOR_BGR2RGB)
+
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Qt asteapta un format de culoare RGB
         qimage = QtGui.QImage(image.data, image.shape[1], image.shape[0], QtGui.QImage.Format_RGB888)
 
         self.display_image(qimage)
+
+    ##face
+    # def get_frame(self):
+    #     # daca camera nu este disponibila returneaza eroare
+    #     if self.cap is None or not self.cap.isOpened():
+    #         return -1
+    #
+    #     _, frame = self.cap.read()
+    #
+    #     # detectare modul
+    #     image = self.mod.detect(frame)
+    #     if image is not None:
+    #         frame_to_show = cv2.flip(frame, 1)
+    #         image = cv2.cvtColor(frame_to_show, cv2.COLOR_BGR2RGB)
+    #
+    #     # Qt asteapta un format de culoare RGB
+    #     qimage = QtGui.QImage(image.data, image.shape[1], image.shape[0], QtGui.QImage.Format_RGB888)
+    #
+    #     self.display_image(qimage)
 
     def display_image(self, qimage):
         if self.part == 'Face':

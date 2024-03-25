@@ -9,8 +9,11 @@ class UIFunctions(QMainWindow):
         settings = QSettings("Licenta", "CamControl")
 
         # Load the state of the checkbox
-        checkbox_state = settings.value("moveCursorCheckBox", defaultValue=True, type=bool)
-        self.ui.moveCursorCheckBox.setChecked(checkbox_state)
+        checkbox_state = settings.value("moveFaceCursorCheckBox", defaultValue=True, type=bool)
+        self.ui.moveFaceCursorCheckBox.setChecked(checkbox_state)
+        # Load the state of the checkbox
+        checkbox_state = settings.value("moveHandsCursorCheckBox", defaultValue=True, type=bool)
+        self.ui.moveHandsCursorCheckBox.setChecked(checkbox_state)
 
         # Load the values of five sliders
         slider_values = settings.value("slider_values", type=list)
@@ -20,12 +23,21 @@ class UIFunctions(QMainWindow):
         self.ui.filterSlider_Y.setValue(slider_values[3])
         self.ui.filterSlider.setValue(slider_values[4])
 
+        hands_speed = settings.value("speedHandsCursor", type=float)
+        self.ui.speedHandsSlider.setValue(hands_speed)
+
+
     def save_settings(self):
         settings = QSettings("Licenta", "CamControl")
 
         # Save the state of the checkbox
-        checkbox_state = self.ui.moveCursorCheckBox.isChecked()
-        settings.setValue("moveCursorCheckBox", checkbox_state)
+        checkbox_state = self.ui.moveFaceCursorCheckBox.isChecked()
+        settings.setValue("moveFaceCursorCheckBox", checkbox_state)
+
+        # Save the state of the checkbox
+        checkbox_state = self.ui.moveHandsCursorCheckBox.isChecked()
+        settings.setValue("moveHandsCursorCheckBox", checkbox_state)
+
 
         # Save the values of five sliders
         slider_values = [
@@ -36,3 +48,12 @@ class UIFunctions(QMainWindow):
             self.ui.filterSlider.value()
         ]
         settings.setValue("slider_values", slider_values)
+
+        hands_speed = self.ui.speedHandsSlider.value()
+        settings.setValue("speedHandsCursor", hands_speed)
+
+        image_width = self.ui.imageFrameHands.frameGeometry().width()
+        settings.setValue("image_width", image_width)
+        print(image_width)
+        image_height = self.ui.imageFrameHands.frameGeometry().height()
+        settings.setValue("image_height", image_height)

@@ -17,7 +17,7 @@ class FaceModule:
         self.face_mesh = face_mesh.FaceMesh(refine_landmarks=True)
 
         settings = QSettings("Licenta", "CamControl")
-        self.move = settings.value("moveCursorCheckBox", type=bool)
+        self.move = settings.value("moveFaceCursorCheckBox", type=bool)
         slider_values = settings.value("slider_values", type=list)
 
         self.speedX = slider_values[0]
@@ -98,7 +98,7 @@ class FaceModule:
         if self.move is True:
             # misca cursorul pe axa x
             move_X_final, move_x = self.digital_filter_cursor_X(move_X, self.speedX)
-            pyautogui.moveRel(int(round(move_X_final)), 0)
+            pyautogui.moveRel(int(round(-move_X_final)), 0)
 
             # misca cursorul pe axa y
             move_Y_final, move_y = self.digital_filter_cursor_Y(move_Y, self.speedY)
@@ -114,7 +114,6 @@ class FaceModule:
     def digital_filter_cursor_X(self, dx, speed):
         # numtaps = self.filterSpinBox_X.value()
         numtaps = self.filterX
-        print(numtaps)
         # fara filtru
         if (numtaps == 0):
             x_out = dx
