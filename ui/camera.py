@@ -5,6 +5,7 @@ from PyQt5 import QtGui
 from .ui_modules import *
 from src.face_module import *
 from src.hand_module import *
+from PyQt5.QtCore import QSettings
 
 
 class Camera:
@@ -20,10 +21,12 @@ class Camera:
             print("Unable to open Camera!")
             msg.exec_()
 
+        self.settings = QSettings("Licenta", "CamControl")
         if self.part == 'Face':
             self.mod = FaceModule()
         else:
             self.mod = HandModule(self)
+
 
     def select_camera(self, id):
         camera = id
@@ -54,6 +57,11 @@ class Camera:
         if image is not None:
 
             image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            image_width = image.shape[1]
+            self.settings.setValue("image_width", image_width)
+            image_height = image.shape[0]
+            self.settings.setValue("image_height", image_height)
 
         # Qt asteapta un format de culoare RGB
         qimage = QtGui.QImage(image.data, image.shape[1], image.shape[0], QtGui.QImage.Format_RGB888)

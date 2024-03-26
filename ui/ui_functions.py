@@ -52,8 +52,3 @@ class UIFunctions(QMainWindow):
         hands_speed = self.ui.speedHandsSlider.value()
         settings.setValue("speedHandsCursor", hands_speed)
 
-        image_width = self.ui.imageFrameHands.frameGeometry().width()
-        settings.setValue("image_width", image_width)
-        print(image_width)
-        image_height = self.ui.imageFrameHands.frameGeometry().height()
-        settings.setValue("image_height", image_height)

@@ -38,6 +38,8 @@ class HandModule:
         self.x = 0
         self.y = 0
 
+        self.threshold = 3.5
+
 
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
@@ -106,10 +108,11 @@ class HandModule:
         nowY = calculate_moving_average(
             hand_landmarks.landmark[8].y, self.smoothingFactor, self.listY)
 
-        sensitivity = self.speedCursor
+        speed = self.speedCursor
+        normalized_speed = speed / self.threshold
         # transpunerea acestora in imagine
-        dx = sensitivity * (nowX - self.previousX) * self.image_width
-        dy = sensitivity * (nowY - self.previousY) * self.image_height
+        dx = normalized_speed * (nowX - self.previousX) * self.image_width
+        dy = normalized_speed * (nowY - self.previousY) * self.image_height
 
         self.previousX = nowX
         self.previousY = nowY
@@ -120,7 +123,7 @@ class HandModule:
 
     def move_cursor(self, dx, dy, hand_landmarks):
         if abs(dx) > THRESHOLD or abs(dy) > THRESHOLD:
-            pyautogui.move(dx, dy) ### rezolvat miscare cursor in directia potrivita
+            pyautogui.move(dx, dy)
 
         self.x = hand_landmarks.landmark[8].x * self.image_width
         self.y = hand_landmarks.landmark[8].y * self.image_height
