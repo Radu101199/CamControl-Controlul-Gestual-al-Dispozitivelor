@@ -865,7 +865,7 @@ QPushButton:pressed {
                    </size>
                   </property>
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>3</number>
                   </property>
                   <widget class="QWidget" name="page_home">
                    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1257,6 +1257,32 @@ QPushButton:pressed {
                     </property>
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                   <widget class="QCheckBox" name="dwellClickCheckBox">
+                    <property name="geometry">
+                     <rect>
+                      <x>100</x>
+                      <y>450</y>
+                      <width>111</width>
+                      <height>21</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Dwell Click</string>
+                    </property>
+                   </widget>
+                   <widget class="QCheckBox" name="smileCenterCheckBox">
+                    <property name="geometry">
+                     <rect>
+                      <x>100</x>
+                      <y>500</y>
+                      <width>111</width>
+                      <height>21</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Smile Center</string>
                     </property>
                    </widget>
                   </widget>

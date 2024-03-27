@@ -5,6 +5,8 @@ import pyautogui
 from .app_utils import *
 from scipy import signal
 from PyQt5.QtCore import QSettings
+from PyQt5.QtCore import QTimer
+import time
 
 NK_DWELL_MOVE_THRESH = 10
 # anuleaza inchiderea aplicatiei cand coltul din stanga sus este atins
@@ -18,8 +20,10 @@ class FaceModule:
 
         settings = QSettings("Licenta", "CamControl")
         self.move = settings.value("moveFaceCursorCheckBox", type=bool)
-        slider_values = settings.value("slider_values", type=list)
+        self.dwellClick = settings.value("dwellClickCheckBox", type=bool)
+        self.smileCenter = settings.value("smileCenterCheckBox", type=bool)
 
+        slider_values = settings.value("slider_values", type=list)
         self.speedX = slider_values[0]
         self.speedY = slider_values[1]
         self.filter = slider_values[4]
@@ -30,6 +34,7 @@ class FaceModule:
         # miscare cursor
         self.cX_prev = 0
         self.cY_prev = 0
+        self.move_detected = 0
         # variabila pentru prima miscare a cursorului
         self.first_data = 0
         # filtrarea datelor privind miscarea cursorului
@@ -41,6 +46,16 @@ class FaceModule:
         self.fine_control_Y = np.zeros(2)
         #  self.fine_control_X = np.zeros(4)
         #  self.fine_control_Y = np.zeros(4)
+
+        if self.dwellClick:
+            # conectare Dwell click checkbox si timer
+            self.dwell_timer()
+
+
+
+        # instantiere constanta zambet si variabila de timp
+        self.smile_duration_threshold = 5
+        self.smile_start_time = None
 
 
     def detect(self, frame):
@@ -58,11 +73,74 @@ class FaceModule:
                 x = (bounding_box[0][0] + bounding_box[1][0]) / 2
                 y = (bounding_box[0][1] + bounding_box[1][1]) / 2
                 self.move_cursor(x, y)
+                if self.smileCenter:
+                    self.detect_smile(face_landmarks)
 
 
         else:
             frame_markers = frame
         return frame_markers
+
+    # timer dwell
+    def dwell_timer(self):
+        self.timer_dwell = QTimer()
+        self.timer_dwell.timeout.connect(self.check_move)
+        self.timer_dwell.start(1800)
+
+    def check_move(self):
+        checkbox_check = self.move and self.dwellClick
+        if checkbox_check and (self.move_detected == 0):
+            #  print("mouse click")
+            pyautogui.click()  # click the mouse
+            self.timer_dwell.start(1600)
+        self.move_detected = 0
+
+    def detect_smile(self, landmarks):
+
+        # Extrage landmark-uri relevante ale fetei
+        smile_landmarks = [
+            landmarks.landmark[361],  # jaw
+            landmarks.landmark[132],
+            landmarks.landmark[61],  # lips
+            landmarks.landmark[291]
+        ]
+        outer_eye_corners = [
+            landmarks.landmark[33],  # jaw
+            landmarks.landmark[263],
+        ]
+
+        face_width = abs(outer_eye_corners[0].x - outer_eye_corners[1].x)
+
+        # Calculeaza lungimea buzelor si a maxilarului
+        lips_width = abs(smile_landmarks[2].x - smile_landmarks[3].x)
+        jaw_width = abs(smile_landmarks[1].x - smile_landmarks[0].x)
+
+        # normalizeaza acestei valori pentru o valoare mai generala
+        lips_width_normalized = lips_width / face_width
+        jaw_width_normalized = jaw_width / face_width
+
+        ratio = lips_width_normalized / jaw_width_normalized
+        if ratio > 0.45:
+            # Incepe timerul daca zembetul este detectat
+            if self.smile_start_time is None:
+                self.smile_start_time = time.time()
+            else:
+                # print(time.time() - self.smile_start_time)
+                # Daca zambetul continua mai mult de 5 secunda muta cursorul in centru
+                if time.time() - self.smile_start_time >= self.smile_duration_threshold:
+                    # Lungimea si latimea ecranului
+                    screen_width, screen_height = pyautogui.size()
+                    # Coordonatele centrale
+                    center_x = screen_width // 2
+                    center_y = screen_height // 2
+
+                    # Misca cursorul in centru
+                    pyautogui.moveTo(center_x, center_y)
+                    pyautogui.sleep(1)
+                    self.smile_start_time = None
+        else:
+            # Daca zambetul scade sub rata, reseteaza inceputul acestuia
+            self.smile_start_time = None
 
         # misca cursor
     def move_cursor(self, cX, cY):

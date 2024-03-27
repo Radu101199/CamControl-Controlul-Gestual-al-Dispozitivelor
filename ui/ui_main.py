@@ -657,6 +657,12 @@ class Ui_MainWindow(object):
         self.speedHandsSlider.setSliderPosition(5)
         self.speedHandsSlider.setOrientation(QtCore.Qt.Horizontal)
         self.speedHandsSlider.setObjectName("speedHandsSlider")
+        self.dwellClickCheckBox = QtWidgets.QCheckBox(self.page_settings)
+        self.dwellClickCheckBox.setGeometry(QtCore.QRect(100, 450, 111, 21))
+        self.dwellClickCheckBox.setObjectName("dwellClickCheckBox")
+        self.smileCenterCheckBox = QtWidgets.QCheckBox(self.page_settings)
+        self.smileCenterCheckBox.setGeometry(QtCore.QRect(100, 500, 111, 21))
+        self.smileCenterCheckBox.setObjectName("smileCenterCheckBox")
         self.stackedWidget.addWidget(self.page_settings)
         self.horizontalLayout_4.addWidget(self.stackedWidget)
         self.horizontalLayout_3.addWidget(self.frame_content)
@@ -669,7 +675,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -699,6 +705,8 @@ class Ui_MainWindow(object):
         self.label_17.setText(_translate("MainWindow", "Filter"))
         self.btn_save.setText(_translate("MainWindow", "Save"))
         self.label_28.setText(_translate("MainWindow", "Speed"))
+        self.dwellClickCheckBox.setText(_translate("MainWindow", "Dwell Click"))
+        self.smileCenterCheckBox.setText(_translate("MainWindow", "Smile Center"))
 
 
 if __name__ == "__main__":

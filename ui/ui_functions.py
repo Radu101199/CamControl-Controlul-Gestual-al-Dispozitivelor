@@ -15,6 +15,13 @@ class UIFunctions(QMainWindow):
         checkbox_state = settings.value("moveHandsCursorCheckBox", defaultValue=True, type=bool)
         self.ui.moveHandsCursorCheckBox.setChecked(checkbox_state)
 
+        # Load the state of the checkbox
+        checkbox_state = settings.value("smileCenterCheckBox", defaultValue=True, type=bool)
+        self.ui.smileCenterCheckBox.setChecked(checkbox_state)
+        # Load the state of the checkbox
+        checkbox_state = settings.value("dwellClickCheckBox", defaultValue=True, type=bool)
+        self.ui.dwellClickCheckBox.setChecked(checkbox_state)
+
         # Load the values of five sliders
         slider_values = settings.value("slider_values", type=list)
         self.ui.speedSlider_X.setValue(slider_values[0])
@@ -38,6 +45,13 @@ class UIFunctions(QMainWindow):
         checkbox_state = self.ui.moveHandsCursorCheckBox.isChecked()
         settings.setValue("moveHandsCursorCheckBox", checkbox_state)
 
+        # Save the state of the checkbox
+        checkbox_state = self.ui.smileCenterCheckBox.isChecked()
+        settings.setValue("smileCenterCheckBox", checkbox_state)
+
+        # Save the state of the checkbox
+        checkbox_state = self.ui.dwellClickCheckBox.isChecked()
+        settings.setValue("dwellClickCheckBox", checkbox_state)
 
         # Save the values of five sliders
         slider_values = [

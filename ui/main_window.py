@@ -78,3 +78,9 @@ class MainWindow(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.camera.get_frame)
         self.timer.start(0.1)
+
+
+
+
+    def reset_dwell_timer(self):
+        self.timer_dwell.start(1800)
