@@ -18,8 +18,6 @@ class MainWindow(QMainWindow):
         UIFunctions.clickBtnCon(self, 'btn_settings')
         UIFunctions.clickBtnCon(self, 'btn_save')
 
-
-
         self.camera = None
         self.show()
 

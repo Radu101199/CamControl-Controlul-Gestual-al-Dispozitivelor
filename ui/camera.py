@@ -25,7 +25,7 @@ class Camera:
         if self.part == 'Face':
             self.mod = FaceModule()
         else:
-            self.mod = HandModule(self)
+            self.mod = HandModule()
 
 
     def select_camera(self, id):

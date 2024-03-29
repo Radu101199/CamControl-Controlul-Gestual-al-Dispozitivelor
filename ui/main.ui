@@ -865,7 +865,7 @@ QPushButton:pressed {
                    </size>
                   </property>
                   <property name="currentIndex">
-                   <number>3</number>
+                   <number>0</number>
                   </property>
                   <widget class="QWidget" name="page_home">
                    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1103,7 +1103,7 @@ QPushButton:pressed {
                      <enum>Qt::Horizontal</enum>
                     </property>
                    </widget>
-                   <widget class="QSlider" name="filterSlider_Y">
+                   <widget class="QSlider" name="filterSlider_Y_Face">
                     <property name="geometry">
                      <rect>
                       <x>90</x>
@@ -1151,7 +1151,7 @@ QPushButton:pressed {
                      <string>Filter X</string>
                     </property>
                    </widget>
-                   <widget class="QSlider" name="filterSlider_X">
+                   <widget class="QSlider" name="filterSlider_X_Face">
                     <property name="geometry">
                      <rect>
                       <x>90</x>
@@ -1173,7 +1173,7 @@ QPushButton:pressed {
                      <enum>Qt::Horizontal</enum>
                     </property>
                    </widget>
-                   <widget class="QSlider" name="filterSlider">
+                   <widget class="QSlider" name="filterSlider_Face">
                     <property name="geometry">
                      <rect>
                       <x>90</x>
@@ -1250,10 +1250,10 @@ QPushButton:pressed {
                      <number>12</number>
                     </property>
                     <property name="value">
-                     <number>5</number>
+                     <number>4</number>
                     </property>
                     <property name="sliderPosition">
-                     <number>5</number>
+                     <number>4</number>
                     </property>
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
@@ -1283,6 +1283,111 @@ QPushButton:pressed {
                     </property>
                     <property name="text">
                      <string>Smile Center</string>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="label_18">
+                    <property name="geometry">
+                     <rect>
+                      <x>430</x>
+                      <y>256</y>
+                      <width>60</width>
+                      <height>20</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Filter X</string>
+                    </property>
+                   </widget>
+                   <widget class="QSlider" name="filterSlider_X_Hands">
+                    <property name="geometry">
+                     <rect>
+                      <x>500</x>
+                      <y>260</y>
+                      <width>160</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="maximum">
+                     <number>10</number>
+                    </property>
+                    <property name="value">
+                     <number>3</number>
+                    </property>
+                    <property name="sliderPosition">
+                     <number>3</number>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                   <widget class="QSlider" name="filterSlider_Hands">
+                    <property name="geometry">
+                     <rect>
+                      <x>500</x>
+                      <y>340</y>
+                      <width>160</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="maximum">
+                     <number>10</number>
+                    </property>
+                    <property name="value">
+                     <number>2</number>
+                    </property>
+                    <property name="sliderPosition">
+                     <number>2</number>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                   <widget class="QSlider" name="filterSlider_Y_Hands">
+                    <property name="geometry">
+                     <rect>
+                      <x>500</x>
+                      <y>300</y>
+                      <width>160</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="maximum">
+                     <number>10</number>
+                    </property>
+                    <property name="value">
+                     <number>3</number>
+                    </property>
+                    <property name="sliderPosition">
+                     <number>3</number>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="label_19">
+                    <property name="geometry">
+                     <rect>
+                      <x>430</x>
+                      <y>300</y>
+                      <width>60</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Filter Y</string>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="label_20">
+                    <property name="geometry">
+                     <rect>
+                      <x>430</x>
+                      <y>340</y>
+                      <width>60</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Filter</string>
                     </property>
                    </widget>
                   </widget>

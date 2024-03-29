@@ -7,7 +7,6 @@ class UIFunctions(QMainWindow):
 
     def load_settings(self):
         settings = QSettings("Licenta", "CamControl")
-
         # Load the state of the checkbox
         checkbox_state = settings.value("moveFaceCursorCheckBox", defaultValue=True, type=bool)
         self.ui.moveFaceCursorCheckBox.setChecked(checkbox_state)
@@ -22,16 +21,20 @@ class UIFunctions(QMainWindow):
         checkbox_state = settings.value("dwellClickCheckBox", defaultValue=True, type=bool)
         self.ui.dwellClickCheckBox.setChecked(checkbox_state)
 
-        # Load the values of five sliders
-        slider_values = settings.value("slider_values", type=list)
-        self.ui.speedSlider_X.setValue(slider_values[0])
-        self.ui.speedSlider_Y.setValue(slider_values[1])
-        self.ui.filterSlider_X.setValue(slider_values[2])
-        self.ui.filterSlider_Y.setValue(slider_values[3])
-        self.ui.filterSlider.setValue(slider_values[4])
+        # Load the values of five sliders face
+        slider_values_face = settings.value("slider_values_face", type=list)
+        self.ui.speedSlider_X.setValue(slider_values_face[0])
+        self.ui.speedSlider_Y.setValue(slider_values_face[1])
+        self.ui.filterSlider_X_Face.setValue(slider_values_face[2])
+        self.ui.filterSlider_Y_Face.setValue(slider_values_face[3])
+        self.ui.filterSlider_Face.setValue(slider_values_face[4])
 
-        hands_speed = settings.value("speedHandsCursor", type=float)
-        self.ui.speedHandsSlider.setValue(hands_speed)
+        # Load the values of sliders hands
+        slider_values_hands = settings.value("slider_values_hands", type=list)
+        self.ui.speedHandsSlider.setValue(slider_values_hands[0])
+        self.ui.filterSlider_X_Hands.setValue(slider_values_hands[1])
+        self.ui.filterSlider_Y_Hands.setValue(slider_values_hands[2])
+        self.ui.filterSlider_Hands.setValue(slider_values_hands[3])
 
 
     def save_settings(self):
@@ -53,16 +56,23 @@ class UIFunctions(QMainWindow):
         checkbox_state = self.ui.dwellClickCheckBox.isChecked()
         settings.setValue("dwellClickCheckBox", checkbox_state)
 
-        # Save the values of five sliders
-        slider_values = [
+        # Save the values of five sliders face
+        slider_values_face = [
             self.ui.speedSlider_X.value(),
             self.ui.speedSlider_Y.value(),
-            self.ui.filterSlider_X.value(),
-            self.ui.filterSlider_Y.value(),
-            self.ui.filterSlider.value()
+            self.ui.filterSlider_X_Face.value(),
+            self.ui.filterSlider_Y_Face.value(),
+            self.ui.filterSlider_Face.value()
         ]
-        settings.setValue("slider_values", slider_values)
+        settings.setValue("slider_values_face", slider_values_face)
 
-        hands_speed = self.ui.speedHandsSlider.value()
-        settings.setValue("speedHandsCursor", hands_speed)
+        # Save the values of sliders hands
+        slider_values_hands = [
+            self.ui.speedHandsSlider.value(),
+            self.ui.filterSlider_X_Hands.value(),
+            self.ui.filterSlider_Y_Hands.value(),
+            self.ui.filterSlider_Hands.value()
+        ]
+        settings.setValue("slider_values_hands", slider_values_hands)
+
 

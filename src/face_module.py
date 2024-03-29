@@ -23,7 +23,7 @@ class FaceModule:
         self.dwellClick = settings.value("dwellClickCheckBox", type=bool)
         self.smileCenter = settings.value("smileCenterCheckBox", type=bool)
 
-        slider_values = settings.value("slider_values", type=list)
+        slider_values = settings.value("slider_values_face", type=list)
         self.speedX = slider_values[0]
         self.speedY = slider_values[1]
         self.filter = slider_values[4]
@@ -51,12 +51,9 @@ class FaceModule:
             # conectare Dwell click checkbox si timer
             self.dwell_timer()
 
-
-
         # instantiere constanta zambet si variabila de timp
         self.smile_duration_threshold = 5
         self.smile_start_time = None
-
 
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
@@ -72,6 +69,7 @@ class FaceModule:
 
                 x = (bounding_box[0][0] + bounding_box[1][0]) / 2
                 y = (bounding_box[0][1] + bounding_box[1][1]) / 2
+                print(x, y)
                 self.move_cursor(x, y)
                 if self.smileCenter:
                     self.detect_smile(face_landmarks)
@@ -202,7 +200,6 @@ class FaceModule:
 
     # filtru pentru miscarea cursorului pe x
     def digital_filter_cursor_X(self, dx, speed):
-        # numtaps = self.filterSpinBox_X.value()
         numtaps = self.filterX
         # fara filtru
         if (numtaps == 0):
@@ -251,7 +248,6 @@ class FaceModule:
     def digital_filter_cursor_Y(self, dy, speed):
 
         numtaps = self.filterY
-
         # fara filtru
         if (numtaps == 0):
             y_out = dy
