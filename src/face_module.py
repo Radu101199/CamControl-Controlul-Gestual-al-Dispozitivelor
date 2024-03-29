@@ -163,6 +163,16 @@ class FaceModule:
         # pentru primul set de date se returneaza 0(nu exista date anterioare)
         if (self.first_data == 0):
             self.first_data = 1
+            # preluare marime ecran
+            screen_width, screen_height = pyautogui.size()
+            # coordonate centrale
+            center_x = screen_width // 2
+            center_y = screen_height // 2
+
+            pyautogui.moveTo(center_x, center_y)
+
+            # pauza o secunda
+            time.sleep(1)
             return move_X, move_Y
 
         # la miscare mai semnficiativa se face diferenta pentru filtru folosit
@@ -170,17 +180,19 @@ class FaceModule:
             move_X = -(delta_X - noise_X)
 
         if (abs(delta_Y) > abs(noise_Y)):
-            move_Y = delta_Y - noise_Y
+            move_Y = -(delta_Y - noise_Y)
 
         # daca este bifata realizarea miscarii
         if self.move is True:
             # misca cursorul pe axa x
             move_X_final, move_x = self.digital_filter_cursor_X(move_X, self.speedX)
-            pyautogui.moveRel(int(round(-move_X_final)), 0)
+            # pyautogui.moveRel(int(round(-move_X_final)), 0)
 
             # misca cursorul pe axa y
             move_Y_final, move_y = self.digital_filter_cursor_Y(move_Y, self.speedY)
-            pyautogui.moveRel(0, int(round(move_Y_final)))
+            # pyautogui.moveRel(0, int(round(move_Y_final)))
+            # rezolvare diagonala
+            pyautogui.moveRel(int(round(-move_X_final)), int(round(-move_Y_final)))
             # detectare miscare pentru dwell click
             if move_x or move_y:
                 self.move_detected = 1
