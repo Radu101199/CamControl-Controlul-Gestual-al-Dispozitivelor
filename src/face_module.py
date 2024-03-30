@@ -287,7 +287,7 @@ class FaceModule:
 
         # verifica daca miscarea calculata trece de pragul de stationare
         move = 0
-        if (abs(y_out) > NK_DWELL_MOVE_THRESH):
+        if abs(y_out) > NK_DWELL_MOVE_THRESH:
             move = 1
 
         return y_out, move

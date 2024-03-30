@@ -37,7 +37,7 @@ class HandModule:
         self.move_detected = 0
         self.first_data = 0
 
-        self.k, self.h = 0, 0  # de schimbat denumire
+        self.before_right_click, self.after_right_click = 0, 0  # de schimbat denumire
         self.start, self.c_start = float('inf'), float('inf')
 
         # variabile click
@@ -271,10 +271,14 @@ class HandModule:
             self.rightClick()
 
         #daca degetul aratator este strans
+
         if hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y > -0.06:
-            self.Scroll()
+            print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
+            self.move = False
+            self.Scroll(hand_landmarks.landmark[5].y - hand_landmarks.landmark[4].y)
         else:
-            self.nowMovement = 1
+            self.move = True
+            self.move_detected = 1
 
         #actualizare click flag
         self.previousLeftClick = self.nowLeftClick
@@ -289,13 +293,13 @@ class HandModule:
             self.nowLeftClick = 0
 
         if self.move_detected:  # miscarea mainii
-            self.k = 0
+            self.before_right_click = 0
 
         #daca se identifica leftclick si miscarea e minimala ceea ce indica ca k = 0 atunci porneste un timer
         if self.nowLeftClick == 1 and self.move_detected == 0:
-            if self.k == 0:
+            if self.before_right_click == 0:
                 self.start = time.perf_counter()
-                self.k += 1
+                self.before_right_click += 1
             end = time.perf_counter()
             #daca timer ul dureaza mai mult de 1.5 secunde se face click dreapta
             if end - self.start > 1.5:
@@ -306,9 +310,8 @@ class HandModule:
     # click stanga
 
     def leftClick(self):
-        # print(self.h)
-        if self.h == 1:
-            self.h = 0
+        if self.after_right_click == 1:
+            self.after_right_click = 0
         pyautogui.mouseDown()
 
     # eliberare click stanga
@@ -316,7 +319,7 @@ class HandModule:
     def leftClickRelease(self):
         pyautogui.mouseUp()
         # resetare k
-        self.k = 0
+        self.before_right_click = 0
 
         # verificarea unui potential dublu click
         if self.doubleClick == 0:
@@ -326,19 +329,20 @@ class HandModule:
         # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
         if 10 * (c_end - self.c_start) > 10 and self.doubleClick == 1:
             # self.mouse.click(Button.left, 2)
+            print('double click')
             pyautogui.doubleClick()
             self.doubleClick = 0
 
     # click dreapta
     def rightClick(self):
         pyautogui.rightClick()
-        self.h = 1
+        self.after_right_click = 1
 
     # scroll pe verticala
-    def Scroll(self):
-        (dx, dy) = pyautogui.position()
-
-        pyautogui.scroll(-dy / 50)
+    def Scroll(self, dy):
+        # print('dy=', -dy)
+        dy = dy * 1080
+        pyautogui.scroll(dy / 50)
 
         #### asigura ca nu se misca mouse ul in momentul asta
 
