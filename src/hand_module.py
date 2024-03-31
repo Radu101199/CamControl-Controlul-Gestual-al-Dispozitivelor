@@ -44,6 +44,8 @@ class HandModule:
         self.nowRightClick, self.nowLeftClick = 0, 0
         self.previousRightClick, self.previousLeftClick = 0, 0
         self.doubleClick = 0
+
+        # variabile pentru viitoare desenare
         self.x = 0
         self.y = 0
 
@@ -78,7 +80,6 @@ class HandModule:
                 y = hand_landmarks.landmark[8].y * frame.shape[0]
                 self.move_cursor(x, y)
                 self.click_functionality(hand_landmarks)
-                # self.preparation(hand_landmarks)
         else:
             frame_markers = frame
         return frame_markers

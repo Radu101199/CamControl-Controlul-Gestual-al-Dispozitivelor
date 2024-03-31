@@ -37,6 +37,14 @@ class FaceModule:
         self.move_detected = 0
         # variabila pentru prima miscare a cursorului
         self.first_data = 0
+
+        # variabile click
+        self.nowRightClick, self.nowLeftClick = 0, 0
+        self.previousRightClick, self.previousLeftClick = 0, 0
+        self.doubleClick = 0
+        self.c_start = float('inf')
+        self.click_count = 0
+
         # filtrarea datelor privind miscarea cursorului
         self.filter_cursor_X = np.zeros(100)
         self.filter_cursor_Y = np.zeros(100)
@@ -69,12 +77,11 @@ class FaceModule:
 
                 x = (bounding_box[0][0] + bounding_box[1][0]) / 2
                 y = (bounding_box[0][1] + bounding_box[1][1]) / 2
-                print(x, y)
                 self.move_cursor(x, y)
                 if self.smileCenter:
                     self.detect_smile(face_landmarks)
 
-
+                self.click_functionality(face_landmarks)
         else:
             frame_markers = frame
         return frame_markers
@@ -103,7 +110,7 @@ class FaceModule:
             landmarks.landmark[291]
         ]
         outer_eye_corners = [
-            landmarks.landmark[33],  # jaw
+            landmarks.landmark[33],
             landmarks.landmark[263],
         ]
 
@@ -291,4 +298,67 @@ class FaceModule:
             move = 1
 
         return y_out, move
+
+    def click_functionality(self, face_landmarks):
+
+        self.click(face_landmarks)
+
+        #print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
+        if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
+            #print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
+            self.leftClick()
+
+        if self.nowLeftClick == 0 and self.nowLeftClick != self.previousLeftClick:
+            self.leftClickRelease()
+
+        # print(self.nowRightClick)
+        if self.nowRightClick == 1 and self.nowRightClick != self.previousRightClick:
+            self.rightClick()
+
+        #daca degetul aratator este strans
+
+
+        #actualizare click flag
+        self.previousLeftClick = self.nowLeftClick
+        self.previousRightClick = self.nowRightClick
+
+    def click(self, face_landmarks):
+        distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
+        distance_right_eye = abs(face_landmarks.landmark[374].y - face_landmarks.landmark[386].y)
+
+        if distance_left_eye < 0.004:
+            self.nowLeftClick = 1
+        else:
+            self.nowLeftClick = 0
+
+        if distance_right_eye < 0.004:
+            self.nowRightClick = 1
+        else:
+            self.nowRightClick = 0
+
+    def leftClick(self):
+        self.click_count += 1
+        if self.click_count == 1:
+            self.c_start = time.perf_counter()
+        c_end = time.perf_counter()
+        # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
+        if 10 * (c_end - self.c_start) > 20 and self.click_count >= 1:
+            pyautogui.mouseDown()
+            self.click_count = 0
+
+    # eliberare click stanga
+
+    def leftClickRelease(self):
+        pyautogui.mouseUp()
+
+    # click dreapta
+    def rightClick(self):
+        self.click_count += 1
+        if self.click_count == 1:
+            self.c_start = time.perf_counter()
+        c_end = time.perf_counter()
+        # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
+        if 10 * (c_end - self.c_start) > 20 and self.click_count >= 1:
+            pyautogui.rightClick()
+            self.click_count = 0
 
