@@ -42,8 +42,8 @@ class FaceModule:
         self.nowRightClick, self.nowLeftClick = 0, 0
         self.previousRightClick, self.previousLeftClick = 0, 0
         self.doubleClick = 0
-        self.c_start = float('inf')
-        self.click_count = 0
+        self.c_start_left, self.c_start_right = float('inf'), float('inf')
+        self.click_count_left, self.click_count_right = 0, 0
 
         # filtrarea datelor privind miscarea cursorului
         self.filter_cursor_X = np.zeros(100)
@@ -99,6 +99,8 @@ class FaceModule:
             pyautogui.click()  # click the mouse
             self.timer_dwell.start(1600)
         self.move_detected = 0
+
+
 
     def detect_smile(self, landmarks):
 
@@ -303,9 +305,9 @@ class FaceModule:
 
         self.click(face_landmarks)
 
-        #print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
+        # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
-            #print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
+            # print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
             self.leftClick()
 
         if self.nowLeftClick == 0 and self.nowLeftClick != self.previousLeftClick:
@@ -315,50 +317,56 @@ class FaceModule:
         if self.nowRightClick == 1 and self.nowRightClick != self.previousRightClick:
             self.rightClick()
 
-        #daca degetul aratator este strans
-
-
-        #actualizare click flag
         self.previousLeftClick = self.nowLeftClick
         self.previousRightClick = self.nowRightClick
+
+        #actualizare click flag
 
     def click(self, face_landmarks):
         distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
         distance_right_eye = abs(face_landmarks.landmark[374].y - face_landmarks.landmark[386].y)
 
-        if distance_left_eye < 0.004:
+        if distance_left_eye < 0.006:
             self.nowLeftClick = 1
         else:
             self.nowLeftClick = 0
 
-        if distance_right_eye < 0.004:
+        if distance_right_eye < 0.006:
             self.nowRightClick = 1
         else:
             self.nowRightClick = 0
 
+
+
+
     def leftClick(self):
-        self.click_count += 1
-        if self.click_count == 1:
-            self.c_start = time.perf_counter()
+        self.click_count_left += 1
+        if self.click_count_left == 1:
+            self.c_start_left = time.perf_counter()
+        self.mouse_down = False
         c_end = time.perf_counter()
         # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
-        if 10 * (c_end - self.c_start) > 20 and self.click_count >= 1:
+        print(10 * (c_end - self.c_start_left), self.click_count_left, self.mouse_down)
+        if 10 * (c_end - self.c_start_left) > 20 and self.click_count_left >= 1 and self.mouse_down is False:
             pyautogui.mouseDown()
-            self.click_count = 0
+            print('mouse down')
+            self.mouse_down = True
+            self.click_count_left = 0
 
     # eliberare click stanga
 
     def leftClickRelease(self):
+        self.mouse_down = False
         pyautogui.mouseUp()
 
     # click dreapta
     def rightClick(self):
-        self.click_count += 1
-        if self.click_count == 1:
-            self.c_start = time.perf_counter()
+        self.click_count_right += 1
+        if self.click_count_right == 1:
+            self.c_start_right = time.perf_counter()
         c_end = time.perf_counter()
         # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
-        if 10 * (c_end - self.c_start) > 20 and self.click_count >= 1:
+        if 10 * (c_end - self.c_start_right) > 30 and self.click_count_right >= 1:
             pyautogui.rightClick()
-            self.click_count = 0
+            self.click_count_right = 0
 
