@@ -35,12 +35,14 @@ class FaceModule:
         self.cX_prev = 0
         self.cY_prev = 0
         self.move_detected = 0
+        self.x, self.y = 0, 0
         # variabila pentru prima miscare a cursorului
         self.first_data = 0
 
         # variabile click
         self.nowRightClick, self.nowLeftClick = 0, 0
         self.previousRightClick, self.previousLeftClick = 0, 0
+        self.nowScroll = 0
         self.doubleClick = 0
         self.c_start_left, self.c_start_right = float('inf'), float('inf')
         self.click_count_left, self.click_count_right = 0, 0
@@ -63,6 +65,9 @@ class FaceModule:
         self.smile_duration_threshold = 5
         self.smile_start_time = None
 
+        self.initial_distance = None
+        self.head_returned_time = None
+
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -75,11 +80,15 @@ class FaceModule:
                 bounding_box = calculate_bounding_box(rgb_frame, face_landmarks)
                 frame_markers = cv2.rectangle(frame, bounding_box[0], bounding_box[1], (0, 255, 0), 3)
 
-                x = (bounding_box[0][0] + bounding_box[1][0]) / 2
-                y = (bounding_box[0][1] + bounding_box[1][1]) / 2
-                self.move_cursor(x, y)
+                self.x = (bounding_box[0][0] + bounding_box[1][0]) / 2
+                self.y = (bounding_box[0][1] + bounding_box[1][1]) / 2
+                self.move_cursor(self.x, self.y)
                 if self.smileCenter:
                     self.detect_smile(face_landmarks)
+
+
+                # distance_nose = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
+                # print(distance_nose)
 
                 self.click_functionality(face_landmarks)
         else:
@@ -89,16 +98,25 @@ class FaceModule:
     # timer dwell
     def dwell_timer(self):
         self.timer_dwell = QTimer()
+        # self.timer_dwell.timeout.connect(self.check_move)
         self.timer_dwell.timeout.connect(self.check_move)
-        self.timer_dwell.start(1800)
+        self.timer_dwell.start(5000)
 
     def check_move(self):
         checkbox_check = self.move and self.dwellClick
+        print
         if checkbox_check and (self.move_detected == 0):
+
             #  print("mouse click")
-            pyautogui.click()  # click the mouse
-            self.timer_dwell.start(1600)
+            # pyautogui.click()  # click the mouse
+            self.nowScroll = 1
+            # print(self.nowScroll)
+            self.timer_dwell.stop()
+        else:
+            self.nowScroll = 0
+            # self.timer_dwell.start(5000)
         self.move_detected = 0
+
 
 
 
@@ -305,6 +323,7 @@ class FaceModule:
 
         self.click(face_landmarks)
 
+
         # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
             # print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
@@ -316,10 +335,19 @@ class FaceModule:
         # print(self.nowRightClick)
         if self.nowRightClick == 1 and self.nowRightClick != self.previousRightClick:
             self.rightClick()
+        if self.nowScroll == 1:
+            if self.initial_distance is None:
+                self.initial_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
+
+            self.move = False
+            self.Scroll(face_landmarks, self.initial_distance)
+        else:
+            self.move = True
+            self.initial_distance = None
+
 
         self.previousLeftClick = self.nowLeftClick
         self.previousRightClick = self.nowRightClick
-
         #actualizare click flag
 
     def click(self, face_landmarks):
@@ -336,9 +364,6 @@ class FaceModule:
         else:
             self.nowRightClick = 0
 
-
-
-
     def leftClick(self):
         self.click_count_left += 1
         if self.click_count_left == 1:
@@ -346,10 +371,10 @@ class FaceModule:
         self.mouse_down = False
         c_end = time.perf_counter()
         # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
-        print(10 * (c_end - self.c_start_left), self.click_count_left, self.mouse_down)
+        # print(10 * (c_end - self.c_start_left), self.click_count_left, self.mouse_down)
         if 10 * (c_end - self.c_start_left) > 20 and self.click_count_left >= 1 and self.mouse_down is False:
             pyautogui.mouseDown()
-            print('mouse down')
+            # print('mouse down')
             self.mouse_down = True
             self.click_count_left = 0
 
@@ -370,3 +395,35 @@ class FaceModule:
             pyautogui.rightClick()
             self.click_count_right = 0
 
+    def Scroll(self, face_landmarks, initial_distance):
+        current_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
+        # print(current_distance, initial_distance)
+        dy = face_landmarks.landmark[195].y - self.y/1080
+        dy = dy * 1080
+        pyautogui.scroll(-dy/50)
+
+        if self.head_returned(current_distance):
+            self.timer_dwell.start()
+
+
+    def head_returned(self, current_distance, tolerance=0.02, return_duration=3):
+        # Define the lower and upper bounds of the interval
+        lower_bound = self.initial_distance - tolerance
+        upper_bound = self.initial_distance + tolerance
+
+        # Check if the current distance is within the interval
+        if lower_bound <= current_distance <= upper_bound:
+            if self.head_returned_time is None:
+                # Start counting the time when head returns to initial position
+                self.head_returned_time = time.time()
+            elif time.time() - self.head_returned_time >= return_duration:
+                # Head has remained in initial position for return_duration seconds
+                print('a trecut de timp')
+                return True
+            print(time.time() - self.head_returned_time)
+
+
+        else:
+            # Reset head returned time if head is not in initial position
+            self.head_returned_time = None
+        return False

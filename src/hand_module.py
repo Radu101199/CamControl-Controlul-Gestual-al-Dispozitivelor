@@ -274,7 +274,7 @@ class HandModule:
         #daca degetul aratator este strans
 
         if hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y > -0.06:
-            print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
+            # print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
             self.move = False
             self.Scroll(hand_landmarks.landmark[5].y - hand_landmarks.landmark[4].y)
         else:
@@ -341,8 +341,10 @@ class HandModule:
 
     # scroll pe verticala
     def Scroll(self, dy):
-        # print('dy=', -dy)
+        print('dy inainte=', dy)
+
         dy = dy * 1080
+        print('dy dupa * 1080', dy)
         pyautogui.scroll(dy / 50)
 
         #### asigura ca nu se misca mouse ul in momentul asta
