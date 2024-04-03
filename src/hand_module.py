@@ -1,4 +1,6 @@
 import cv2
+import numpy as np
+
 from .app_utils import *
 from mediapipe.python.solutions import hands as mp_hands
 from mediapipe.python.solutions import drawing_utils as mp_drawing
@@ -61,6 +63,7 @@ class HandModule:
 
         # apel functie pentru verificarea miscarii
         self.check_move_timer()
+        self.timer_move_detected = None
 
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
@@ -80,6 +83,7 @@ class HandModule:
                 y = hand_landmarks.landmark[8].y * frame.shape[0]
                 self.move_cursor(x, y)
                 self.click_functionality(hand_landmarks)
+                self.recenter_cursor(hand_landmarks)
         else:
             frame_markers = frame
         return frame_markers
@@ -251,6 +255,30 @@ class HandModule:
 
         return y_out, move
 
+    def recenter_cursor(self, hand_landmarks):
+        distance_index_finger = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[5])
+        distance_average = np.average([calculate_distance(hand_landmarks.landmark[11], hand_landmarks.landmark[10]),
+                                       calculate_distance(hand_landmarks.landmark[15], hand_landmarks.landmark[14]),
+                                       calculate_distance(hand_landmarks.landmark[19], hand_landmarks.landmark[18])])
+        threshold = distance_average/distance_index_finger
+        if threshold <= 0.08 and self.move_detected is 0:
+            if self.timer_move_detected is None:
+                    self.timer_move_detected = time.time()
+            elif time.time() - self.timer_move_detected >= 3:
+                    # print('a trecut de timp')
+                    screen_width, screen_height = pyautogui.size()
+                    center_x = screen_width // 2
+                    center_y = screen_height // 2
+
+                    pyautogui.moveTo(center_x, center_y)
+                    pyautogui.sleep(1)
+
+                    self.timer_move_detected = None
+        else:
+                # Reset head returned time if head is not in initial position
+            self.timer_move_detected = None
+
+
     def click_functionality(self, hand_landmarks):
         # calculeaza distante intre puncte specifice pentru miscarea mainii sau click
         absStandard = calculate_distance(hand_landmarks.landmark[0], hand_landmarks.landmark[1]) #distanta dintre baza mainii si inceputul degetului mare
@@ -279,7 +307,6 @@ class HandModule:
             self.Scroll(hand_landmarks.landmark[5].y - hand_landmarks.landmark[4].y)
         else:
             self.move = True
-            self.move_detected = 1
 
         #actualizare click flag
         self.previousLeftClick = self.nowLeftClick
@@ -341,10 +368,10 @@ class HandModule:
 
     # scroll pe verticala
     def Scroll(self, dy):
-        print('dy inainte=', dy)
+        # print('dy inainte=', dy)
 
         dy = dy * 1080
-        print('dy dupa * 1080', dy)
+        # print('dy dupa * 1080', dy)
         pyautogui.scroll(dy / 50)
 
         #### asigura ca nu se misca mouse ul in momentul asta

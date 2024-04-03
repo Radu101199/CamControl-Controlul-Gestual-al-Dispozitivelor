@@ -104,7 +104,6 @@ class FaceModule:
 
     def check_move(self):
         checkbox_check = self.move and self.dwellClick
-        print
         if checkbox_check and (self.move_detected == 0):
 
             #  print("mouse click")
@@ -115,7 +114,7 @@ class FaceModule:
         else:
             self.nowScroll = 0
             # self.timer_dwell.start(5000)
-        self.move_detected = 0
+            self.move_detected = 0
 
 
 
@@ -335,6 +334,7 @@ class FaceModule:
         # print(self.nowRightClick)
         if self.nowRightClick == 1 and self.nowRightClick != self.previousRightClick:
             self.rightClick()
+
         if self.nowScroll == 1:
             if self.initial_distance is None:
                 self.initial_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
@@ -404,13 +404,14 @@ class FaceModule:
 
         if self.head_returned(current_distance):
             self.timer_dwell.start()
+            print('poti sa misti cursorul')
+            self.nowScroll = 0
 
 
     def head_returned(self, current_distance, tolerance=0.02, return_duration=3):
         # Define the lower and upper bounds of the interval
         lower_bound = self.initial_distance - tolerance
         upper_bound = self.initial_distance + tolerance
-
         # Check if the current distance is within the interval
         if lower_bound <= current_distance <= upper_bound:
             if self.head_returned_time is None:
@@ -419,10 +420,9 @@ class FaceModule:
             elif time.time() - self.head_returned_time >= return_duration:
                 # Head has remained in initial position for return_duration seconds
                 print('a trecut de timp')
+                self.head_returned_time = None
                 return True
-            print(time.time() - self.head_returned_time)
-
-
+            # print(time.time() - self.head_returned_time)
         else:
             # Reset head returned time if head is not in initial position
             self.head_returned_time = None
