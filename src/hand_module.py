@@ -172,6 +172,7 @@ class HandModule:
             f = 0.1
             # coeficientii filtrului
             c = signal.firwin(numtaps, f)
+            print(c)
             # numarul de coeficienti
             filter_size = len(c)
             # se adauga valoarea curenta dx
@@ -184,7 +185,7 @@ class HandModule:
             for i in range(0, filter_size):
                 x_out = x_out + self.filter_cursor_X[i] * c[i]
 
-        # scalarea pentru o analiza mai usoara
+        # scalarea pentru calcularea vitezei finale
         x_out = x_out * 1000
 
         # adaugarea valorii absolute ale lui x curent
@@ -220,6 +221,7 @@ class HandModule:
             f = 0.1
             # coeficientii filtrului
             c = signal.firwin(numtaps, f)
+            print(c)
             # numarul de coeficienti
             filter_size = len(c)
 
@@ -233,7 +235,7 @@ class HandModule:
             for i in range(0, filter_size):
                 y_out = y_out + self.filter_cursor_Y[i] * c[i]
 
-        # scalarea pentru o analiza mai usoara
+        # scalarea pentru calcularea vitezei finale
         y_out = y_out * 1000
 
         # adaugarea valorii absolute ale lui y curent
@@ -323,7 +325,7 @@ class HandModule:
         if self.move_detected:  # miscarea mainii
             self.before_right_click = 0
 
-        #daca se identifica leftclick si miscarea e minimala ceea ce indica ca k = 0 atunci porneste un timer
+        #daca se identifica leftclick si miscarea e minimala ceea ce indica ca, k = 0 atunci porneste un timer
         if self.nowLeftClick == 1 and self.move_detected == 0:
             if self.before_right_click == 0:
                 self.start = time.perf_counter()

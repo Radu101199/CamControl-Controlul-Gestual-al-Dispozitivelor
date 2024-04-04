@@ -18,6 +18,7 @@ class FaceModule:
     def __init__(self):
         self.face_mesh = face_mesh.FaceMesh(refine_landmarks=True)
 
+
         settings = QSettings("Licenta", "CamControl")
         self.move = settings.value("moveFaceCursorCheckBox", type=bool)
         self.dwellClick = settings.value("dwellClickCheckBox", type=bool)
@@ -44,8 +45,10 @@ class FaceModule:
         self.previousRightClick, self.previousLeftClick = 0, 0
         self.nowScroll = 0
         self.doubleClick = 0
-        self.c_start_left, self.c_start_right = float('inf'), float('inf')
+        self.c_start_left, self.c_start_right = None, None
         self.click_count_left, self.click_count_right = 0, 0
+        self.mouse_down = False
+        self.double_click_timer = 0
 
         # filtrarea datelor privind miscarea cursorului
         self.filter_cursor_X = np.zeros(100)
@@ -91,6 +94,7 @@ class FaceModule:
                 # print(distance_nose)
 
                 self.click_functionality(face_landmarks)
+                # print(self.nowLeftClick)
         else:
             frame_markers = frame
         return frame_markers
@@ -201,25 +205,38 @@ class FaceModule:
 
         # la miscare mai semnficiativa se face diferenta pentru filtru folosit
         if (abs(delta_X) > abs(noise_X)):
-            move_X = -(delta_X - noise_X)
+            move_X = delta_X - noise_X
 
         if (abs(delta_Y) > abs(noise_Y)):
-            move_Y = -(delta_Y - noise_Y)
+            move_Y = delta_Y - noise_Y
 
         # daca este bifata realizarea miscarii
         if self.move is True:
             # misca cursorul pe axa x
+
             move_X_final, move_x = self.digital_filter_cursor_X(move_X, self.speedX)
             # pyautogui.moveRel(int(round(-move_X_final)), 0)
 
             # misca cursorul pe axa y
             move_Y_final, move_y = self.digital_filter_cursor_Y(move_Y, self.speedY)
             # pyautogui.moveRel(0, int(round(move_Y_final)))
-            # rezolvare diagonala
-            pyautogui.moveRel(int(round(-move_X_final)), int(round(-move_Y_final)))
+            pyautogui.moveRel(int(round(move_X_final)), int(round(move_Y_final)))
             # detectare miscare pentru dwell click
             if move_x or move_y:
                 self.move_detected = 1
+
+            ### CURSOR MOVEMENT ANALYSIS
+            # debug to file - slow and doesn't show all iterations
+            # f_move_X = open( 'log/move_X.txt', 'a' )
+            # f_move_X.write( 'move_X = ' + repr(int(move_X/self.speedX)) + '\n' )
+            #
+            # f_move_Y = open( 'log/move_Y.txt', 'a' )
+            # f_move_Y.write( 'move_Y = ' + repr(int(move_Y/self.speedY)) + '\n' )
+            # f_move_Y.close()
+            #
+            # print("move X:", int(move_X/self.speedX))
+            # print("move Y:", move_Y)
+
 
         # returneaza miscarea pe x si y
         return move_X, move_Y
@@ -247,8 +264,7 @@ class FaceModule:
             x_out = 0
             for i in range(0, filter_size):
                 x_out = x_out + self.filter_cursor_X[i] * c[i]
-
-        # scalarea pentru o analiza mai usoara
+        # scalarea pentru calcularea vitezei finale
         x_out = x_out * 1000
 
         # adaugarea valorii absolute ale lui x curent
@@ -275,7 +291,7 @@ class FaceModule:
 
         numtaps = self.filterY
         # fara filtru
-        if (numtaps == 0):
+        if numtaps == 0:
             y_out = dy
         # filtru Finite Impulse Response pentru a reduce din zgomot
         else:
@@ -296,7 +312,7 @@ class FaceModule:
             for i in range(0, filter_size):
                 y_out = y_out + self.filter_cursor_Y[i] * c[i]
 
-        # scalarea pentru o analiza mai usoara
+        # scalarea pentru calcularea vitezei finale
         y_out = y_out * 1000
 
         # adaugarea valorii absolute ale lui y curent
@@ -319,17 +335,45 @@ class FaceModule:
         return y_out, move
 
     def click_functionality(self, face_landmarks):
+        # self.click(face_landmarks)
+        distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
 
-        self.click(face_landmarks)
+
+        if distance_left_eye < 0.01:
+            self.nowLeftClick = 1
+        else:
+            self.nowLeftClick = 0
 
 
-        # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
+            print(time.time() - self.double_click_timer)
+            if time.time() - self.double_click_timer < 3:
+                print('double click')
+                pyautogui.doubleClick()
+                self.double_click_timer = 0
+            # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
+        if self.nowLeftClick == 1:
+            distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
+            if self.c_start_left is None:
+                self.c_start_left = time.time()
+            elif time.time() - self.c_start_left >= 3 and self.mouse_down is False:
+                self.leftClick()
+                print(self.double_click_timer)
+                self.double_click_timer = time.time()
+            # self.double_click_timer = 0
+                # print('a trecut de timer')
+            # print(time.time() - self.c_start_left)
+
+            # if self.nowLeftClick == 0:
+            #     self.c_start_left = None
             # print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
-            self.leftClick()
+            # self.leftClick()
 
         if self.nowLeftClick == 0 and self.nowLeftClick != self.previousLeftClick:
-            self.leftClickRelease()
+            self.c_start_left = None
+            distance_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
+            self.leftClickRelease(distance_eye)
+
 
         # print(self.nowRightClick)
         if self.nowRightClick == 1 and self.nowRightClick != self.previousRightClick:
@@ -354,35 +398,58 @@ class FaceModule:
         distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
         distance_right_eye = abs(face_landmarks.landmark[374].y - face_landmarks.landmark[386].y)
 
-        if distance_left_eye < 0.006:
+        ##normalizare valoare distanta ochi
+        # norm_dist = calculate_distance(face_landmarks.landmark[8], face_landmarks.landmark[1])
+        # dist_eye = calculate_distance(face_landmarks.landmark[145],face_landmarks.landmark[159])
+        # print(dist_eye/norm_dist)
+
+        if distance_left_eye < 0.01:
             self.nowLeftClick = 1
         else:
             self.nowLeftClick = 0
 
-        if distance_right_eye < 0.006:
-            self.nowRightClick = 1
-        else:
-            self.nowRightClick = 0
+        # if distance_right_eye < 0.006:
+        #     self.nowRightClick = 1
+        # else:
+        #     self.nowRightClick = 0
 
     def leftClick(self):
-        self.click_count_left += 1
-        if self.click_count_left == 1:
-            self.c_start_left = time.perf_counter()
-        self.mouse_down = False
-        c_end = time.perf_counter()
-        # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
-        # print(10 * (c_end - self.c_start_left), self.click_count_left, self.mouse_down)
-        if 10 * (c_end - self.c_start_left) > 20 and self.click_count_left >= 1 and self.mouse_down is False:
-            pyautogui.mouseDown()
-            # print('mouse down')
-            self.mouse_down = True
-            self.click_count_left = 0
+        pyautogui.mouseDown()
+        self.mouse_down = True
+        # self.click_count_left += 1
+        # if self.click_count_left == 1:
+        #     self.c_start_left = time.perf_counter()
+        # self.mouse_down = False
+        # c_end = time.perf_counter()
+        # # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
+        # print(10 * (c_end - self.c_start_left), self.click_count_left)
+        # if 10 * (c_end - self.c_start_left) > 20 and self.click_count_left >= 1 and self.mouse_down is False:
+        #     pyautogui.mouseDown()
+        print('mouse down')
+        #     self.mouse_down = True
+        #     self.click_count_left = 0
 
     # eliberare click stanga
 
-    def leftClickRelease(self):
+    def leftClickRelease(self, distance_eye):
         self.mouse_down = False
         pyautogui.mouseUp()
+        # print('mouse_up')
+        # verificarea unui potential dublu click
+        # if self.doubleClick == 0:
+        #     self.c_start = time.perf_counter()
+        #     self.doubleClick += 1
+        # c_end = time.perf_counter()
+        # print('distanta intre ochi: ', distance_eye)
+        # # print(self.nowLeftClick)
+        # # verifica daca se inchide ochiul iar pana in 2 secunde
+        # print('timp trecut: ', 20*(c_end - self.c_start))
+        # if 20 * (c_end - self.c_start) <= 20 and self.doubleClick == 1 and distance_eye < 0.006:
+        #     # self.mouse.click(Button.left, 2)
+        #     print('double click')
+        #     c_end = 0
+        #     pyautogui.doubleClick()
+        #     self.doubleClick = 0
 
     # click dreapta
     def rightClick(self):
@@ -404,7 +471,7 @@ class FaceModule:
 
         if self.head_returned(current_distance):
             self.timer_dwell.start()
-            print('poti sa misti cursorul')
+            # print('poti sa misti cursorul')
             self.nowScroll = 0
 
 
@@ -419,7 +486,7 @@ class FaceModule:
                 self.head_returned_time = time.time()
             elif time.time() - self.head_returned_time >= return_duration:
                 # Head has remained in initial position for return_duration seconds
-                print('a trecut de timp')
+                # print('a trecut de timp')
                 self.head_returned_time = None
                 return True
             # print(time.time() - self.head_returned_time)
