@@ -113,11 +113,9 @@ class FaceModule:
             #  print("mouse click")
             # pyautogui.click()  # click the mouse
             self.nowScroll = 1
-            # print(self.nowScroll)
             self.timer_dwell.stop()
         else:
             self.nowScroll = 0
-            # self.timer_dwell.start(5000)
             self.move_detected = 0
 
 
@@ -335,64 +333,45 @@ class FaceModule:
         return y_out, move
 
     def click_functionality(self, face_landmarks):
-        # self.click(face_landmarks)
-        distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
+        self.click(face_landmarks)
 
-
-        if distance_left_eye < 0.01:
-            self.nowLeftClick = 1
-        else:
-            self.nowLeftClick = 0
-
-
+        #functionalitate dublu click
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
             print(time.time() - self.double_click_timer)
             if time.time() - self.double_click_timer < 3:
-                print('double click')
-                pyautogui.doubleClick()
-                self.double_click_timer = 0
-            # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
+                self.double_click()
+
+        #functionalitate left click
+        # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
         if self.nowLeftClick == 1:
-            distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
             if self.c_start_left is None:
                 self.c_start_left = time.time()
             elif time.time() - self.c_start_left >= 3 and self.mouse_down is False:
                 self.leftClick()
-                print(self.double_click_timer)
                 self.double_click_timer = time.time()
-            # self.double_click_timer = 0
-                # print('a trecut de timer')
-            # print(time.time() - self.c_start_left)
 
-            # if self.nowLeftClick == 0:
-            #     self.c_start_left = None
-            # print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
-            # self.leftClick()
-
+        # functionalitate mouse up
         if self.nowLeftClick == 0 and self.nowLeftClick != self.previousLeftClick:
             self.c_start_left = None
-            distance_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
-            self.leftClickRelease(distance_eye)
+            self.leftClickRelease()
 
-
-        # print(self.nowRightClick)
+        # functionalitate right click
         if self.nowRightClick == 1 and self.nowRightClick != self.previousRightClick:
             self.rightClick()
 
+        # functionalitate scroll
         if self.nowScroll == 1:
             if self.initial_distance is None:
                 self.initial_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
-
             self.move = False
             self.Scroll(face_landmarks, self.initial_distance)
         else:
             self.move = True
             self.initial_distance = None
 
-
+        # actualizare click flag
         self.previousLeftClick = self.nowLeftClick
         self.previousRightClick = self.nowRightClick
-        #actualizare click flag
 
     def click(self, face_landmarks):
         distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
@@ -402,54 +381,31 @@ class FaceModule:
         # norm_dist = calculate_distance(face_landmarks.landmark[8], face_landmarks.landmark[1])
         # dist_eye = calculate_distance(face_landmarks.landmark[145],face_landmarks.landmark[159])
         # print(dist_eye/norm_dist)
+        ##
 
         if distance_left_eye < 0.01:
             self.nowLeftClick = 1
         else:
             self.nowLeftClick = 0
 
-        # if distance_right_eye < 0.006:
-        #     self.nowRightClick = 1
-        # else:
-        #     self.nowRightClick = 0
+        if distance_right_eye < 0.01:
+            self.nowRightClick = 1
+        else:
+            self.nowRightClick = 0
 
     def leftClick(self):
         pyautogui.mouseDown()
         self.mouse_down = True
-        # self.click_count_left += 1
-        # if self.click_count_left == 1:
-        #     self.c_start_left = time.perf_counter()
-        # self.mouse_down = False
-        # c_end = time.perf_counter()
-        # # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
-        # print(10 * (c_end - self.c_start_left), self.click_count_left)
-        # if 10 * (c_end - self.c_start_left) > 20 and self.click_count_left >= 1 and self.mouse_down is False:
-        #     pyautogui.mouseDown()
-        print('mouse down')
-        #     self.mouse_down = True
-        #     self.click_count_left = 0
 
     # eliberare click stanga
 
-    def leftClickRelease(self, distance_eye):
+    def leftClickRelease(self):
         self.mouse_down = False
         pyautogui.mouseUp()
-        # print('mouse_up')
-        # verificarea unui potential dublu click
-        # if self.doubleClick == 0:
-        #     self.c_start = time.perf_counter()
-        #     self.doubleClick += 1
-        # c_end = time.perf_counter()
-        # print('distanta intre ochi: ', distance_eye)
-        # # print(self.nowLeftClick)
-        # # verifica daca se inchide ochiul iar pana in 2 secunde
-        # print('timp trecut: ', 20*(c_end - self.c_start))
-        # if 20 * (c_end - self.c_start) <= 20 and self.doubleClick == 1 and distance_eye < 0.006:
-        #     # self.mouse.click(Button.left, 2)
-        #     print('double click')
-        #     c_end = 0
-        #     pyautogui.doubleClick()
-        #     self.doubleClick = 0
+    def double_click(self):
+        print('double click')
+        pyautogui.doubleClick()
+        self.double_click_timer = 0
 
     # click dreapta
     def rightClick(self):

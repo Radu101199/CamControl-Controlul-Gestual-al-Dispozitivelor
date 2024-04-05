@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+import keyboard
 from .app_utils import *
 from mediapipe.python.solutions import hands as mp_hands
 from mediapipe.python.solutions import drawing_utils as mp_drawing
@@ -8,6 +8,7 @@ import pyautogui
 from PyQt5.QtCore import QSettings, QTimer
 import time
 from scipy import signal
+from pynput.keyboard import Controller, Key
 
 # anuleaza inchiderea aplicatiei cand coltul din stanga sus este atins
 pyautogui.FAILSAFE = False
@@ -22,7 +23,6 @@ class HandModule:
         min_tracking_confidence=0.8,
         max_num_hands=1
     )
-
         settings = QSettings("Licenta", "CamControl")
         self.move = settings.value("moveHandsCursorCheckBox", type=bool)
         self.speedCursor = settings.value("speedHandsCursor", type=float)
@@ -64,6 +64,15 @@ class HandModule:
         # apel functie pentru verificarea miscarii
         self.check_move_timer()
         self.timer_move_detected = None
+
+        #volum
+        self.controll_volume = False
+        self.nowVolume = 0
+        self.volume_timer = None
+        self.initiate_volume_timer = None
+        self.last_volume = 0
+        self.keyboard = Controller()
+
 
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
@@ -172,7 +181,7 @@ class HandModule:
             f = 0.1
             # coeficientii filtrului
             c = signal.firwin(numtaps, f)
-            print(c)
+            # print(c)
             # numarul de coeficienti
             filter_size = len(c)
             # se adauga valoarea curenta dx
@@ -221,7 +230,7 @@ class HandModule:
             f = 0.1
             # coeficientii filtrului
             c = signal.firwin(numtaps, f)
-            print(c)
+            # print(c)
             # numarul de coeficienti
             filter_size = len(c)
 
@@ -263,7 +272,7 @@ class HandModule:
                                        calculate_distance(hand_landmarks.landmark[15], hand_landmarks.landmark[14]),
                                        calculate_distance(hand_landmarks.landmark[19], hand_landmarks.landmark[18])])
         threshold = distance_average/distance_index_finger
-        if threshold <= 0.08 and self.move_detected is 0:
+        if threshold <= 0.08 and self.move_detected == 0:
             if self.timer_move_detected is None:
                     self.timer_move_detected = time.time()
             elif time.time() - self.timer_move_detected >= 3:
@@ -285,9 +294,10 @@ class HandModule:
         # calculeaza distante intre puncte specifice pentru miscarea mainii sau click
         absStandard = calculate_distance(hand_landmarks.landmark[0], hand_landmarks.landmark[1]) #distanta dintre baza mainii si inceputul degetului mare
         absClick = calculate_distance(hand_landmarks.landmark[4], hand_landmarks.landmark[6]) / absStandard # distanta dintre varful degetului mare si mijlocul degetului aratator
+        absVolume = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[4]) / absStandard
 
         #apelarea actiunilor pentru mouse
-        self.click(absClick)
+        self.click(absClick, absVolume)
 
         #print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
@@ -310,11 +320,23 @@ class HandModule:
         else:
             self.move = True
 
+        if self.nowVolume == 1:
+
+            if self.initiate_volume_timer is None:
+                self.initiate_volume_timer = time.time()
+            if self.controll_volume is True or time.time() - self.initiate_volume_timer >= 2:
+                self.controll_volume = True
+                self.set_volume(absVolume)
+                self.initiate_volume_timer = None
+            print(self.controll_volume is True,  self.initiate_volume_timer)
+            # print(time.time() - self.initiate_volume_timer, self.controll_volume)
+
+
         #actualizare click flag
         self.previousLeftClick = self.nowLeftClick
         self.previousRightClick = self.nowRightClick
 
-    def click(self, absClick):
+    def click(self, absClick, absVolume):
         #click stanga
         if absClick < self.distance_click:
             self.nowLeftClick = 1
@@ -336,6 +358,11 @@ class HandModule:
                 self.nowRightClick = 1
         else:
             self.nowRightClick = 0
+
+        if absVolume > 6:
+            self.nowVolume = 1
+        else:
+            self.initiate_volume_timer = None
 
     # click stanga
 
@@ -378,5 +405,37 @@ class HandModule:
 
         #### asigura ca nu se misca mouse ul in momentul asta
 
+    def set_volume(self, absVolume):
+        absVolume *= 2.5
+        self.move = False
+        if self.volume_timer is None:
+            self.volume_timer = time.time()
+            print("Degetele sunt la distanță, a început timer-ul.")
+            for _ in range(16):
+                self.keyboard.press(Key.media_volume_up)
+                self.keyboard.release(Key.media_volume_up)
+        if time.time() - self.volume_timer >= 5:
+            self.nowVolume = 0
+            self.volume_timer = None
+            self.initiate_volume_timer = None
+            print('A trecut timpul')
+            self.move = True
+            self.controll_volume = False
+        else:
 
-
+            # if self.last_volume != int(absVolume):
+            if self.last_volume > int(absVolume):
+                for _ in range(self.last_volume-int(absVolume)):
+                    self.keyboard.press(Key.media_volume_down)
+                    self.keyboard.release(Key.media_volume_down)
+            if self.last_volume < int(absVolume):
+                for _ in range(int(absVolume) - self.last_volume):
+                    self.keyboard.press(Key.media_volume_up)
+                    self.keyboard.release(Key.media_volume_up)
+            self.last_volume = int(absVolume)
+            #     print("Volumul a fost ajustat la:", absVolume)
+            # if self.last_volume > int(absVolume):
+            #     for i in range
+            #         self.keyboard.press(Key.media_volume_down)
+            #         #         self.keyboard.release(Key.media_volume_down)
+            #
