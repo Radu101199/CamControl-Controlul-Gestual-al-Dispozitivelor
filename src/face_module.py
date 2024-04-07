@@ -7,7 +7,6 @@ from scipy import signal
 from PyQt5.QtCore import QSettings
 from PyQt5.QtCore import QTimer
 import time
-
 NK_DWELL_MOVE_THRESH = 10
 # anuleaza inchiderea aplicatiei cand coltul din stanga sus este atins
 pyautogui.FAILSAFE = False
@@ -81,7 +80,7 @@ class FaceModule:
             for face_landmarks in results.multi_face_landmarks:
                 # desenarea unui dreptunghi in jurul fetei
                 bounding_box = calculate_bounding_box(rgb_frame, face_landmarks)
-                frame_markers = cv2.rectangle(frame, bounding_box[0], bounding_box[1], (0, 255, 0), 3)
+                self.frame_markers = cv2.rectangle(frame, bounding_box[0], bounding_box[1], (0, 255, 0), 3)
 
                 self.x = (bounding_box[0][0] + bounding_box[1][0]) / 2
                 self.y = (bounding_box[0][1] + bounding_box[1][1]) / 2
@@ -96,8 +95,8 @@ class FaceModule:
                 self.click_functionality(face_landmarks)
                 # print(self.nowLeftClick)
         else:
-            frame_markers = frame
-        return frame_markers
+            self.frame_markers = frame
+        return self.frame_markers
 
     # timer dwell
     def dwell_timer(self):
@@ -146,11 +145,16 @@ class FaceModule:
         jaw_width_normalized = jaw_width / face_width
 
         ratio = lips_width_normalized / jaw_width_normalized
+        ratioBar = ratio
+        ratioBar = np.interp(ratioBar, [0.41, 0.52], [400, 150])
+        cv2.rectangle(self.frame_markers, (50, 150), (85, 400), (0, 255, 0), 3)
+        cv2.rectangle(self.frame_markers, (50, int(ratioBar)), (85, 400), (0, 255, 0), cv2.FILLED)
         if ratio > 0.45:
             # Incepe timerul daca zembetul este detectat
             if self.smile_start_time is None:
                 self.smile_start_time = time.time()
             else:
+                cv2.putText(self.frame_markers, "Zambet in detectare!", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 # print(time.time() - self.smile_start_time)
                 # Daca zambetul continua mai mult de 5 secunda muta cursorul in centru
                 if time.time() - self.smile_start_time >= self.smile_duration_threshold:
@@ -337,7 +341,7 @@ class FaceModule:
 
         #functionalitate dublu click
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
-            print(time.time() - self.double_click_timer)
+            # print(time.time() - self.double_click_timer)
             if time.time() - self.double_click_timer < 3:
                 self.double_click()
 

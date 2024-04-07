@@ -1,5 +1,7 @@
 from .main_window import *
 from PyQt5.QtCore import QSettings
+import subprocess
+
 class UIFunctions(QMainWindow):
     def clickBtnCon(self, name):
         button = self.findChild(QPushButton, name)
@@ -75,4 +77,38 @@ class UIFunctions(QMainWindow):
         ]
         settings.setValue("slider_values_hands", slider_values_hands)
 
+    @staticmethod
+    def launch_keyboard():
+        applescript_code = '''
+        tell application "System Settings"
+            if not running then
+                run
+                delay 1
+            end if
+            set current pane to pane id "com.apple.Accessibility-Settings.extension"
+            delay 1
+        end tell
+        tell application "System Events"
+            tell window 1 of application process "System Settings"
+                tell button 2 of group 3 of scroll area 1 of group 1 of list 2 of splitter group 1 of list 1
+                    click
+                    delay 1
+                end tell
+            end tell
+        end tell
 
+        tell application "System Events"
+            tell window 1 of application process "System Settings"
+                tell checkbox "Tastatură de accesibilitate" of group 3 of scroll area 1 of group 1 of list 2 of splitter group 1 of list 1
+                    click
+                    delay 1
+                end tell
+            end tell
+        end tell
+
+        tell application "System Settings"
+            quit
+        end tell
+        '''
+        # Run the AppleScript code
+        subprocess.run(['osascript', '-e', applescript_code])

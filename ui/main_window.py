@@ -16,7 +16,9 @@ class MainWindow(QMainWindow):
         UIFunctions.clickBtnCon(self, 'btn_face')
         UIFunctions.clickBtnCon(self, 'btn_hands')
         UIFunctions.clickBtnCon(self, 'btn_settings')
+        UIFunctions.clickBtnCon(self, 'btn_keyboard')
         UIFunctions.clickBtnCon(self, 'btn_save')
+
 
         self.camera = None
         self.show()
@@ -62,6 +64,10 @@ class MainWindow(QMainWindow):
             UIFunctions.save_settings(self)
             self.repaint()
             UIFunctions.load_settings(self)
+
+        # KEYBOARD BTN
+        if btn_widget.objectName() == "btn_keyboard":
+            UIFunctions.launch_keyboard()
 
 
     def display_image(self, qimage, part):

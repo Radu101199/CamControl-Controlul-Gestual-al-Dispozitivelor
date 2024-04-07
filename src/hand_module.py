@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import keyboard
 from .app_utils import *
 from mediapipe.python.solutions import hands as mp_hands
 from mediapipe.python.solutions import drawing_utils as mp_drawing
@@ -328,6 +327,7 @@ class HandModule:
                 self.controll_volume = True
                 self.set_volume(absVolume)
                 self.initiate_volume_timer = None
+                self.move = True
             print(self.controll_volume is True,  self.initiate_volume_timer)
             # print(time.time() - self.initiate_volume_timer, self.controll_volume)
 
@@ -415,12 +415,12 @@ class HandModule:
                 self.keyboard.press(Key.media_volume_up)
                 self.keyboard.release(Key.media_volume_up)
         if time.time() - self.volume_timer >= 5:
-            self.nowVolume = 0
+            # self.nowVolume = 0
             self.volume_timer = None
             self.initiate_volume_timer = None
-            print('A trecut timpul')
-            self.move = True
             self.controll_volume = False
+            # print('A trecut timpul')
+
         else:
 
             # if self.last_volume != int(absVolume):
