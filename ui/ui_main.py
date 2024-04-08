@@ -459,6 +459,23 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_7.setSpacing(0)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
+        self.btn_voice = QtWidgets.QPushButton(self.frame_settings)
+        self.btn_voice.setMinimumSize(QtCore.QSize(0, 60))
+        self.btn_voice.setStyleSheet("QPushButton {\n"
+"\n"
+"    background-position: center;\n"
+"    background-repeat: no-reperat;\n"
+"    border: none;\n"
+"    background-color: rgb(27, 29, 35);\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(33, 37, 43);\n"
+"}\n"
+"QPushButton:pressed {    \n"
+"    background-color: rgb(85, 170, 255);\n"
+"}")
+        self.btn_voice.setObjectName("btn_voice")
+        self.verticalLayout_7.addWidget(self.btn_voice)
         self.btn_keyboard = QtWidgets.QPushButton(self.frame_settings)
         self.btn_keyboard.setMinimumSize(QtCore.QSize(0, 60))
         self.btn_keyboard.setStyleSheet("QPushButton {\n"
@@ -735,6 +752,7 @@ class Ui_MainWindow(object):
         self.btn_home.setText(_translate("MainWindow", "Home"))
         self.btn_face.setText(_translate("MainWindow", "Face"))
         self.btn_hands.setText(_translate("MainWindow", "Hands"))
+        self.btn_voice.setText(_translate("MainWindow", "Voice"))
         self.btn_keyboard.setText(_translate("MainWindow", "Keyboard"))
         self.btn_settings.setText(_translate("MainWindow", "Settings"))
         self.label.setText(_translate("MainWindow", "HOME"))

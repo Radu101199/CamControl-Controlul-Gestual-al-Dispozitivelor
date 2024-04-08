@@ -112,3 +112,10 @@ class UIFunctions(QMainWindow):
         '''
         # Run the AppleScript code
         subprocess.run(['osascript', '-e', applescript_code])
+
+    @staticmethod
+    def launch_siri():
+        subprocess.Popen(
+            ["/usr/bin/open", "-W", "-n", "-a", "/System/Applications/Siri.app"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE
+        )

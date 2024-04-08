@@ -17,6 +17,7 @@ class MainWindow(QMainWindow):
         UIFunctions.clickBtnCon(self, 'btn_hands')
         UIFunctions.clickBtnCon(self, 'btn_settings')
         UIFunctions.clickBtnCon(self, 'btn_keyboard')
+        UIFunctions.clickBtnCon(self, 'btn_voice')
         UIFunctions.clickBtnCon(self, 'btn_save')
 
 
@@ -67,8 +68,20 @@ class MainWindow(QMainWindow):
 
         # KEYBOARD BTN
         if btn_widget.objectName() == "btn_keyboard":
-            UIFunctions.launch_keyboard()
+            self.launch_feature('btn_keyboard')
 
+        # VOICE BTN
+        if btn_widget.objectName() == "btn_voice":
+            self.launch_feature('btn_voice')
+
+    def launch_feature(self, btn_name):
+        if self.camera is not None:
+            self.camera = Camera(self, self.camera.part)
+            self.frame_timer()
+        if btn_name == 'btn_voice':
+            UIFunctions.launch_siri()
+        else:
+            UIFunctions.launch_keyboard()
 
     def display_image(self, qimage, part):
         if part == 'Face':
