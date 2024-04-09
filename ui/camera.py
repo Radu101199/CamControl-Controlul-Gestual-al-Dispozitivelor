@@ -13,6 +13,7 @@ class Camera:
         self.main_window = main_window
         self.camera_id = camera_id
         self.cap = cv2.VideoCapture(camera_id)
+        # self.cap = cv2.VideoCapture('Class Diagram0.mp4') # testare video
         self.part = part
         if self.cap is None or not self.cap.isOpened():
             msg = QMessageBox()
@@ -67,25 +68,6 @@ class Camera:
         qimage = QtGui.QImage(image.data, image.shape[1], image.shape[0], QtGui.QImage.Format_RGB888)
 
         self.display_image(qimage)
-
-    ##face
-    # def get_frame(self):
-    #     # daca camera nu este disponibila returneaza eroare
-    #     if self.cap is None or not self.cap.isOpened():
-    #         return -1
-    #
-    #     _, frame = self.cap.read()
-    #
-    #     # detectare modul
-    #     image = self.mod.detect(frame)
-    #     if image is not None:
-    #         frame_to_show = cv2.flip(frame, 1)
-    #         image = cv2.cvtColor(frame_to_show, cv2.COLOR_BGR2RGB)
-    #
-    #     # Qt asteapta un format de culoare RGB
-    #     qimage = QtGui.QImage(image.data, image.shape[1], image.shape[0], QtGui.QImage.Format_RGB888)
-    #
-    #     self.display_image(qimage)
 
     def display_image(self, qimage):
         if self.part == 'Face':

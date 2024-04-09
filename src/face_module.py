@@ -1,4 +1,5 @@
 from mediapipe.python.solutions import face_mesh
+from mediapipe.python.solutions import drawing_utils
 import numpy as np
 import cv2
 import pyautogui
@@ -7,9 +8,11 @@ from scipy import signal
 from PyQt5.QtCore import QSettings
 from PyQt5.QtCore import QTimer
 import time
+mpDraw = drawing_utils
+
 NK_DWELL_MOVE_THRESH = 10
 # anuleaza inchiderea aplicatiei cand coltul din stanga sus este atins
-pyautogui.FAILSAFE = False
+# pyautogui.FAILSAFE = False
 # mareste viteza
 pyautogui.PAUSE = 0
 
@@ -81,6 +84,13 @@ class FaceModule:
                 # desenarea unui dreptunghi in jurul fetei
                 bounding_box = calculate_bounding_box(rgb_frame, face_landmarks)
                 self.frame_markers = cv2.rectangle(frame, bounding_box[0], bounding_box[1], (0, 255, 0), 3)
+                # mpDraw.draw_landmarks(self.frame_markers, face_landmarks, face_mesh.FACEMESH_IRISES)
+                # Draw only three landmarks
+                for idx, landmark in enumerate(face_landmarks.landmark):
+                    if idx in [159, 468, 145, 130, 133, 470, 472, 124, 111]:  # Choose the landmark indices you want to draw
+                        height, width, _ = frame.shape
+                        cx, cy = int(landmark.x * width), int(landmark.y * height)
+                        cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
 
                 self.x = (bounding_box[0][0] + bounding_box[1][0]) / 2
                 self.y = (bounding_box[0][1] + bounding_box[1][1]) / 2
@@ -350,7 +360,7 @@ class FaceModule:
         if self.nowLeftClick == 1:
             if self.c_start_left is None:
                 self.c_start_left = time.time()
-            elif time.time() - self.c_start_left >= 3 and self.mouse_down is False:
+            elif time.time() - self.c_start_left >= 2 and self.mouse_down is False:
                 self.leftClick()
                 self.double_click_timer = time.time()
 
@@ -359,9 +369,18 @@ class FaceModule:
             self.c_start_left = None
             self.leftClickRelease()
 
+        if self.nowRightClick == 0:
+            self.c_start_right = None
+
         # functionalitate right click
-        if self.nowRightClick == 1 and self.nowRightClick != self.previousRightClick:
-            self.rightClick()
+        if self.nowRightClick == 1 :# and self.nowRightClick != self.previousRightClick:
+            if self.c_start_right is None:
+                self.c_start_right = time.time()
+            elif time.time() - self.c_start_right >= 2:
+                self.rightClick()
+                self.c_start_right = None
+
+
 
         # functionalitate scroll
         if self.nowScroll == 1:
@@ -378,21 +397,23 @@ class FaceModule:
         self.previousRightClick = self.nowRightClick
 
     def click(self, face_landmarks):
-        distance_left_eye = abs(face_landmarks.landmark[145].y - face_landmarks.landmark[159].y)
-        distance_right_eye = abs(face_landmarks.landmark[374].y - face_landmarks.landmark[386].y)
 
-        ##normalizare valoare distanta ochi
-        # norm_dist = calculate_distance(face_landmarks.landmark[8], face_landmarks.landmark[1])
-        # dist_eye = calculate_distance(face_landmarks.landmark[145],face_landmarks.landmark[159])
-        # print(dist_eye/norm_dist)
-        ##
+        nose_length_norm = calculate_distance(face_landmarks.landmark[10], face_landmarks.landmark[1])
+        distance_left_eye = face_landmarks.landmark[145].y - face_landmarks.landmark[159].y
+        distance_right_eye = calculate_distance(face_landmarks.landmark[374], face_landmarks.landmark[386])
 
-        if distance_left_eye < 0.01:
+        # print(distance_left_eye/nose_length_norm) # < 0.2 normal = 0.75
+        # print(distance_left_eye / nose_portion_norm)  # < 0.15 normal = 0.50
+        # print(distance_left_eye/jaw_width_norm) #< 0.25 normal = 0.95
+        # print(distance_left_eye/norm_outer_eye) # < 0.15 normal = 0.45
+        distance_left_eye_normalized = distance_left_eye/nose_length_norm
+        distance_right_eye_normalized = distance_right_eye / nose_length_norm
+        if distance_left_eye_normalized < 0.02:
             self.nowLeftClick = 1
         else:
             self.nowLeftClick = 0
 
-        if distance_right_eye < 0.01:
+        if distance_right_eye_normalized < 0.02:
             self.nowRightClick = 1
         else:
             self.nowRightClick = 0
@@ -413,14 +434,7 @@ class FaceModule:
 
     # click dreapta
     def rightClick(self):
-        self.click_count_right += 1
-        if self.click_count_right == 1:
-            self.c_start_right = time.perf_counter()
-        c_end = time.perf_counter()
-        # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
-        if 10 * (c_end - self.c_start_right) > 30 and self.click_count_right >= 1:
-            pyautogui.rightClick()
-            self.click_count_right = 0
+        pyautogui.rightClick()
 
     def Scroll(self, face_landmarks, initial_distance):
         current_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
