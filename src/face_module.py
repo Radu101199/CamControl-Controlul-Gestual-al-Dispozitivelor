@@ -12,7 +12,7 @@ mpDraw = drawing_utils
 
 NK_DWELL_MOVE_THRESH = 10
 # anuleaza inchiderea aplicatiei cand coltul din stanga sus este atins
-# pyautogui.FAILSAFE = False
+pyautogui.FAILSAFE = False
 # mareste viteza
 pyautogui.PAUSE = 0
 
@@ -20,15 +20,14 @@ class FaceModule:
     def __init__(self):
         self.face_mesh = face_mesh.FaceMesh(refine_landmarks=True)
 
-
         settings = QSettings("Licenta", "CamControl")
         self.move = settings.value("moveFaceCursorCheckBox", type=bool)
         self.dwellClick = settings.value("dwellClickCheckBox", type=bool)
         self.smileCenter = settings.value("smileCenterCheckBox", type=bool)
 
         slider_values = settings.value("slider_values_face", type=list)
-        self.speedX = slider_values[0]
-        self.speedY = slider_values[1]
+        self.speedX = slider_values[0]/20
+        self.speedY = slider_values[1]/20
         self.filter = slider_values[4]
         self.filterX = slider_values[2]
         self.filterY = slider_values[3]
@@ -84,10 +83,11 @@ class FaceModule:
                 # desenarea unui dreptunghi in jurul fetei
                 bounding_box = calculate_bounding_box(rgb_frame, face_landmarks)
                 self.frame_markers = cv2.rectangle(frame, bounding_box[0], bounding_box[1], (0, 255, 0), 3)
+                # print(bounding_box)
                 # mpDraw.draw_landmarks(self.frame_markers, face_landmarks, face_mesh.FACEMESH_IRISES)
                 # Draw only three landmarks
                 for idx, landmark in enumerate(face_landmarks.landmark):
-                    if idx in [159, 468, 145, 130, 133, 470, 472, 124, 111]:  # Choose the landmark indices you want to draw
+                    if idx in [159, 468, 145, 130, 133, 470, 472, 124, 111, 362]:  # Choose the landmark indices you want to draw
                         height, width, _ = frame.shape
                         cx, cy = int(landmark.x * width), int(landmark.y * height)
                         cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
@@ -98,12 +98,8 @@ class FaceModule:
                 if self.smileCenter:
                     self.detect_smile(face_landmarks)
 
-
-                # distance_nose = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
-                # print(distance_nose)
-
-                self.click_functionality(face_landmarks)
-                # print(self.nowLeftClick)
+                if self.head_tilt(face_landmarks):
+                    self.click_functionality(face_landmarks)
         else:
             self.frame_markers = frame
         return self.frame_markers
@@ -118,17 +114,14 @@ class FaceModule:
     def check_move(self):
         checkbox_check = self.move and self.dwellClick
         if checkbox_check and (self.move_detected == 0):
-
+            # print(1)
             #  print("mouse click")
-            # pyautogui.click()  # click the mouse
-            self.nowScroll = 1
-            self.timer_dwell.stop()
+            pyautogui.click()  # click the mouse
+            # self.nowScroll = 1
+            # self.timer_dwell.stop()
         else:
             self.nowScroll = 0
             self.move_detected = 0
-
-
-
 
     def detect_smile(self, landmarks):
 
@@ -398,22 +391,28 @@ class FaceModule:
 
     def click(self, face_landmarks):
 
-        nose_length_norm = calculate_distance(face_landmarks.landmark[10], face_landmarks.landmark[1])
-        distance_left_eye = face_landmarks.landmark[145].y - face_landmarks.landmark[159].y
-        distance_right_eye = calculate_distance(face_landmarks.landmark[374], face_landmarks.landmark[386])
+        # nose_length_norm = calculate_distance(face_landmarks.landmark[10], face_landmarks.landmark[1])
+        # distance_left_eye = face_landmarks.landmark[145].y - face_landmarks.landmark[159].y
+        # distance_left_eye_normalized = distance_left_eye/nose_length_norm
 
-        # print(distance_left_eye/nose_length_norm) # < 0.2 normal = 0.75
-        # print(distance_left_eye / nose_portion_norm)  # < 0.15 normal = 0.50
-        # print(distance_left_eye/jaw_width_norm) #< 0.25 normal = 0.95
-        # print(distance_left_eye/norm_outer_eye) # < 0.15 normal = 0.45
-        distance_left_eye_normalized = distance_left_eye/nose_length_norm
-        distance_right_eye_normalized = distance_right_eye / nose_length_norm
-        if distance_left_eye_normalized < 0.02:
+
+        ear_opt_left_eye = ((calculate_distance(face_landmarks.landmark[160], face_landmarks.landmark[144])
+                    + calculate_distance(face_landmarks.landmark[158], face_landmarks.landmark[153])
+                    + calculate_distance(face_landmarks.landmark[159], face_landmarks.landmark[145]))
+                    /  calculate_distance(face_landmarks.landmark[33], face_landmarks.landmark[133]))
+
+        ear_opt_right_eye = ((calculate_distance(face_landmarks.landmark[386], face_landmarks.landmark[374])
+                    + calculate_distance(face_landmarks.landmark[385], face_landmarks.landmark[380])
+                    + calculate_distance(face_landmarks.landmark[387], face_landmarks.landmark[373]))
+                    /  calculate_distance(face_landmarks.landmark[362], face_landmarks.landmark[263]))
+        print(ear_opt_right_eye)
+        if ear_opt_left_eye < 0.315:
+            # print(1)
             self.nowLeftClick = 1
         else:
             self.nowLeftClick = 0
 
-        if distance_right_eye_normalized < 0.02:
+        if ear_opt_right_eye < 0.315:
             self.nowRightClick = 1
         else:
             self.nowRightClick = 0
@@ -468,3 +467,50 @@ class FaceModule:
             # Reset head returned time if head is not in initial position
             self.head_returned_time = None
         return False
+
+    def head_tilt(self, face_landmarks):
+        face_2d = []
+        face_3d = []
+        for idx, lm in enumerate(face_landmarks.landmark):
+            if idx == 33 or idx == 263 or idx == 1 or idx == 61 or idx == 291 or idx == 199:
+                x, y = int(lm.x * 1920), int(lm.y * 1080)
+
+                # Get the 2D Coordinates
+                face_2d.append([x, y])
+
+                # Get the 3D Coordinates
+                face_3d.append([x, y, lm.z])
+        face_2d = np.array(face_2d, dtype=np.float64)
+        face_3d = np.array(face_3d, dtype=np.float64)
+        # The camera matrix
+        focal_length = 1 * 1920
+
+        cam_matrix = np.array([[focal_length, 0, 1080 / 2],
+                               [0, focal_length, 1920 / 2],
+                               [0, 0, 1]])
+
+        # The distortion parameters
+        dist_matrix = np.zeros((4, 1), dtype=np.float64)
+
+        # Solve PnP
+        success, rot_vec, trans_vec = cv2.solvePnP(face_3d, face_2d, cam_matrix, dist_matrix)
+
+        # Get rotational matrix
+        rmat, jac = cv2.Rodrigues(rot_vec)
+
+        # Get angles
+        angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
+
+        # Get the y rotation degree
+        x = angles[0] * 360
+        y = angles[1] * 360
+        z = angles[2] * 360
+        # Add the text on the image
+        # cv2.putText(image, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
+        cv2.putText(self.frame_markers, "x: " + str(np.round(x, 2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(self.frame_markers, "y: " + str(np.round(y, 2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(self.frame_markers, "z: " + str(np.round(z, 2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        if x < 4 and x > -2 and y > -2.5 and y < 2.5:
+            return True
+        return False
+

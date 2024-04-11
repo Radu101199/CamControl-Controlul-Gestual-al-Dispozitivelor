@@ -31,3 +31,20 @@ def calculate_distance(landmark1, landmark2):
     #norma euclidiana a unui vector ce da distanta dintre 2 puncte in plan 2D
     distance = np.linalg.norm(v)
     return distance
+
+def calculate_distance_z(landmark1, landmark2):
+    #calcule vectorizate
+    x1 = landmark1.x
+    y1 = landmark1.y
+    z1 = landmark1.z
+
+    x2 = landmark2.x
+    y2 = landmark2.y
+    z2 = landmark2.z
+
+
+    v = np.array([x1, y1, z1]) - \
+        np.array([x2, y2, z2])
+    #norma euclidiana a unui vector ce da distanta dintre 2 puncte in plan 2D
+    distance = np.linalg.norm(v)
+    return distance
