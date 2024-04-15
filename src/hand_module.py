@@ -271,6 +271,7 @@ class HandModule:
                                        calculate_distance(hand_landmarks.landmark[15], hand_landmarks.landmark[14]),
                                        calculate_distance(hand_landmarks.landmark[19], hand_landmarks.landmark[18])])
         threshold = distance_average/distance_index_finger
+        print(threshold)
         if threshold <= 0.08 and self.move_detected == 0:
             if self.timer_move_detected is None:
                     self.timer_move_detected = time.time()
@@ -311,7 +312,7 @@ class HandModule:
             self.rightClick()
 
         #daca degetul aratator este strans
-
+        print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
         if hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y > -0.06:
             # print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
             self.move = False
@@ -328,8 +329,8 @@ class HandModule:
                 self.set_volume(absVolume)
                 self.initiate_volume_timer = None
                 self.move = True
-            print(self.controll_volume is True,  self.initiate_volume_timer)
-            # print(time.time() - self.initiate_volume_timer, self.controll_volume)
+            # (self.controll_volume is True,  self.initiate_volume_timer)
+            # pprintrint(time.time() - self.initiate_volume_timer, self.controll_volume)
 
 
         #actualizare click flag

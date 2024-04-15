@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 
 # HeadModule function
 def calculate_bounding_box(frame, landmarks):
@@ -32,19 +33,56 @@ def calculate_distance(landmark1, landmark2):
     distance = np.linalg.norm(v)
     return distance
 
-def calculate_distance_z(landmark1, landmark2):
-    #calcule vectorizate
-    x1 = landmark1.x
-    y1 = landmark1.y
-    z1 = landmark1.z
+def head_tilt(face_landmarks, frame_markers):
+    face_2d = []
+    face_3d = []
+    for idx, lm in enumerate(face_landmarks.landmark):
+        if idx == 33 or idx == 263 or idx == 1 or idx == 61 or idx == 291 or idx == 199:
+            x, y = int(lm.x * 1920), int(lm.y * 1080)
 
-    x2 = landmark2.x
-    y2 = landmark2.y
-    z2 = landmark2.z
+            # Get the 2D Coordinates
+            face_2d.append([x, y])
 
+            # Get the 3D Coordinates
+            face_3d.append([x, y, lm.z])
+    face_2d = np.array(face_2d, dtype=np.float64)
+    face_3d = np.array(face_3d, dtype=np.float64)
+    # The camera matrix
+    focal_length = 1 * 1920
 
-    v = np.array([x1, y1, z1]) - \
-        np.array([x2, y2, z2])
-    #norma euclidiana a unui vector ce da distanta dintre 2 puncte in plan 2D
-    distance = np.linalg.norm(v)
-    return distance
+    cam_matrix = np.array([[focal_length, 0, 1080 / 2],
+                           [0, focal_length, 1920 / 2],
+                           [0, 0, 1]])
+
+    # The distortion parameters
+    dist_matrix = np.zeros((4, 1), dtype=np.float64)
+
+    # Solve PnP
+    success, rot_vec, trans_vec = cv2.solvePnP(face_3d, face_2d, cam_matrix, dist_matrix)
+
+    # Get rotational matrix
+    rmat, jac = cv2.Rodrigues(rot_vec)
+
+    # Get angles
+    angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
+
+    # Get the y rotation degree
+    x = angles[0] * 360
+    y = angles[1] * 360
+    z = angles[2] * 360
+    # Add the text on the image
+    # cv2.putText(image, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
+    cv2.putText(frame_markers, "x: " + str(np.round(x, 2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    cv2.putText(frame_markers, "y: " + str(np.round(y, 2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    cv2.putText(frame_markers, "z: " + str(np.round(z, 2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    if x < 4 and x > -2 and y > -2.5 and y < 2.5:
+        return True
+    return False
+
+def hand_position(hand_landmarks, label):
+    distance = hand_landmarks.landmark[17].x - hand_landmarks.landmark[4].x
+    if label == 'Right' and distance > 0:
+        return True
+    elif label == 'Left' and distance < 0:
+        return True
+    return False

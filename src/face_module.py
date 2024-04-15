@@ -98,7 +98,7 @@ class FaceModule:
                 if self.smileCenter:
                     self.detect_smile(face_landmarks)
 
-                if self.head_tilt(face_landmarks):
+                if head_tilt(face_landmarks, self.frame_markers):
                     self.click_functionality(face_landmarks)
         else:
             self.frame_markers = frame
@@ -152,6 +152,7 @@ class FaceModule:
         ratioBar = np.interp(ratioBar, [0.41, 0.52], [400, 150])
         cv2.rectangle(self.frame_markers, (50, 150), (85, 400), (0, 255, 0), 3)
         cv2.rectangle(self.frame_markers, (50, int(ratioBar)), (85, 400), (0, 255, 0), cv2.FILLED)
+        print(ratio)
         if ratio > 0.45:
             # Incepe timerul daca zembetul este detectat
             if self.smile_start_time is None:
@@ -405,7 +406,7 @@ class FaceModule:
                     + calculate_distance(face_landmarks.landmark[385], face_landmarks.landmark[380])
                     + calculate_distance(face_landmarks.landmark[387], face_landmarks.landmark[373]))
                     /  calculate_distance(face_landmarks.landmark[362], face_landmarks.landmark[263]))
-        print(ear_opt_right_eye)
+        # print(ear_opt_right_eye)
         if ear_opt_left_eye < 0.315:
             # print(1)
             self.nowLeftClick = 1
@@ -468,49 +469,5 @@ class FaceModule:
             self.head_returned_time = None
         return False
 
-    def head_tilt(self, face_landmarks):
-        face_2d = []
-        face_3d = []
-        for idx, lm in enumerate(face_landmarks.landmark):
-            if idx == 33 or idx == 263 or idx == 1 or idx == 61 or idx == 291 or idx == 199:
-                x, y = int(lm.x * 1920), int(lm.y * 1080)
 
-                # Get the 2D Coordinates
-                face_2d.append([x, y])
-
-                # Get the 3D Coordinates
-                face_3d.append([x, y, lm.z])
-        face_2d = np.array(face_2d, dtype=np.float64)
-        face_3d = np.array(face_3d, dtype=np.float64)
-        # The camera matrix
-        focal_length = 1 * 1920
-
-        cam_matrix = np.array([[focal_length, 0, 1080 / 2],
-                               [0, focal_length, 1920 / 2],
-                               [0, 0, 1]])
-
-        # The distortion parameters
-        dist_matrix = np.zeros((4, 1), dtype=np.float64)
-
-        # Solve PnP
-        success, rot_vec, trans_vec = cv2.solvePnP(face_3d, face_2d, cam_matrix, dist_matrix)
-
-        # Get rotational matrix
-        rmat, jac = cv2.Rodrigues(rot_vec)
-
-        # Get angles
-        angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
-
-        # Get the y rotation degree
-        x = angles[0] * 360
-        y = angles[1] * 360
-        z = angles[2] * 360
-        # Add the text on the image
-        # cv2.putText(image, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
-        cv2.putText(self.frame_markers, "x: " + str(np.round(x, 2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        cv2.putText(self.frame_markers, "y: " + str(np.round(y, 2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        cv2.putText(self.frame_markers, "z: " + str(np.round(z, 2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        if x < 4 and x > -2 and y > -2.5 and y < 2.5:
-            return True
-        return False
 

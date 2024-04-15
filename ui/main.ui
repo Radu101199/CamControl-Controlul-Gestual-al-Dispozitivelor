@@ -1446,6 +1446,86 @@ QPushButton:pressed {
                      <string>Filter</string>
                     </property>
                    </widget>
+                   <widget class="QScrollArea" name="scrollArea">
+                    <property name="geometry">
+                     <rect>
+                      <x>680</x>
+                      <y>20</y>
+                      <width>161</width>
+                      <height>201</height>
+                     </rect>
+                    </property>
+                    <property name="widgetResizable">
+                     <bool>true</bool>
+                    </property>
+                    <widget class="QWidget" name="scrollAreaWidgetContents">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>157</width>
+                       <height>197</height>
+                      </rect>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_8">
+                      <item>
+                       <widget class="QCheckBox" name="face_click_left_checkBox">
+                        <property name="text">
+                         <string>Face Click Left</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QCheckBox" name="face_click_right_checkBox">
+                        <property name="text">
+                         <string>Face Click Right</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QCheckBox" name="face_smile_checkBox">
+                        <property name="text">
+                         <string>Face Smile</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QCheckBox" name="hand_click_checkBox">
+                        <property name="text">
+                         <string>Hand Click</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QCheckBox" name="hand_recenter_checkBox">
+                        <property name="text">
+                         <string>Hand Recenter</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QCheckBox" name="hand_volume_checkBox">
+                        <property name="text">
+                         <string>Hand Volume</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </widget>
+                   <widget class="QPushButton" name="btn_recalibrate">
+                    <property name="geometry">
+                     <rect>
+                      <x>730</x>
+                      <y>240</y>
+                      <width>81</width>
+                      <height>26</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Recalibrate</string>
+                    </property>
+                   </widget>
                   </widget>
                  </widget>
                 </item>

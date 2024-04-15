@@ -5,7 +5,9 @@ from PyQt5 import QtGui
 from .ui_modules import *
 from src.face_module import *
 from src.hand_module import *
+from src.setup_module import *
 from PyQt5.QtCore import QSettings
+
 
 
 class Camera:
@@ -25,8 +27,11 @@ class Camera:
         self.settings = QSettings("Licenta", "CamControl")
         if self.part == 'Face':
             self.mod = FaceModule()
-        else:
+        elif self.part == 'Hands':
             self.mod = HandModule()
+        else:
+            self.mod = SetupModule()
+
 
 
     def select_camera(self, id):
@@ -73,9 +78,12 @@ class Camera:
         if self.part == 'Face':
             self.main_window.ui.imageFrameFace.setPixmap(QtGui.QPixmap.fromImage(qimage))
             self.main_window.ui.imageFrameFace.setScaledContents(True)
-        else:
+        elif self.part == 'Hands':
             self.main_window.ui.imageFrameHands.setPixmap(QtGui.QPixmap.fromImage(qimage))
             self.main_window.ui.imageFrameHands.setScaledContents(True)
+        else:
+            self.main_window.ui.imageFrame.setPixmap(QtGui.QPixmap.fromImage(qimage))
+            self.main_window.ui.imageFrame.setScaledContents(True)
 
     def is_opened(self):
         return self.cap and self.cap.isOpened()
