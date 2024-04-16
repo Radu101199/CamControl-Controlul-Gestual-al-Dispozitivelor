@@ -33,7 +33,7 @@ class HandModule:
         self.filterY = slider_values[2]
 
         # Initializare variabile
-        self.distance_click = 0.7
+        # self.distance_click = 0.7
         self.cX_prev, self.cY_prev = 0, 0
         self.move_detected = 0
         self.first_data = 0
@@ -71,6 +71,13 @@ class HandModule:
         self.initiate_volume_timer = None
         self.last_volume = 0
         self.keyboard = Controller()
+
+
+
+        thresholds = load_dictionary_from_settings()
+        self.threshold_click_hand = thresholds.get('hand_click') + 0.05
+        self.threshold_recenter_hand = thresholds.get('hand_recenter') + 0.05
+        self.threshold_volume_hand = thresholds.get('hand_volume') - 0.5
 
 
     def detect(self, frame):
@@ -272,7 +279,7 @@ class HandModule:
                                        calculate_distance(hand_landmarks.landmark[19], hand_landmarks.landmark[18])])
         threshold = distance_average/distance_index_finger
         print(threshold)
-        if threshold <= 0.08 and self.move_detected == 0:
+        if threshold <= self.threshold_recenter_hand and self.move_detected == 0:
             if self.timer_move_detected is None:
                     self.timer_move_detected = time.time()
             elif time.time() - self.timer_move_detected >= 3:
@@ -339,10 +346,10 @@ class HandModule:
 
     def click(self, absClick, absVolume):
         #click stanga
-        if absClick < self.distance_click:
+        if absClick < self.threshold_click_hand:
             self.nowLeftClick = 1
 
-        elif absClick >= self.distance_click:
+        elif absClick >= self.threshold_click_hand:
             self.nowLeftClick = 0
 
         if self.move_detected:  # miscarea mainii
@@ -360,7 +367,7 @@ class HandModule:
         else:
             self.nowRightClick = 0
 
-        if absVolume > 6:
+        if absVolume > self.threshold_volume_hand:
             self.nowVolume = 1
         else:
             self.initiate_volume_timer = None

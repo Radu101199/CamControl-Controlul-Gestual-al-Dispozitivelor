@@ -1,9 +1,12 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
 from PyQt5.QtCore import QSettings
+
+from .ui_functions import UIFunctions
 from .ui_modules import *
 from .camera import *
 import time
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -19,10 +22,11 @@ class MainWindow(QMainWindow):
         UIFunctions.clickBtnCon(self, 'btn_keyboard')
         UIFunctions.clickBtnCon(self, 'btn_voice')
         UIFunctions.clickBtnCon(self, 'btn_save')
-
+        UIFunctions.clickBtnCon(self, 'btn_recalibrate')
 
         self.camera = None
-        self.show()
+        # self.show()
+        UIFunctions.first_time(self)
 
     def Button(self):
         btn_widget = self.sender()
@@ -74,6 +78,9 @@ class MainWindow(QMainWindow):
         if btn_widget.objectName() == "btn_voice":
             self.launch_feature('btn_voice')
 
+        if btn_widget.objectName() == "btn_recalibrate":
+            UIFunctions.launch_calibration(self)
+
     def launch_feature(self, btn_name):
         if self.camera is not None:
             self.camera = Camera(self, self.camera.part)
@@ -98,3 +105,6 @@ class MainWindow(QMainWindow):
 
     def reset_dwell_timer(self):
         self.timer_dwell.start(1800)
+
+    def close_window(self):
+        self.close()

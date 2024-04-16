@@ -1,5 +1,7 @@
 import numpy as np
 import cv2
+import json
+from PyQt5.QtCore import QSettings
 
 # HeadModule function
 def calculate_bounding_box(frame, landmarks):
@@ -86,3 +88,16 @@ def hand_position(hand_landmarks, label):
     elif label == 'Left' and distance < 0:
         return True
     return False
+
+def save_calibration_to_settings(dictionary):
+    settings = QSettings("Licenta", "CamControl")
+    json_data = json.dumps(dictionary)
+    settings.setValue("mean_calibrations", json_data)
+
+def load_dictionary_from_settings():
+    settings = QSettings("Licenta", "CamControl")
+    json_data = settings.value("mean_calibrations")
+    if json_data is not None:
+        return json.loads(json_data)
+    else:
+        return {}

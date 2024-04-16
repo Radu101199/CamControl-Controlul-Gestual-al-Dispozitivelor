@@ -72,6 +72,12 @@ class FaceModule:
         self.initial_distance = None
         self.head_returned_time = None
 
+        thresholds = load_dictionary_from_settings()
+        self.threshold_left_eye = thresholds.get('face_click_left') + 0.05
+        self.threshold_right_eye = thresholds.get('face_click_right') + 0.05
+        self.threshold_smile = thresholds.get('face_smile') + 0.5
+
+
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -153,7 +159,7 @@ class FaceModule:
         cv2.rectangle(self.frame_markers, (50, 150), (85, 400), (0, 255, 0), 3)
         cv2.rectangle(self.frame_markers, (50, int(ratioBar)), (85, 400), (0, 255, 0), cv2.FILLED)
         print(ratio)
-        if ratio > 0.45:
+        if ratio > self.threshold_smile:
             # Incepe timerul daca zembetul este detectat
             if self.smile_start_time is None:
                 self.smile_start_time = time.time()
@@ -230,19 +236,6 @@ class FaceModule:
             # detectare miscare pentru dwell click
             if move_x or move_y:
                 self.move_detected = 1
-
-            ### CURSOR MOVEMENT ANALYSIS
-            # debug to file - slow and doesn't show all iterations
-            # f_move_X = open( 'log/move_X.txt', 'a' )
-            # f_move_X.write( 'move_X = ' + repr(int(move_X/self.speedX)) + '\n' )
-            #
-            # f_move_Y = open( 'log/move_Y.txt', 'a' )
-            # f_move_Y.write( 'move_Y = ' + repr(int(move_Y/self.speedY)) + '\n' )
-            # f_move_Y.close()
-            #
-            # print("move X:", int(move_X/self.speedX))
-            # print("move Y:", move_Y)
-
 
         # returneaza miscarea pe x si y
         return move_X, move_Y
@@ -407,13 +400,13 @@ class FaceModule:
                     + calculate_distance(face_landmarks.landmark[387], face_landmarks.landmark[373]))
                     /  calculate_distance(face_landmarks.landmark[362], face_landmarks.landmark[263]))
         # print(ear_opt_right_eye)
-        if ear_opt_left_eye < 0.315:
+        if ear_opt_left_eye < self.threshold_left_eye:
             # print(1)
             self.nowLeftClick = 1
         else:
             self.nowLeftClick = 0
 
-        if ear_opt_right_eye < 0.315:
+        if ear_opt_right_eye < self.threshold_right_eye:
             self.nowRightClick = 1
         else:
             self.nowRightClick = 0

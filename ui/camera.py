@@ -11,10 +11,11 @@ from PyQt5.QtCore import QSettings
 
 
 class Camera:
-    def __init__(self, main_window, part, camera_id: int = 0):
+    def __init__(self, main_window, part, camera_id: int = 0, list_calibration=None):
         self.main_window = main_window
         self.camera_id = camera_id
         self.cap = cv2.VideoCapture(camera_id)
+        self.list_calibration = list_calibration
         # self.cap = cv2.VideoCapture('Class Diagram0.mp4') # testare video
         self.part = part
         if self.cap is None or not self.cap.isOpened():
@@ -30,7 +31,8 @@ class Camera:
         elif self.part == 'Hands':
             self.mod = HandModule()
         else:
-            self.mod = SetupModule()
+            print(self.list_calibration)
+            self.mod = SetupModule(main_window, self.list_calibration)
 
 
 

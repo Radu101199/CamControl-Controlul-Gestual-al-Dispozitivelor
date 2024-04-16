@@ -6,20 +6,24 @@ import cv2
 import time
 import math
 from .app_utils import *
+from ui.ui_functions import UIFunctions
 
 
 class SetupModule:
-    def __init__(self, list_calibration=None):
+    def __init__(self, setup_window, list_calibration):
         self.face_mesh = face_mesh.FaceMesh(refine_landmarks=True)
         self.hands = mp_hands.Hands(min_detection_confidence=0.8,
                                     min_tracking_confidence=0.8,
                                     max_num_hands=1
                                     )
+        print(list_calibration)
+        self.setup_window = setup_window
         if list_calibration is None:
             self.list_calibration = ['face_click_left', 'face_click_right', 'face_smile',
                                 'hand_click', 'hand_recenter', 'hand_volume']
         else:
             self.list_calibration = list_calibration
+
 
         self.label = ''
         self.calibration = np.zeros(151)
@@ -27,7 +31,7 @@ class SetupModule:
         self.index = None
         self.delay_calibration = None
         self.continue_calibration = True
-
+        self.dictionary_calibrated = {}
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -47,6 +51,7 @@ class SetupModule:
                     self.bounding_box = calculate_bounding_box(rgb_frame, self.face_landmarks)
                     part = list_face[0]
                     # if self.i < len(list_face):
+                    print(1)
                     if self.continue_calibration is True:
                         if self.delay_calibration is None:
                             self.delay_calibration = time.time()
@@ -56,11 +61,12 @@ class SetupModule:
                             self.delay_gesture(part)
                     elif len(list_face) > 0 or contains_hand is True:
                         self.continue_calibration = True
-                    elif len(list_face) == 0 and contains_hand is False:
-                        pass
+
+
             else:
                 cv2.putText(self.frame_markers, "Afiseaza fata in fata camerei ",
                             (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
 
         elif contains_hand:
             list_hand = [s for s in self.list_calibration if 'hand' in s]
@@ -81,12 +87,15 @@ class SetupModule:
                             self.delay_gesture(part)
                     elif len(list_hand) > 0:
                         self.continue_calibration = True
-                    elif len(list_hand) == 0:
-                        pass
 
             else:
                 cv2.putText(self.frame_markers, "Afiseaza mana in fata camerei ",
                             (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        elif contains_face is False and contains_hand is False:
+            save_calibration_to_settings(self.dictionary_calibrated)
+            self.setup_window.parent.show()
+            self.setup_window.camera.close()
+            self.setup_window.destroy()
         return self.frame_markers
 
     def start_calibration(self, gesture):
@@ -103,7 +112,8 @@ class SetupModule:
                 self.calibration[self.index] = threshold
                 self.index = self.index + 1
             if (time.time() - self.calibration_timer) > 10:
-                print(np.mean(self.calibration))
+                # print(np.mean(self.calibration))
+                self.dictionary_calibrated[gesture] = np.mean(self.calibration)
                 self.continue_calibration = False
                 self.delay_calibration = None
                 self.calibration_timer = None

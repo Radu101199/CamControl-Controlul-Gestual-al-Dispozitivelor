@@ -1,6 +1,7 @@
 from .main_window import *
 from PyQt5.QtCore import QSettings
 import subprocess
+# from .setup_window import *
 
 class UIFunctions(QMainWindow):
     def clickBtnCon(self, name):
@@ -76,6 +77,40 @@ class UIFunctions(QMainWindow):
             self.ui.filterSlider_Hands.value()
         ]
         settings.setValue("slider_values_hands", slider_values_hands)
+
+    # def close_window(self):
+    #     self.close()
+
+    def first_time(self):
+        settings = QSettings("Licenta", "CamControl")
+
+        first_time = settings.value('isFirstTime')
+        if first_time is True or first_time is None:
+            from ui import SetupWindow
+            self.setup_window = SetupWindow(self)
+            self.close()
+            settings.setValue('isFirstTime', False)
+        else:
+            self.show()
+
+    def launch_calibration(self):
+        list_calibration = []
+        checkboxes = [
+            ('face_click_left', self.ui.face_click_left_checkBox.isChecked()),
+            ('face_click_right', self.ui.face_click_right_checkBox.isChecked()),
+            ('face_smile', self.ui.face_smile_checkBox.isChecked()),
+            ('hand_click', self.ui.hand_click_checkBox.isChecked()),
+            ('hand_recenter', self.ui.hand_recenter_checkBox.isChecked()),
+            ('hand_volume', self.ui.hand_volume_checkBox.isChecked())
+        ]
+
+        for checkbox_name, checkbox_state in checkboxes:
+            if checkbox_state:
+                list_calibration.append(checkbox_name)
+        print(list_calibration)
+        from ui import SetupWindow
+        self.close()
+        self.setup_window = SetupWindow(self, list_calibration)
 
     @staticmethod
     def launch_keyboard():
