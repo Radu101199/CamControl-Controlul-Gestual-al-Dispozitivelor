@@ -8,7 +8,6 @@ import math
 from .app_utils import *
 from ui.ui_functions import UIFunctions
 
-
 class SetupModule:
     def __init__(self, setup_window, list_calibration):
         self.face_mesh = face_mesh.FaceMesh(refine_landmarks=True)
@@ -16,14 +15,12 @@ class SetupModule:
                                     min_tracking_confidence=0.8,
                                     max_num_hands=1
                                     )
-        print(list_calibration)
         self.setup_window = setup_window
         if list_calibration is None:
             self.list_calibration = ['face_click_left', 'face_click_right', 'face_smile',
                                 'hand_click', 'hand_recenter', 'hand_volume']
         else:
             self.list_calibration = list_calibration
-
 
         self.label = ''
         self.calibration = np.zeros(151)
@@ -32,6 +29,7 @@ class SetupModule:
         self.delay_calibration = None
         self.continue_calibration = True
         self.dictionary_calibrated = {}
+
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -50,8 +48,6 @@ class SetupModule:
                     mpDraw.draw_landmarks(self.frame_markers, self.face_landmarks, face_mesh.FACEMESH_TESSELATION)
                     self.bounding_box = calculate_bounding_box(rgb_frame, self.face_landmarks)
                     part = list_face[0]
-                    # if self.i < len(list_face):
-                    print(1)
                     if self.continue_calibration is True:
                         if self.delay_calibration is None:
                             self.delay_calibration = time.time()
@@ -64,10 +60,8 @@ class SetupModule:
 
 
             else:
-                cv2.putText(self.frame_markers, "Afiseaza fata in fata camerei ",
+                cv2.putText(self.frame_markers, "Camera nu recunoaste o fata in dreptul sau ",
                             (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
-
         elif contains_hand:
             list_hand = [s for s in self.list_calibration if 'hand' in s]
             if results_hands.multi_hand_landmarks:
@@ -87,7 +81,6 @@ class SetupModule:
                             self.delay_gesture(part)
                     elif len(list_hand) > 0:
                         self.continue_calibration = True
-
             else:
                 cv2.putText(self.frame_markers, "Afiseaza mana in fata camerei ",
                             (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
@@ -104,15 +97,11 @@ class SetupModule:
         if self.calibration_timer is None:
             self.calibration_timer = time.time()
         if self.check_part(gesture):
-
-            # if len(self.calibration) == 151:
-            #     self.calibration = np.delete( self.calibration, 0)
             if self.index < 151:
                 threshold = self.operations(gesture)
                 self.calibration[self.index] = threshold
                 self.index = self.index + 1
             if (time.time() - self.calibration_timer) > 10:
-                # print(np.mean(self.calibration))
                 self.dictionary_calibrated[gesture] = np.mean(self.calibration)
                 self.continue_calibration = False
                 self.delay_calibration = None
@@ -141,26 +130,27 @@ class SetupModule:
                         + calculate_distance(self.face_landmarks.landmark[158], self.face_landmarks.landmark[153])
                         + calculate_distance(self.face_landmarks.landmark[159], self.face_landmarks.landmark[145]))
                        / (calculate_distance(self.face_landmarks.landmark[33], self.face_landmarks.landmark[133])))
+
         elif gesture == 'face_click_right':
                 return ((calculate_distance(self.face_landmarks.landmark[386], self.face_landmarks.landmark[374])
                         + calculate_distance(self.face_landmarks.landmark[385], self.face_landmarks.landmark[380])
                         + calculate_distance(self.face_landmarks.landmark[387], self.face_landmarks.landmark[373]))
                        / calculate_distance(self.face_landmarks.landmark[362], self.face_landmarks.landmark[263]))
+
         elif gesture == 'face_smile':
                 face_width = abs(self.face_landmarks.landmark[33].x - self.face_landmarks.landmark[263].x)
-                # Calculeaza lungimea buzelor si a maxilarului
                 lips_width =abs(self.face_landmarks.landmark[61].x - self.face_landmarks.landmark[291].x)
                 jaw_width = abs(self.face_landmarks.landmark[132].x - self.face_landmarks.landmark[361].x)
-                # normalizeaza acestei valori pentru o valoare mai generala
                 lips_width_normalized = lips_width / face_width
                 jaw_width_normalized = jaw_width / face_width
-
                 return lips_width_normalized / jaw_width_normalized
+
         elif gesture == 'hand_click':
             absStandard = calculate_distance(self.hand_landmarks.landmark[0], self.hand_landmarks.landmark[
                 1])  # distanta dintre baza mainii si inceputul degetului mare
             return calculate_distance(self.hand_landmarks.landmark[4], self.hand_landmarks.landmark[
                 6]) / absStandard  # distanta dintre varful degetului mare si mijlocul degetului aratator
+
         elif gesture == 'hand_recenter':
             distance_index_finger = calculate_distance(self.hand_landmarks.landmark[8], self.hand_landmarks.landmark[5])
             distance_average = np.average([calculate_distance(self.hand_landmarks.landmark[11], self.hand_landmarks.landmark[10]),
@@ -168,37 +158,35 @@ class SetupModule:
                                            calculate_distance(self.hand_landmarks.landmark[19],
                                                               self.hand_landmarks.landmark[18])])
             return distance_average / distance_index_finger
+
         else:
             absStandard = calculate_distance(self.hand_landmarks.landmark[0], self.hand_landmarks.landmark[1])
             return  calculate_distance(self.hand_landmarks.landmark[8], self.hand_landmarks.landmark[4]) / absStandard
 
-
-
     def delay_gesture(self, gesture):
+        if gesture == 'face_click_left':
+            cv2.putText(self.frame_markers, "Inchide ochiul stang, calibrarea v-a incepe in  " + str(
+                np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                        (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-          if gesture == 'face_click_left':
-                cv2.putText(self.frame_markers, "Inchide ochiul stang, calibrarea v-a incepe in  " + str(
-                    np.round(3.00 - (time.time() - self.delay_calibration), 2)),
-                            (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-          elif gesture == 'face_click_right':
-                cv2.putText(self.frame_markers, "Inchide ochiul drept, calibrarea v-a incepe in  " + str(
-                                np.round(3.00 - (time.time() - self.delay_calibration), 2)),
-                            (500, 50),  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-          elif gesture == 'face_smile':
-                cv2.putText(self.frame_markers, "Incepe sa zambesti, calibrarea v-a incepe in  " + str(
-                    np.round(3.00 - (time.time() - self.delay_calibration), 2)),
-                            (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255), 2)
-          elif gesture == 'hand_click':
-              cv2.putText(self.frame_markers, "Afiseaza mana spre camera, si lipeste degetul mare de cel aratator"
-                                                      ", calibrarea v-a incepe in  " +
-                                  str(np.round(3.00-(time.time() - self.delay_calibration), 2)),
-                          (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-          else :
-              cv2.putText(self.frame_markers,"Afiseaza mana spre camera, in pozitia urmatoare"
-                                  ", calibrarea v-a incepe in  " +
-                                  str(np.round(3.00 - (time.time() - self.delay_calibration), 2)),
-                                  (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255), 2)
+        elif gesture == 'face_click_right':
+            cv2.putText(self.frame_markers, "Inchide ochiul drept, calibrarea v-a incepe in  " + str(
+                            np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                        (500, 50),  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
+        elif gesture == 'face_smile':
+            cv2.putText(self.frame_markers, "Incepe sa zambesti, calibrarea v-a incepe in  " + str(
+                np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                        (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255), 2)
 
+        elif gesture == 'hand_click':
+            cv2.putText(self.frame_markers, "Afiseaza mana spre camera, si lipeste degetul mare de cel aratator"
+                                                  ", calibrarea v-a incepe in  " +
+                              str(np.round(3.00-(time.time() - self.delay_calibration), 2)),
+                      (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-
+        else :
+            cv2.putText(self.frame_markers,"Afiseaza mana spre camera, in pozitia urmatoare"
+                              ", calibrarea v-a incepe in  " +
+                              str(np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                              (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255), 2)

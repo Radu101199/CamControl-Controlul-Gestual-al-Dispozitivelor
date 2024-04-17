@@ -33,12 +33,11 @@ class HandModule:
         self.filterY = slider_values[2]
 
         # Initializare variabile
-        # self.distance_click = 0.7
         self.cX_prev, self.cY_prev = 0, 0
         self.move_detected = 0
         self.first_data = 0
 
-        self.before_right_click, self.after_right_click = 0, 0  # de schimbat denumire
+        self.before_right_click, self.after_right_click = 0, 0
         self.start, self.c_start = float('inf'), float('inf')
 
         # variabile click
@@ -64,7 +63,7 @@ class HandModule:
         self.check_move_timer()
         self.timer_move_detected = None
 
-        #volum
+        # volum
         self.controll_volume = False
         self.nowVolume = 0
         self.volume_timer = None
@@ -72,13 +71,11 @@ class HandModule:
         self.last_volume = 0
         self.keyboard = Controller()
 
-
-
+        # preluare thresholds din setari
         thresholds = load_dictionary_from_settings()
         self.threshold_click_hand = thresholds.get('hand_click') + 0.05
         self.threshold_recenter_hand = thresholds.get('hand_recenter') + 0.05
         self.threshold_volume_hand = thresholds.get('hand_volume') - 0.5
-
 
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
@@ -104,7 +101,6 @@ class HandModule:
         return frame_markers
 
         # procesarea reperelor si apelarea diferitor actiuni
-
     def check_move_timer(self):
         self.timer_dwell = QTimer()
         self.timer_dwell.timeout.connect(self.check_move)
@@ -161,14 +157,10 @@ class HandModule:
             sensitivity = self.speedCursor / 100
             # misca cursorul pe axa x
             move_X_final, move_x = self.digital_filter_cursor_X(move_X, sensitivity)
-            # pyautogui.moveRel(int(round(-move_X_final)), 0)
-
             # misca cursorul pe axa y
             move_Y_final, move_y = self.digital_filter_cursor_Y(move_Y, sensitivity)
-            # pyautogui.moveRel(0, int(round(move_Y_final)))
             # rezolvare diagonala
             pyautogui.moveRel(int(round(-move_X_final)), int(round(-move_Y_final)))
-            # print(move_Y_final, move_X_final)
             # detectare miscare pentru dwell click
             if move_x or move_y:
                 self.move_detected = 1
@@ -278,12 +270,10 @@ class HandModule:
                                        calculate_distance(hand_landmarks.landmark[15], hand_landmarks.landmark[14]),
                                        calculate_distance(hand_landmarks.landmark[19], hand_landmarks.landmark[18])])
         threshold = distance_average/distance_index_finger
-        print(threshold)
         if threshold <= self.threshold_recenter_hand and self.move_detected == 0:
             if self.timer_move_detected is None:
                     self.timer_move_detected = time.time()
             elif time.time() - self.timer_move_detected >= 3:
-                    # print('a trecut de timp')
                     screen_width, screen_height = pyautogui.size()
                     center_x = screen_width // 2
                     center_y = screen_height // 2
@@ -293,7 +283,6 @@ class HandModule:
 
                     self.timer_move_detected = None
         else:
-                # Reset head returned time if head is not in initial position
             self.timer_move_detected = None
 
 
@@ -303,25 +292,23 @@ class HandModule:
         absClick = calculate_distance(hand_landmarks.landmark[4], hand_landmarks.landmark[6]) / absStandard # distanta dintre varful degetului mare si mijlocul degetului aratator
         absVolume = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[4]) / absStandard
 
-        #apelarea actiunilor pentru mouse
+        # apelarea actiunilor pentru mouse
         self.click(absClick, absVolume)
 
-        #print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
+        # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
-            #print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
+            # print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
             self.leftClick()
 
         if self.nowLeftClick == 0 and self.nowLeftClick != self.previousLeftClick:
             self.leftClickRelease()
 
-        # print(self.nowRightClick)
         if self.nowRightClick == 1 and self.nowRightClick != self.previousRightClick:
             self.rightClick()
 
-        #daca degetul aratator este strans
+        # daca degetul aratator este strans
         print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
         if hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y > -0.06:
-            # print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
             self.move = False
             self.Scroll(hand_landmarks.landmark[5].y - hand_landmarks.landmark[4].y)
         else:
@@ -336,16 +323,13 @@ class HandModule:
                 self.set_volume(absVolume)
                 self.initiate_volume_timer = None
                 self.move = True
-            # (self.controll_volume is True,  self.initiate_volume_timer)
-            # pprintrint(time.time() - self.initiate_volume_timer, self.controll_volume)
 
-
-        #actualizare click flag
+        # actualizare click flag
         self.previousLeftClick = self.nowLeftClick
         self.previousRightClick = self.nowRightClick
 
     def click(self, absClick, absVolume):
-        #click stanga
+        # click stanga
         if absClick < self.threshold_click_hand:
             self.nowLeftClick = 1
 
@@ -355,13 +339,13 @@ class HandModule:
         if self.move_detected:  # miscarea mainii
             self.before_right_click = 0
 
-        #daca se identifica leftclick si miscarea e minimala ceea ce indica ca, k = 0 atunci porneste un timer
+        # daca se identifica leftclick si miscarea e minimala ceea ce indica ca, k = 0 atunci porneste un timer
         if self.nowLeftClick == 1 and self.move_detected == 0:
             if self.before_right_click == 0:
                 self.start = time.perf_counter()
                 self.before_right_click += 1
             end = time.perf_counter()
-            #daca timer ul dureaza mai mult de 1.5 secunde se face click dreapta
+            # daca timer ul dureaza mai mult de 1.5 secunde se face click dreapta
             if end - self.start > 1.5:
                 self.nowRightClick = 1
         else:
@@ -373,17 +357,15 @@ class HandModule:
             self.initiate_volume_timer = None
 
     # click stanga
-
     def leftClick(self):
         if self.after_right_click == 1:
             self.after_right_click = 0
         pyautogui.mouseDown()
 
     # eliberare click stanga
-
     def leftClickRelease(self):
         pyautogui.mouseUp()
-        # resetare k
+        # resetare before_right_click
         self.before_right_click = 0
 
         # verificarea unui potential dublu click
@@ -405,10 +387,7 @@ class HandModule:
 
     # scroll pe verticala
     def Scroll(self, dy):
-        # print('dy inainte=', dy)
-
         dy = dy * 1080
-        # print('dy dupa * 1080', dy)
         pyautogui.scroll(dy / 50)
 
         #### asigura ca nu se misca mouse ul in momentul asta
@@ -418,20 +397,14 @@ class HandModule:
         self.move = False
         if self.volume_timer is None:
             self.volume_timer = time.time()
-            print("Degetele sunt la distanță, a început timer-ul.")
             for _ in range(16):
                 self.keyboard.press(Key.media_volume_up)
                 self.keyboard.release(Key.media_volume_up)
         if time.time() - self.volume_timer >= 5:
-            # self.nowVolume = 0
             self.volume_timer = None
             self.initiate_volume_timer = None
             self.controll_volume = False
-            # print('A trecut timpul')
-
         else:
-
-            # if self.last_volume != int(absVolume):
             if self.last_volume > int(absVolume):
                 for _ in range(self.last_volume-int(absVolume)):
                     self.keyboard.press(Key.media_volume_down)
@@ -441,9 +414,3 @@ class HandModule:
                     self.keyboard.press(Key.media_volume_up)
                     self.keyboard.release(Key.media_volume_up)
             self.last_volume = int(absVolume)
-            #     print("Volumul a fost ajustat la:", absVolume)
-            # if self.last_volume > int(absVolume):
-            #     for i in range
-            #         self.keyboard.press(Key.media_volume_down)
-            #         #         self.keyboard.release(Key.media_volume_down)
-            #
