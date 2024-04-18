@@ -77,6 +77,8 @@ class HandModule:
         self.threshold_recenter_hand = thresholds.get('hand_recenter') + 0.05
         self.threshold_volume_hand = thresholds.get('hand_volume') - 0.5
 
+        # reducere frame pentru movement
+        self.frame_reduction = 200
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -89,7 +91,7 @@ class HandModule:
                 mp_drawing.draw_landmarks(
                     frame, hand_landmarks, mp_hands.HAND_CONNECTIONS
                 )
-                frame_markers = frame
+                self.frame_markers = frame
                 # coordonatele x si y ale degetului aratator
                 x = hand_landmarks.landmark[8].x * frame.shape[1]
                 y = hand_landmarks.landmark[8].y * frame.shape[0]
@@ -97,8 +99,8 @@ class HandModule:
                 self.click_functionality(hand_landmarks)
                 self.recenter_cursor(hand_landmarks)
         else:
-            frame_markers = frame
-        return frame_markers
+            self.frame_markers = frame
+        return self.frame_markers
 
         # procesarea reperelor si apelarea diferitor actiuni
     def check_move_timer(self):
@@ -113,6 +115,7 @@ class HandModule:
         self.move_detected = 0
 
     def move_cursor(self, cX, cY):
+        print(cX) # de testat
         filter_move = self.filter
         # variabile pentru reducerea miscarilor mici
         noise_X = filter_move
@@ -153,7 +156,9 @@ class HandModule:
 
         # print(self.moveCursorCheckBox.checkState())
         # daca este bifata realizarea miscarii
-        if self.move:
+        if self.move and cX > 200 and cY > 200 and cX < 1720 and cY < 880:
+
+            cv2.rectangle(self.frame_markers, (self.frame_reduction, self.frame_reduction), (1920 - 200, 1080-200), (255, 0, 255), 2)
             sensitivity = self.speedCursor / 100
             # misca cursorul pe axa x
             move_X_final, move_x = self.digital_filter_cursor_X(move_X, sensitivity)
