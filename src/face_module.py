@@ -22,7 +22,8 @@ class FaceModule:
 
         settings = QSettings("Licenta", "CamControl")
         self.move = settings.value("moveFaceCursorCheckBox", type=bool)
-        self.dwellClick = settings.value("dwellClickCheckBox", type=bool)
+        self.dwellClick = settings.value("dwellClickRadioBox", type=bool)
+        self.dwellScroll = settings.value("dwellScrollRadioBox", type=bool)
         self.smileCenter = settings.value("smileCenterCheckBox", type=bool)
 
         slider_values = settings.value("slider_values_face", type=list)
@@ -60,8 +61,8 @@ class FaceModule:
         self.fine_control_Y = np.zeros(2)
         #  self.fine_control_X = np.zeros(4)
         #  self.fine_control_Y = np.zeros(4)
-
-        if self.dwellClick:
+        print(self.dwellScroll)
+        if self.dwellClick or self.dwellScroll:
             # conectare Dwell click checkbox si timer
             self.dwell_timer()
 
@@ -106,6 +107,9 @@ class FaceModule:
 
                 if head_tilt(face_landmarks, self.frame_markers):
                     self.click_functionality(face_landmarks)
+                if self.dwellScroll:
+                    self.initiate_Scroll(face_landmarks)
+
         else:
             self.frame_markers = frame
         return self.frame_markers
@@ -113,18 +117,20 @@ class FaceModule:
     # timer dwell
     def dwell_timer(self):
         self.timer_dwell = QTimer()
-        # self.timer_dwell.timeout.connect(self.check_move)
         self.timer_dwell.timeout.connect(self.check_move)
         self.timer_dwell.start(5000)
 
     def check_move(self):
-        checkbox_check = self.move and self.dwellClick
+        checkbox_check = (self.move and self.dwellClick) or (self.move and self.dwellScroll)
         if checkbox_check and (self.move_detected == 0):
-            # print(1)
-            #  print("mouse click")
-            pyautogui.click()  # click the mouse
-            # self.nowScroll = 1
-            # self.timer_dwell.stop()
+
+            if self.dwellClick:
+                print("mouse click")
+                pyautogui.click()  # click
+            elif self.dwellScroll:
+                print('Incepe scroll')
+                self.nowScroll = 1
+                self.timer_dwell.stop()
         else:
             self.nowScroll = 0
             self.move_detected = 0
@@ -158,7 +164,6 @@ class FaceModule:
         ratioBar = np.interp(ratioBar, [0.41, 0.52], [400, 150])
         cv2.rectangle(self.frame_markers, (50, 150), (85, 400), (0, 255, 0), 3)
         cv2.rectangle(self.frame_markers, (50, int(ratioBar)), (85, 400), (0, 255, 0), cv2.FILLED)
-        print(ratio)
         if ratio > self.threshold_smile:
             # Incepe timerul daca zembetul este detectat
             if self.smile_start_time is None:
@@ -367,18 +372,6 @@ class FaceModule:
                 self.rightClick()
                 self.c_start_right = None
 
-
-
-        # functionalitate scroll
-        if self.nowScroll == 1:
-            if self.initial_distance is None:
-                self.initial_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
-            self.move = False
-            self.Scroll(face_landmarks, self.initial_distance)
-        else:
-            self.move = True
-            self.initial_distance = None
-
         # actualizare click flag
         self.previousLeftClick = self.nowLeftClick
         self.previousRightClick = self.nowRightClick
@@ -428,6 +421,18 @@ class FaceModule:
     # click dreapta
     def rightClick(self):
         pyautogui.rightClick()
+
+
+    def initiate_Scroll(self, face_landmarks):
+        # functionalitate scroll
+        if self.nowScroll == 1:
+            if self.initial_distance is None:
+                self.initial_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
+            self.move = False
+            self.Scroll(face_landmarks, self.initial_distance)
+        else:
+            self.move = True
+            self.initial_distance = None
 
     def Scroll(self, face_landmarks, initial_distance):
         current_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])

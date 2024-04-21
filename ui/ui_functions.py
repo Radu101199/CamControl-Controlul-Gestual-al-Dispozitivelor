@@ -24,6 +24,12 @@ class UIFunctions(QMainWindow):
         checkbox_state = settings.value("dwellClickCheckBox", defaultValue=True, type=bool)
         self.ui.dwellClickCheckBox.setChecked(checkbox_state)
 
+        radiobox_state = settings.value("dwellClickRadioBox", defaultValue=True, type=bool)
+        self.ui.dwellClickRadioBox.setChecked(radiobox_state)
+
+        radiobox_state = settings.value("dwellScrollRadioBox", defaultValue=True, type=bool)
+        self.ui.dwellScrollRadioBox.setChecked(radiobox_state)
+
         # Load the values of five sliders face
         slider_values_face = settings.value("slider_values_face", type=list)
         self.ui.speedSlider_X.setValue(slider_values_face[0])
@@ -59,6 +65,12 @@ class UIFunctions(QMainWindow):
         checkbox_state = self.ui.dwellClickCheckBox.isChecked()
         settings.setValue("dwellClickCheckBox", checkbox_state)
 
+        radiobox_state = self.ui.dwellClickRadioBox.isChecked()
+        settings.setValue("dwellClickRadioBox", radiobox_state)
+
+        radiobox_state = self.ui.dwellScrollRadioBox.isChecked()
+        settings.setValue("dwellScrollRadioBox", radiobox_state)
+
         # Save the values of five sliders face
         slider_values_face = [
             self.ui.speedSlider_X.value(),
@@ -77,9 +89,6 @@ class UIFunctions(QMainWindow):
             self.ui.filterSlider_Hands.value()
         ]
         settings.setValue("slider_values_hands", slider_values_hands)
-
-    # def close_window(self):
-    #     self.close()
 
     def first_time(self):
         settings = QSettings("Licenta", "CamControl")

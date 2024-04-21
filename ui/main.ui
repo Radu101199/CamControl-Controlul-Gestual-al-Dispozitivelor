@@ -921,7 +921,7 @@ QPushButton:pressed {
                    </size>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>3</number>
                   </property>
                   <widget class="QWidget" name="page_home">
                    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1318,8 +1318,8 @@ QPushButton:pressed {
                    <widget class="QCheckBox" name="dwellClickCheckBox">
                     <property name="geometry">
                      <rect>
-                      <x>100</x>
-                      <y>450</y>
+                      <x>110</x>
+                      <y>550</y>
                       <width>111</width>
                       <height>21</height>
                      </rect>
@@ -1331,7 +1331,7 @@ QPushButton:pressed {
                    <widget class="QCheckBox" name="smileCenterCheckBox">
                     <property name="geometry">
                      <rect>
-                      <x>100</x>
+                      <x>110</x>
                       <y>500</y>
                       <width>111</width>
                       <height>21</height>
@@ -1524,6 +1524,35 @@ QPushButton:pressed {
                     </property>
                     <property name="text">
                      <string>Recalibrate</string>
+                    </property>
+                   </widget>
+                   <widget class="QRadioButton" name="dwellClickRadioBox">
+                    <property name="geometry">
+                     <rect>
+                      <x>50</x>
+                      <y>450</y>
+                      <width>97</width>
+                      <height>21</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Dwell Click</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                   <widget class="QRadioButton" name="dwellScrollRadioBox">
+                    <property name="geometry">
+                     <rect>
+                      <x>170</x>
+                      <y>450</y>
+                      <width>101</width>
+                      <height>21</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Dwell Scroll</string>
                     </property>
                    </widget>
                   </widget>

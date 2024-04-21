@@ -344,7 +344,7 @@ class HandModule:
         if self.move_detected:  # miscarea mainii
             self.before_right_click = 0
 
-        # daca se identifica leftclick si miscarea e minimala ceea ce indica ca, k = 0 atunci porneste un timer
+        # daca se identifica leftclick si miscarea e minimala ceea ce indica ca, move_detected = 0 atunci porneste un timer
         if self.nowLeftClick == 1 and self.move_detected == 0:
             if self.before_right_click == 0:
                 self.start = time.perf_counter()
