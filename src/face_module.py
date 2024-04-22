@@ -34,6 +34,7 @@ class FaceModule:
         self.filterY = slider_values[3]
 
         # initializare variabile
+
         # miscare cursor
         self.cX_prev = 0
         self.cY_prev = 0
@@ -61,7 +62,7 @@ class FaceModule:
         self.fine_control_Y = np.zeros(2)
         #  self.fine_control_X = np.zeros(4)
         #  self.fine_control_Y = np.zeros(4)
-        print(self.dwellScroll)
+
         if self.dwellClick or self.dwellScroll:
             # conectare Dwell click checkbox si timer
             self.dwell_timer()
@@ -90,11 +91,8 @@ class FaceModule:
                 # desenarea unui dreptunghi in jurul fetei
                 bounding_box = calculate_bounding_box(rgb_frame, face_landmarks)
                 self.frame_markers = cv2.rectangle(frame, bounding_box[0], bounding_box[1], (0, 255, 0), 3)
-                # print(bounding_box)
-                # mpDraw.draw_landmarks(self.frame_markers, face_landmarks, face_mesh.FACEMESH_IRISES)
-                # Draw only three landmarks
                 for idx, landmark in enumerate(face_landmarks.landmark):
-                    if idx in [159, 468, 145, 130, 133, 470, 472, 124, 111, 362]:  # Choose the landmark indices you want to draw
+                    if idx in [159, 468]:  # alege indicii pe care vrei sa ii desenezi
                         height, width, _ = frame.shape
                         cx, cy = int(landmark.x * width), int(landmark.y * height)
                         cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
@@ -170,7 +168,6 @@ class FaceModule:
                 self.smile_start_time = time.time()
             else:
                 cv2.putText(self.frame_markers, "Zambet in detectare!", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                # print(time.time() - self.smile_start_time)
                 # Daca zambetul continua mai mult de 5 secunda muta cursorul in centru
                 if time.time() - self.smile_start_time >= self.smile_duration_threshold:
                     # Lungimea si latimea ecranului
@@ -178,7 +175,6 @@ class FaceModule:
                     # Coordonatele centrale
                     center_x = screen_width // 2
                     center_y = screen_height // 2
-
                     # Misca cursorul in centru
                     pyautogui.moveTo(center_x, center_y)
                     pyautogui.sleep(1)
@@ -230,13 +226,9 @@ class FaceModule:
         # daca este bifata realizarea miscarii
         if self.move is True:
             # misca cursorul pe axa x
-
             move_X_final, move_x = self.digital_filter_cursor_X(move_X, self.speedX)
-            # pyautogui.moveRel(int(round(-move_X_final)), 0)
-
             # misca cursorul pe axa y
             move_Y_final, move_y = self.digital_filter_cursor_Y(move_Y, self.speedY)
-            # pyautogui.moveRel(0, int(round(move_Y_final)))
             pyautogui.moveRel(int(round(move_X_final)), int(round(move_Y_final)))
             # detectare miscare pentru dwell click
             if move_x or move_y:
@@ -340,15 +332,12 @@ class FaceModule:
 
     def click_functionality(self, face_landmarks):
         self.click(face_landmarks)
-
         #functionalitate dublu click
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
-            # print(time.time() - self.double_click_timer)
             if time.time() - self.double_click_timer < 3:
                 self.double_click()
 
         #functionalitate left click
-        # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
         if self.nowLeftClick == 1:
             if self.c_start_left is None:
                 self.c_start_left = time.time()
@@ -365,7 +354,7 @@ class FaceModule:
             self.c_start_right = None
 
         # functionalitate right click
-        if self.nowRightClick == 1 :# and self.nowRightClick != self.previousRightClick:
+        if self.nowRightClick == 1:
             if self.c_start_right is None:
                 self.c_start_right = time.time()
             elif time.time() - self.c_start_right >= 2:
@@ -378,11 +367,6 @@ class FaceModule:
 
     def click(self, face_landmarks):
 
-        # nose_length_norm = calculate_distance(face_landmarks.landmark[10], face_landmarks.landmark[1])
-        # distance_left_eye = face_landmarks.landmark[145].y - face_landmarks.landmark[159].y
-        # distance_left_eye_normalized = distance_left_eye/nose_length_norm
-
-
         ear_opt_left_eye = ((calculate_distance(face_landmarks.landmark[160], face_landmarks.landmark[144])
                     + calculate_distance(face_landmarks.landmark[158], face_landmarks.landmark[153])
                     + calculate_distance(face_landmarks.landmark[159], face_landmarks.landmark[145]))
@@ -392,9 +376,7 @@ class FaceModule:
                     + calculate_distance(face_landmarks.landmark[385], face_landmarks.landmark[380])
                     + calculate_distance(face_landmarks.landmark[387], face_landmarks.landmark[373]))
                     /  calculate_distance(face_landmarks.landmark[362], face_landmarks.landmark[263]))
-        # print(ear_opt_right_eye)
         if ear_opt_left_eye < self.threshold_left_eye:
-            # print(1)
             self.nowLeftClick = 1
         else:
             self.nowLeftClick = 0
@@ -409,7 +391,6 @@ class FaceModule:
         self.mouse_down = True
 
     # eliberare click stanga
-
     def leftClickRelease(self):
         self.mouse_down = False
         pyautogui.mouseUp()
@@ -422,30 +403,26 @@ class FaceModule:
     def rightClick(self):
         pyautogui.rightClick()
 
-
     def initiate_Scroll(self, face_landmarks):
         # functionalitate scroll
         if self.nowScroll == 1:
             if self.initial_distance is None:
                 self.initial_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
             self.move = False
-            self.Scroll(face_landmarks, self.initial_distance)
+            self.Scroll(face_landmarks)
         else:
             self.move = True
             self.initial_distance = None
 
-    def Scroll(self, face_landmarks, initial_distance):
+    def Scroll(self, face_landmarks):
         current_distance = calculate_distance(face_landmarks.landmark[152], face_landmarks.landmark[1])
-        # print(current_distance, initial_distance)
         dy = face_landmarks.landmark[195].y - self.y/1080
         dy = dy * 1080
         pyautogui.scroll(-dy/50)
 
         if self.head_returned(current_distance):
             self.timer_dwell.start()
-            # print('poti sa misti cursorul')
             self.nowScroll = 0
-
 
     def head_returned(self, current_distance, tolerance=0.02, return_duration=3):
         # Define the lower and upper bounds of the interval
@@ -458,10 +435,8 @@ class FaceModule:
                 self.head_returned_time = time.time()
             elif time.time() - self.head_returned_time >= return_duration:
                 # Head has remained in initial position for return_duration seconds
-                # print('a trecut de timp')
                 self.head_returned_time = None
                 return True
-            # print(time.time() - self.head_returned_time)
         else:
             # Reset head returned time if head is not in initial position
             self.head_returned_time = None
