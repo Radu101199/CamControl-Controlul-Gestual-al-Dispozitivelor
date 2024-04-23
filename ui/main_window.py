@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
-from PyQt5.QtCore import QSettings
+from PyQt5.QtCore import QSettings, QSize
 
 from .ui_functions import UIFunctions
 from .ui_modules import *
 from .camera import *
 import time
-
+import platform
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -14,19 +14,65 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
 
         self.ui.setupUi(self)
+        ## PRINT ==> SYSTEM
+        print('System: ' + platform.system())
+        print('Version: ' + platform.release())
+        ## Generare UI
+        UIFunctions.removeTitleBar(True)
+
+        self.setWindowTitle('CamControl')
+        UIFunctions.labelTitle(self, 'CamControl')
+        UIFunctions.labelDescription(self, 'Set text')
+
+        startSize = QSize(1012, 738)
+        self.resize(startSize)
+        self.setMinimumSize(startSize)
+
+        # TOGGLE MENU
+        self.ui.btn_toggle_menu.clicked.connect(lambda: UIFunctions.toggleMenu(self, 220, True))
+        # END
+
+        # Adauga butoanele
+        self.ui.stackedWidget.setMinimumWidth(20)
+        UIFunctions.addNewMenu(self, "Home", "btn_home", "url(:/16x16/icons/16x16/cil-home.png)", True)
+        UIFunctions.addNewMenu(self, "Face", "btn_face", "url(:/16x16/icons/16x16/cil-user-follow.png)", True)
+        UIFunctions.addNewMenu(self, "Hands", "btn_hands", "url(:/16x16/icons/16x16/cil-user-follow.png)", True)
+        UIFunctions.addNewMenu(self, "Keyboard", "btn_keyboard", "url(:/16x16/icons/16x16/cil-user-follow.png)", False)
+        UIFunctions.addNewMenu(self, "Voice", "btn_voice", "url(:/16x16/icons/16x16/cil-user-follow.png)", False)
+        UIFunctions.addNewMenu(self, "Settings", "btn_settings", "url(:/16x16/icons/16x16/cil-user-follow.png)", False)
+
+        UIFunctions.selectStandardMenu(self, "btn_home")
+        self.ui.stackedWidget.setCurrentWidget(self.ui.page_home)
+        def moveWindow(event):
+            # IF MAXIMIZED CHANGE TO NORMAL
+            if UIFunctions.returnStatus(self) == 1:
+                UIFunctions.maximize_restore(self)
+
+            # MOVE WINDOW
+            if event.buttons() == Qt.LeftButton:
+                self.move(self.pos() + event.globalPos() - self.dragPos)
+                self.dragPos = event.globalPos()
+                event.accept()
+
+        self.ui.frame_label_top_btns.mouseMoveEvent = moveWindow
+
+        UIFunctions.uiDefinitions(self)
+
+
         UIFunctions.load_settings(self)
-        UIFunctions.clickBtnCon(self,'btn_home')
-        UIFunctions.clickBtnCon(self, 'btn_face')
-        UIFunctions.clickBtnCon(self, 'btn_hands')
-        UIFunctions.clickBtnCon(self, 'btn_settings')
-        UIFunctions.clickBtnCon(self, 'btn_keyboard')
-        UIFunctions.clickBtnCon(self, 'btn_voice')
-        UIFunctions.clickBtnCon(self, 'btn_save')
-        UIFunctions.clickBtnCon(self, 'btn_recalibrate')
+        # UIFunctions.clickBtnCon(self,'btn_home')
+        # UIFunctions.clickBtnCon(self, 'btn_face')
+        # UIFunctions.clickBtnCon(self, 'btn_hands')
+        # UIFunctions.clickBtnCon(self, 'btn_settings')
+        # UIFunctions.clickBtnCon(self, 'btn_keyboard')
+        # UIFunctions.clickBtnCon(self, 'btn_voice')
+        # UIFunctions.clickBtnCon(self, 'btn_save')
+        # UIFunctions.clickBtnCon(self, 'btn_recalibrate')
 
         self.camera = None
-        # self.show()
         UIFunctions.first_time(self)
+
+
 
     def Button(self):
         btn_widget = self.sender()
@@ -108,3 +154,39 @@ class MainWindow(QMainWindow):
 
     def close_window(self):
         self.close()
+
+    ## EVENT ==> MOUSE DOUBLE CLICK
+    ########################################################################
+    def eventFilter(self, watched, event):
+        if watched == self.le and event.type() == QtCore.QEvent.MouseButtonDblClick:
+            print("pos: ", event.pos())
+    ## ==> END ##
+
+    ## EVENT ==> MOUSE CLICK
+    ########################################################################
+    def mousePressEvent(self, event):
+        self.dragPos = event.globalPos()
+        if event.buttons() == Qt.LeftButton:
+            print('Mouse click: LEFT CLICK')
+        if event.buttons() == Qt.RightButton:
+            print('Mouse click: RIGHT CLICK')
+        if event.buttons() == Qt.MidButton:
+            print('Mouse click: MIDDLE BUTTON')
+    ## ==> END ##
+
+    ## EVENT ==> KEY PRESSED
+    ########################################################################
+    def keyPressEvent(self, event):
+        print('Key: ' + str(event.key()) + ' | Text Press: ' + str(event.text()))
+    ## ==> END ##
+
+    ## EVENT ==> RESIZE EVENT
+    ########################################################################
+    def resizeEvent(self, event):
+        self.resizeFunction()
+        return super(MainWindow, self).resizeEvent(event)
+
+    def resizeFunction(self):
+        print('Height: ' + str(self.height()) + ' | Width: ' + str(self.width()))
+    ## ==> END ##
+
