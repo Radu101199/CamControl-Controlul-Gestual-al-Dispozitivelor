@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
         UIFunctions.labelTitle(self, 'CamControl')
         UIFunctions.labelDescription(self, 'Set text')
 
-        startSize = QSize(1012, 738)
+        startSize = QSize(1000, 720)
         self.resize(startSize)
         self.setMinimumSize(startSize)
 
@@ -34,12 +34,12 @@ class MainWindow(QMainWindow):
 
         # Adauga butoanele
         self.ui.stackedWidget.setMinimumWidth(20)
-        UIFunctions.addNewMenu(self, "Home", "btn_home", "url(:/16x16/icons/16x16/cil-home.png)", True)
-        UIFunctions.addNewMenu(self, "Face", "btn_face", "url(:/16x16/icons/16x16/cil-user-follow.png)", True)
-        UIFunctions.addNewMenu(self, "Hands", "btn_hands", "url(:/16x16/icons/16x16/cil-user-follow.png)", True)
-        UIFunctions.addNewMenu(self, "Keyboard", "btn_keyboard", "url(:/16x16/icons/16x16/cil-user-follow.png)", False)
-        UIFunctions.addNewMenu(self, "Voice", "btn_voice", "url(:/16x16/icons/16x16/cil-user-follow.png)", False)
-        UIFunctions.addNewMenu(self, "Settings", "btn_settings", "url(:/16x16/icons/16x16/cil-user-follow.png)", False)
+        UIFunctions.addNewMenu(self, "Home", "btn_home", "", True)
+        UIFunctions.addNewMenu(self, "Face", "btn_face", "", True)
+        UIFunctions.addNewMenu(self, "Hands", "btn_hands", "", True)
+        UIFunctions.addNewMenu(self, "Keyboard", "btn_keyboard", "", False)
+        UIFunctions.addNewMenu(self, "Voice", "btn_voice", "", False)
+        UIFunctions.addNewMenu(self, "Settings", "btn_settings", "", False)
 
         UIFunctions.selectStandardMenu(self, "btn_home")
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_home)
@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
         self.ui.frame_label_top_btns.mouseMoveEvent = moveWindow
 
         UIFunctions.uiDefinitions(self)
-
+        #####
 
         UIFunctions.load_settings(self)
         # UIFunctions.clickBtnCon(self,'btn_home')

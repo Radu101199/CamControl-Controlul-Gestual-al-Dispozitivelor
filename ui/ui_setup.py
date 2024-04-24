@@ -127,7 +127,7 @@ class Ui_SetupWindow(object):
 "QCheckBox::indicator:checked {\n"
 "    background: 3px solid rgb(52, 59, 72);\n"
 "    border: 3px solid rgb(52, 59, 72);    \n"
-"    background-image: url(:/16x16/icons/16x16/cil-check-alt.png);\n"
+
 "}\n"
 "\n"
 "/* RADIO BUTTON */\n"
