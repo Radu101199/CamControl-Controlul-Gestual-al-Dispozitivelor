@@ -778,7 +778,7 @@ QPushButton:pressed {
              </sizepolicy>
             </property>
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::NoFrame</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
@@ -804,23 +804,32 @@ QPushButton:pressed {
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="maximumSize">
-                <size>
-                 <width>910</width>
-                 <height>610</height>
-                </size>
-               </property>
                <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
+                <enum>QFrame::NoFrame</enum>
                </property>
                <property name="frameShadow">
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>5</number>
+                </property>
+                <property name="topMargin">
+                 <number>5</number>
+                </property>
+                <property name="rightMargin">
+                 <number>5</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>5</number>
+                </property>
                 <item>
                  <widget class="QStackedWidget" name="stackedWidget">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -830,6 +839,9 @@ QPushButton:pressed {
                     <width>900</width>
                     <height>600</height>
                    </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background: transparent;</string>
                   </property>
                   <property name="currentIndex">
                    <number>0</number>
@@ -885,7 +897,7 @@ QPushButton:pressed {
                   </widget>
                   <widget class="QWidget" name="page_face">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -905,11 +917,8 @@ QPushButton:pressed {
                         <height>580</height>
                        </size>
                       </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>1000</width>
-                        <height>1000</height>
-                       </size>
+                      <property name="lineWidth">
+                       <number>0</number>
                       </property>
                       <property name="text">
                        <string>Camera not availalable!</string>
@@ -1480,11 +1489,17 @@ QPushButton:pressed {
                  <height>25</height>
                 </size>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>25</height>
+                </size>
+               </property>
                <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
+                <enum>QFrame::NoFrame</enum>
                </property>
                <property name="frameShadow">
-                <enum>QFrame::Plain</enum>
+                <enum>QFrame::Raised</enum>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_3">
                 <property name="spacing">
@@ -1497,7 +1512,7 @@ QPushButton:pressed {
                  <number>0</number>
                 </property>
                 <property name="rightMargin">
-                 <number>0</number>
+                 <number>2</number>
                 </property>
                 <property name="bottomMargin">
                  <number>0</number>
@@ -1505,10 +1520,10 @@ QPushButton:pressed {
                 <item>
                  <widget class="QFrame" name="frame_label_bottom">
                   <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
+                   <enum>QFrame::NoFrame</enum>
                   </property>
                   <property name="frameShadow">
-                   <enum>QFrame::Plain</enum>
+                   <enum>QFrame::Raised</enum>
                   </property>
                  </widget>
                 </item>
