@@ -115,7 +115,7 @@ class HandModule:
         self.move_detected = 0
 
     def move_cursor(self, cX, cY):
-        print(cX) # de testat
+        # print(cX) # de testat
         filter_move = self.filter
         # variabile pentru reducerea miscarilor mici
         noise_X = filter_move
@@ -295,11 +295,17 @@ class HandModule:
         # calculeaza distante intre puncte specifice pentru miscarea mainii sau click
         absStandard = calculate_distance(hand_landmarks.landmark[0], hand_landmarks.landmark[1]) #distanta dintre baza mainii si inceputul degetului mare
         absClick = calculate_distance(hand_landmarks.landmark[4], hand_landmarks.landmark[6]) / absStandard # distanta dintre varful degetului mare si mijlocul degetului aratator
+        absClick2 = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[12])/absStandard # < 0.9
         absVolume = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[4]) / absStandard
-
         # apelarea actiunilor pentru mouse
-        self.click(absClick, absVolume)
-
+        self.click(absClick2, absVolume)
+        if hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y > -0.06:
+            self.move = False
+            self.nowLeftClick = 0
+            self.nowRightClick = 0
+            self.Scroll(hand_landmarks.landmark[5].y - hand_landmarks.landmark[4].y)
+        else:
+            self.move = True
         # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
             # print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
@@ -312,12 +318,8 @@ class HandModule:
             self.rightClick()
 
         # daca degetul aratator este strans
-        print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
-        if hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y > -0.06:
-            self.move = False
-            self.Scroll(hand_landmarks.landmark[5].y - hand_landmarks.landmark[4].y)
-        else:
-            self.move = True
+        # print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
+
 
         if self.nowVolume == 1:
 
@@ -335,6 +337,7 @@ class HandModule:
 
     def click(self, absClick, absVolume):
         # click stanga
+        self.threshold_click_hand = 0.9
         if absClick < self.threshold_click_hand:
             self.nowLeftClick = 1
 
