@@ -298,7 +298,7 @@ class HandModule:
         absClick2 = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[12])/absStandard # < 0.9
         absVolume = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[4]) / absStandard
         # apelarea actiunilor pentru mouse
-        self.click(absClick2, absVolume)
+        self.click(absClick, absVolume)
         if hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y > -0.06:
             self.move = False
             self.nowLeftClick = 0
