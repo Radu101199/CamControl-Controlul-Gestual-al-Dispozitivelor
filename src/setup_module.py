@@ -86,6 +86,7 @@ class SetupModule:
                             (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         elif contains_face is False and contains_hand is False:
             save_calibration_to_settings(self.dictionary_calibrated)
+            print(self.dictionary_calibrated)
             self.setup_window.parent.show()
             self.setup_window.camera.close()
             self.setup_window.destroy()
@@ -143,6 +144,7 @@ class SetupModule:
                 jaw_width = abs(self.face_landmarks.landmark[132].x - self.face_landmarks.landmark[361].x)
                 lips_width_normalized = lips_width / face_width
                 jaw_width_normalized = jaw_width / face_width
+                print(lips_width_normalized / jaw_width_normalized)
                 return lips_width_normalized / jaw_width_normalized
 
         elif gesture == 'hand_click':

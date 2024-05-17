@@ -151,6 +151,7 @@ class UIFunctions(QMainWindow):
         self.sizegrip = QSizeGrip(self.ui.frame_size_grip)
         self.sizegrip.setStyleSheet("width: 20px; height: 20px; margin 0px; padding: 0px;")
 
+
         ### ==> MINIMIZE
         self.ui.btn_minimize.clicked.connect(lambda: self.showMinimized())
 
@@ -159,6 +160,7 @@ class UIFunctions(QMainWindow):
 
         ## SHOW ==> CLOSE APPLICATION
         self.ui.btn_close.clicked.connect(lambda: self.close())
+
 
 
     def load_settings(self):
@@ -247,6 +249,7 @@ class UIFunctions(QMainWindow):
         settings = QSettings("Licenta", "CamControl")
 
         first_time = settings.value('isFirstTime')
+        print(first_time, "time")
         if first_time is True or first_time is None:
             from ui import SetupWindow
             self.setup_window = SetupWindow(self)
@@ -273,6 +276,8 @@ class UIFunctions(QMainWindow):
         from ui import SetupWindow
         self.close()
         self.setup_window = SetupWindow(self, list_calibration)
+        self.hide()
+        # self.setup_window = SetupWindow(self, list_calibration)
 
     @staticmethod
     def launch_keyboard():

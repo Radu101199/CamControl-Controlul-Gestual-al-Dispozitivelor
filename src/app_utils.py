@@ -91,8 +91,17 @@ def hand_position(hand_landmarks, label):
 
 def save_calibration_to_settings(dictionary):
     settings = QSettings("Licenta", "CamControl")
-    json_data = json.dumps(dictionary)
+
+    existing_dict = load_dictionary_from_settings()
+
+    existing_dict.update(dictionary)
+
+    json_data = json.dumps(existing_dict)
+    print(existing_dict, type(existing_dict))
     settings.setValue("mean_calibrations", json_data)
+
+
+
 
 def load_dictionary_from_settings():
     settings = QSettings("Licenta", "CamControl")

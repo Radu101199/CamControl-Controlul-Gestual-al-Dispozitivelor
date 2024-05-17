@@ -8,6 +8,7 @@ from .camera import *
 import time
 import platform
 class MainWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
 
@@ -41,6 +42,7 @@ class MainWindow(QMainWindow):
         UIFunctions.addNewMenu(self, "Voice", "btn_voice", "", False)
         UIFunctions.addNewMenu(self, "Settings", "btn_settings", "", False)
 
+
         UIFunctions.selectStandardMenu(self, "btn_home")
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_home)
         def moveWindow(event):
@@ -66,8 +68,9 @@ class MainWindow(QMainWindow):
         # UIFunctions.clickBtnCon(self, 'btn_settings')
         # UIFunctions.clickBtnCon(self, 'btn_keyboard')
         # UIFunctions.clickBtnCon(self, 'btn_voice')
-        # UIFunctions.clickBtnCon(self, 'btn_save')
-        # UIFunctions.clickBtnCon(self, 'btn_recalibrate')
+        UIFunctions.clickBtnCon(self, 'btn_save')
+        UIFunctions.clickBtnCon(self, 'btn_recalibrate')
+
 
         self.camera = None
         UIFunctions.first_time(self)
@@ -125,7 +128,9 @@ class MainWindow(QMainWindow):
             self.launch_feature('btn_voice')
 
         if btn_widget.objectName() == "btn_recalibrate":
+
             UIFunctions.launch_calibration(self)
+
 
     def launch_feature(self, btn_name):
         if self.camera is not None:

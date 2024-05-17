@@ -77,7 +77,7 @@ class FaceModule:
         thresholds = load_dictionary_from_settings()
         self.threshold_left_eye = thresholds.get('face_click_left') + 0.05
         self.threshold_right_eye = thresholds.get('face_click_right') + 0.05
-        self.threshold_smile = thresholds.get('face_smile') + 0.5
+        self.threshold_smile = thresholds.get('face_smile') + 0.05
 
 
     def detect(self, frame):
@@ -162,6 +162,7 @@ class FaceModule:
         ratioBar = np.interp(ratioBar, [0.41, 0.52], [400, 150])
         cv2.rectangle(self.frame_markers, (50, 150), (85, 400), (0, 255, 0), 3)
         cv2.rectangle(self.frame_markers, (50, int(ratioBar)), (85, 400), (0, 255, 0), cv2.FILLED)
+        print(ratio, self.threshold_smile)
         if ratio > self.threshold_smile:
             # Incepe timerul daca zembetul este detectat
             if self.smile_start_time is None:

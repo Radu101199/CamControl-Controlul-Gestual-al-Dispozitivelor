@@ -18,11 +18,18 @@ class SetupWindow(QMainWindow):
 
         self.ui.setupUi(self)
 
+        startSize = QSize(1000, 720)
+        self.resize(startSize)
+        self.setMinimumSize(startSize)
 
         self.camera = None
         self.show()
         self.start_time = time.time()
         self.setup_timer()
+
+
+
+
 
     def setup_timer(self):
         self.setuptimer = QTimer(self)

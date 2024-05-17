@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1012</width>
+    <width>1000</width>
     <height>738</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1000</width>
+    <height>738</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -32,6 +38,12 @@
     </property>
     <item>
      <widget class="QFrame" name="frame_main">
+      <property name="minimumSize">
+       <size>
+        <width>984</width>
+        <height>710</height>
+       </size>
+      </property>
       <property name="styleSheet">
        <string notr="true">/* LINE EDIT */
 QLineEdit {
@@ -138,7 +150,7 @@ QCheckBox::indicator:hover {
 QCheckBox::indicator:checked {
     background: 3px solid rgb(52, 59, 72);
 	border: 3px solid rgb(52, 59, 72);	
-
+	background-image: url(:/16x16/icons/16x16/cil-check-alt.png);
 }
 
 /* RADIO BUTTON */
@@ -361,120 +373,6 @@ QSlider::handle:vertical:pressed {
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <widget class="QFrame" name="frame_btns_right">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>120</width>
-                    <height>42</height>
-                   </size>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::NoFrame</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_9">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QPushButton" name="btnMinimize">
-                     <property name="minimumSize">
-                      <size>
-                       <width>40</width>
-                       <height>42</height>
-                      </size>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {	
-	border: none;
-	background-color: transparent;
-}
-QPushButton:hover {
-	background-color: rgb(52, 59, 72);
-}
-QPushButton:pressed {	
-	background-color: rgb(85, 170, 255);
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>-</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="btnRestore">
-                     <property name="minimumSize">
-                      <size>
-                       <width>40</width>
-                       <height>42</height>
-                      </size>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {	
-	border: none;
-	background-color: transparent;
-}
-QPushButton:hover {
-	background-color: rgb(52, 59, 72);
-}
-QPushButton:pressed {	
-	background-color: rgb(85, 170, 255);
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>#</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="btnClose">
-                     <property name="minimumSize">
-                      <size>
-                       <width>40</width>
-                       <height>42</height>
-                      </size>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {	
-	border: none;
-	background-color: transparent;
-}
-QPushButton:hover {
-	background-color: rgb(52, 59, 72);
-}
-QPushButton:pressed {	
-	background-color: rgb(85, 170, 255);
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>X</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
                </layout>
               </widget>
              </item>
@@ -545,12 +443,27 @@ QPushButton:pressed {
              </sizepolicy>
             </property>
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::NoFrame</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+             <enum>QFrame::Plain</enum>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QFrame" name="frame_content">
                <property name="sizePolicy">
@@ -559,13 +472,34 @@ QPushButton:pressed {
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>614</height>
+                </size>
+               </property>
                <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
+                <enum>QFrame::NoFrame</enum>
                </property>
                <property name="frameShadow">
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
                 <item>
                  <widget class="QStackedWidget" name="stackedWidget">
                   <property name="sizePolicy">
@@ -576,7 +510,7 @@ QPushButton:pressed {
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>1000</width>
+                    <width>904</width>
                     <height>1000</height>
                    </size>
                   </property>
@@ -621,6 +555,9 @@ QPushButton:pressed {
                        <font>
                         <pointsize>14</pointsize>
                        </font>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::NoFrame</enum>
                       </property>
                       <property name="text">
                        <string>Let's start with the calibration part</string>
@@ -673,6 +610,22 @@ QPushButton:pressed {
                  </widget>
                 </item>
                </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frame_grip">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
               </widget>
              </item>
             </layout>

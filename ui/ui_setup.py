@@ -14,7 +14,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_SetupWindow(object):
     def setupUi(self, SetupWindow):
         SetupWindow.setObjectName("SetupWindow")
-        SetupWindow.resize(1012, 738)
+        SetupWindow.resize(1000, 738)
+        SetupWindow.setMaximumSize(QtCore.QSize(1000, 738))
         self.centralwidget = QtWidgets.QWidget(SetupWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -22,6 +23,7 @@ class Ui_SetupWindow(object):
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.frame_main = QtWidgets.QFrame(self.centralwidget)
+        self.frame_main.setMinimumSize(QtCore.QSize(984, 710))
         self.frame_main.setStyleSheet("/* LINE EDIT */\n"
 "QLineEdit {\n"
 "    background-color: rgb(27, 29, 35);\n"
@@ -127,7 +129,7 @@ class Ui_SetupWindow(object):
 "QCheckBox::indicator:checked {\n"
 "    background: 3px solid rgb(52, 59, 72);\n"
 "    border: 3px solid rgb(52, 59, 72);    \n"
-
+"    background-image: url(:/16x16/icons/16x16/cil-check-alt.png);\n"
 "}\n"
 "\n"
 "/* RADIO BUTTON */\n"
@@ -267,63 +269,6 @@ class Ui_SetupWindow(object):
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
         self.horizontalLayout_8.addWidget(self.frame_3)
-        self.frame_btns_right = QtWidgets.QFrame(self.frame_top_btns)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_btns_right.sizePolicy().hasHeightForWidth())
-        self.frame_btns_right.setSizePolicy(sizePolicy)
-        self.frame_btns_right.setMaximumSize(QtCore.QSize(120, 42))
-        self.frame_btns_right.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.frame_btns_right.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_btns_right.setObjectName("frame_btns_right")
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.frame_btns_right)
-        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_9.setSpacing(0)
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.btnMinimize = QtWidgets.QPushButton(self.frame_btns_right)
-        self.btnMinimize.setMinimumSize(QtCore.QSize(40, 42))
-        self.btnMinimize.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background-color: transparent;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: rgb(52, 59, 72);\n"
-"}\n"
-"QPushButton:pressed {    \n"
-"    background-color: rgb(85, 170, 255);\n"
-"}")
-        self.btnMinimize.setObjectName("btnMinimize")
-        self.horizontalLayout_9.addWidget(self.btnMinimize)
-        self.btnRestore = QtWidgets.QPushButton(self.frame_btns_right)
-        self.btnRestore.setMinimumSize(QtCore.QSize(40, 42))
-        self.btnRestore.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background-color: transparent;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: rgb(52, 59, 72);\n"
-"}\n"
-"QPushButton:pressed {    \n"
-"    background-color: rgb(85, 170, 255);\n"
-"}")
-        self.btnRestore.setObjectName("btnRestore")
-        self.horizontalLayout_9.addWidget(self.btnRestore)
-        self.btnClose = QtWidgets.QPushButton(self.frame_btns_right)
-        self.btnClose.setMinimumSize(QtCore.QSize(40, 42))
-        self.btnClose.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background-color: transparent;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: rgb(52, 59, 72);\n"
-"}\n"
-"QPushButton:pressed {    \n"
-"    background-color: rgb(85, 170, 255);\n"
-"}")
-        self.btnClose.setObjectName("btnClose")
-        self.horizontalLayout_9.addWidget(self.btnClose)
-        self.horizontalLayout_8.addWidget(self.frame_btns_right)
         self.verticalLayout_4.addWidget(self.frame_top_btns)
         self.frame_info = QtWidgets.QFrame(self.frame_top_right)
         self.frame_info.setMinimumSize(QtCore.QSize(0, 23))
@@ -354,21 +299,26 @@ class Ui_SetupWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_content_right.sizePolicy().hasHeightForWidth())
         self.frame_content_right.setSizePolicy(sizePolicy)
-        self.frame_content_right.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_content_right.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_content_right.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frame_content_right.setFrameShadow(QtWidgets.QFrame.Plain)
         self.frame_content_right.setObjectName("frame_content_right")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.frame_content_right)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.frame_content_right)
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_3.setSpacing(0)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.frame_content = QtWidgets.QFrame(self.frame_content_right)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_content.sizePolicy().hasHeightForWidth())
         self.frame_content.setSizePolicy(sizePolicy)
-        self.frame_content.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_content.setMaximumSize(QtCore.QSize(16777215, 614))
+        self.frame_content.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_content.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_content.setObjectName("frame_content")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.frame_content)
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_4.setSpacing(0)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.stackedWidget = QtWidgets.QStackedWidget(self.frame_content)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -376,7 +326,7 @@ class Ui_SetupWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.stackedWidget.sizePolicy().hasHeightForWidth())
         self.stackedWidget.setSizePolicy(sizePolicy)
-        self.stackedWidget.setMaximumSize(QtCore.QSize(1000, 1000))
+        self.stackedWidget.setMaximumSize(QtCore.QSize(904, 1000))
         self.stackedWidget.setObjectName("stackedWidget")
         self.page_welcome = QtWidgets.QWidget()
         self.page_welcome.setObjectName("page_welcome")
@@ -401,6 +351,7 @@ class Ui_SetupWindow(object):
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_3.setFont(font)
+        self.label_3.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.verticalLayout_2.addWidget(self.label_3)
@@ -427,7 +378,13 @@ class Ui_SetupWindow(object):
         self.horizontalLayout_5.addWidget(self.imageFrame)
         self.stackedWidget.addWidget(self.page_calibration)
         self.horizontalLayout_4.addWidget(self.stackedWidget)
-        self.horizontalLayout_3.addWidget(self.frame_content)
+        self.verticalLayout_3.addWidget(self.frame_content)
+        self.frame_grip = QtWidgets.QFrame(self.frame_content_right)
+        self.frame_grip.setMaximumSize(QtCore.QSize(16777215, 25))
+        self.frame_grip.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_grip.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_grip.setObjectName("frame_grip")
+        self.verticalLayout_3.addWidget(self.frame_grip)
         self.horizontalLayout_2.addWidget(self.frame_content_right)
         self.verticalLayout.addWidget(self.frame_center)
         self.horizontalLayout.addWidget(self.frame_main)
@@ -443,9 +400,6 @@ class Ui_SetupWindow(object):
     def retranslateUi(self, SetupWindow):
         _translate = QtCore.QCoreApplication.translate
         SetupWindow.setWindowTitle(_translate("SetupWindow", "MainWindow"))
-        self.btnMinimize.setText(_translate("SetupWindow", "-"))
-        self.btnRestore.setText(_translate("SetupWindow", "#"))
-        self.btnClose.setText(_translate("SetupWindow", "X"))
         self.label.setText(_translate("SetupWindow", "Welcome To CamControl"))
         self.label_3.setText(_translate("SetupWindow", "Let\'s start with the calibration part"))
         self.imageFrame.setText(_translate("SetupWindow", "Camera not availalable!"))

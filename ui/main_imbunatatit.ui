@@ -844,7 +844,7 @@ QPushButton:pressed {
                    <string notr="true">background: transparent;</string>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>3</number>
                   </property>
                   <widget class="QWidget" name="page_home">
                    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1439,8 +1439,11 @@ QPushButton:pressed {
                       <x>730</x>
                       <y>240</y>
                       <width>81</width>
-                      <height>26</height>
+                      <height>50</height>
                      </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton: rgb(76, 90, 255)</string>
                     </property>
                     <property name="text">
                      <string>Recalibrate</string>
