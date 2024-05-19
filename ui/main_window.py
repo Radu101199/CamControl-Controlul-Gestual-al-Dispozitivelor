@@ -73,6 +73,7 @@ class MainWindow(QMainWindow):
 
 
         self.camera = None
+        self.camera_id = 0
         UIFunctions.first_time(self)
 
 
@@ -93,7 +94,7 @@ class MainWindow(QMainWindow):
                 if self.camera.is_opened():
                     self.camera.close()
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_face)
-            self.camera = Camera(self, 'Face')
+            self.camera = Camera(self, 'Face', self.camera_id)
             self.frame_timer()
 
 
@@ -103,7 +104,7 @@ class MainWindow(QMainWindow):
                 if self.camera.is_opened():
                     self.camera.close()
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_hands)
-            self.camera = Camera(self, 'Hands')
+            self.camera = Camera(self, 'Hands', self.camera_id)
             self.frame_timer()
 
         # PAGE SETTINGS
@@ -112,6 +113,10 @@ class MainWindow(QMainWindow):
             if self.camera is not None:
                 if self.camera.is_opened():
                     self.camera.close()
+            self.available_cameras  = self.get_available_cameras()
+            self.ui.camera_comboBox.addItems([f'Camera {i}' for i in self.available_cameras])
+            self.ui.camera_comboBox.currentIndexChanged.connect(self.change_camera)
+            print(self.available_cameras)
 
         # SAVE BTN
         if btn_widget.objectName() == "btn_save":
@@ -130,6 +135,28 @@ class MainWindow(QMainWindow):
         if btn_widget.objectName() == "btn_recalibrate":
 
             UIFunctions.launch_calibration(self)
+
+    def get_available_cameras(self):
+        # List the first 10 camera indices
+        available_cameras = []
+        for i in range(10):
+            cap = cv2.VideoCapture(i)
+            if cap is not None and cap.isOpened():
+                available_cameras.append(i)
+                cap.release()
+            else:
+                if cap is not None:
+                    cap.release()
+        return available_cameras
+
+    def change_camera(self, index):
+        if index >= len(self.available_cameras):
+            self.show_error_message(f"Camera index {index} is out of range!")
+            return
+
+        self.camera_id = self.available_cameras[index]
+        print(self.camera_id)
+
 
 
     def launch_feature(self, btn_name):

@@ -1478,6 +1478,29 @@ QPushButton:pressed {
                      <string>Dwell Scroll</string>
                     </property>
                    </widget>
+                   <widget class="QComboBox" name="camera_comboBox">
+                    <property name="geometry">
+                     <rect>
+                      <x>420</x>
+                      <y>450</y>
+                      <width>151</width>
+                      <height>22</height>
+                     </rect>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="label_8">
+                    <property name="geometry">
+                     <rect>
+                      <x>420</x>
+                      <y>420</y>
+                      <width>151</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Choose Camera</string>
+                    </property>
+                   </widget>
                   </widget>
                  </widget>
                 </item>

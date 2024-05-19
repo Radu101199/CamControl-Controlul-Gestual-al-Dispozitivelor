@@ -256,7 +256,7 @@ class Ui_SetupWindow(object):
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.frame_top_btns = QtWidgets.QFrame(self.frame_top_right)
         self.frame_top_btns.setMinimumSize(QtCore.QSize(0, 42))
-        self.frame_top_btns.setStyleSheet("background-color: rgba(27, 29, 35, 200)")
+        self.frame_top_btns.setStyleSheet("background-color: rgb(240, 236, 236)")
         self.frame_top_btns.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_top_btns.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_top_btns.setObjectName("frame_top_btns")
@@ -272,7 +272,7 @@ class Ui_SetupWindow(object):
         self.verticalLayout_4.addWidget(self.frame_top_btns)
         self.frame_info = QtWidgets.QFrame(self.frame_top_right)
         self.frame_info.setMinimumSize(QtCore.QSize(0, 23))
-        self.frame_info.setStyleSheet("background-color: rgba(27, 29, 35, 200)")
+        self.frame_info.setStyleSheet("background-color: rgb(190, 190, 190)")
         self.frame_info.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_info.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_info.setObjectName("frame_info")
@@ -285,7 +285,7 @@ class Ui_SetupWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_center.sizePolicy().hasHeightForWidth())
         self.frame_center.setSizePolicy(sizePolicy)
-        self.frame_center.setStyleSheet("background-color: rgb(40, 44, 52);")
+        self.frame_center.setStyleSheet("background-color: rgb(84, 84, 84);")
         self.frame_center.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_center.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_center.setObjectName("frame_center")
@@ -336,6 +336,7 @@ class Ui_SetupWindow(object):
         font = QtGui.QFont()
         font.setPointSize(40)
         self.label.setFont(font)
+        self.label.setStyleSheet("label{ color: blackrgb(0, 0, 0)}")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.verticalLayout_2.addWidget(self.label)
@@ -400,8 +401,8 @@ class Ui_SetupWindow(object):
     def retranslateUi(self, SetupWindow):
         _translate = QtCore.QCoreApplication.translate
         SetupWindow.setWindowTitle(_translate("SetupWindow", "MainWindow"))
-        self.label.setText(_translate("SetupWindow", "Welcome To CamControl"))
-        self.label_3.setText(_translate("SetupWindow", "Let\'s start with the calibration part"))
+        self.label.setText(_translate("SetupWindow", "<html><head/><body><p><span style=\" color:#000000;\">Welcome To CamControl</span></p></body></html>"))
+        self.label_3.setText(_translate("SetupWindow", "<html><head/><body><p><span style=\" color:#000000;\">Let\'s start with the calibration part</span></p></body></html>"))
         self.imageFrame.setText(_translate("SetupWindow", "Camera not availalable!"))
 
 

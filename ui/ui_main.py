@@ -673,7 +673,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.hand_volume_checkBox)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.btn_recalibrate = QtWidgets.QPushButton(self.page_settings)
-        self.btn_recalibrate.setGeometry(QtCore.QRect(730, 240, 81, 26))
+        self.btn_recalibrate.setGeometry(QtCore.QRect(730, 240, 81, 50))
+        self.btn_recalibrate.setStyleSheet("QPushButton: rgb(76, 90, 255)")
         self.btn_recalibrate.setObjectName("btn_recalibrate")
         self.dwellClickRadioBox = QtWidgets.QRadioButton(self.page_settings)
         self.dwellClickRadioBox.setGeometry(QtCore.QRect(50, 450, 97, 21))
@@ -682,6 +683,12 @@ class Ui_MainWindow(object):
         self.dwellScrollRadioBox = QtWidgets.QRadioButton(self.page_settings)
         self.dwellScrollRadioBox.setGeometry(QtCore.QRect(170, 450, 101, 21))
         self.dwellScrollRadioBox.setObjectName("dwellScrollRadioBox")
+        self.camera_comboBox = QtWidgets.QComboBox(self.page_settings)
+        self.camera_comboBox.setGeometry(QtCore.QRect(420, 450, 151, 22))
+        self.camera_comboBox.setObjectName("camera_comboBox")
+        self.label_8 = QtWidgets.QLabel(self.page_settings)
+        self.label_8.setGeometry(QtCore.QRect(420, 420, 151, 16))
+        self.label_8.setObjectName("label_8")
         self.stackedWidget.addWidget(self.page_settings)
         self.horizontalLayout_4.addWidget(self.stackedWidget)
         self.verticalLayout_6.addWidget(self.frame_content)
@@ -713,7 +720,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -756,6 +763,7 @@ class Ui_MainWindow(object):
         self.btn_recalibrate.setText(_translate("MainWindow", "Recalibrate"))
         self.dwellClickRadioBox.setText(_translate("MainWindow", "Dwell Click"))
         self.dwellScrollRadioBox.setText(_translate("MainWindow", "Dwell Scroll"))
+        self.label_8.setText(_translate("MainWindow", "Choose Camera"))
 
 
 if __name__ == "__main__":

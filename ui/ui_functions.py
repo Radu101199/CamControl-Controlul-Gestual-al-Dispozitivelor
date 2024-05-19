@@ -276,7 +276,7 @@ class UIFunctions(QMainWindow):
         from ui import SetupWindow
         self.close()
         self.setup_window = SetupWindow(self, list_calibration)
-        self.hide()
+        # self.hide()
         # self.setup_window = SetupWindow(self, list_calibration)
 
     @staticmethod
