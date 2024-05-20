@@ -261,7 +261,8 @@ class Ui_MainWindow(object):
         self.btn_toggle_menu.setSizePolicy(sizePolicy)
         self.btn_toggle_menu.setMinimumSize(QtCore.QSize(70, 65))
         self.btn_toggle_menu.setStyleSheet("QPushButton {\n"
-"    background-image: url();\n"
+"    background-image: url(:/24x24/icons/24x24/cil-menu.png);\n"
+"\n"
 "    background-position: center;\n"
 "    background-repeat: no-reperat;\n"
 "    border: none;\n"
@@ -273,6 +274,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {    \n"
 "    background-color: rgb(85, 170, 255);\n"
 "}")
+        self.btn_toggle_menu.setText("")
+        self.btn_toggle_menu.setFlat(True)
         self.btn_toggle_menu.setObjectName("btn_toggle_menu")
         self.verticalLayout_3.addWidget(self.btn_toggle_menu)
         self.horizontalLayout_7.addWidget(self.frame_toggle)
@@ -332,6 +335,10 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {    \n"
 "    background-color: rgb(85, 170, 255);\n"
 "}")
+        self.btn_minimize.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/20x20/icons/20x20/cil-window-minimize.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_minimize.setIcon(icon)
         self.btn_minimize.setObjectName("btn_minimize")
         self.horizontalLayout_9.addWidget(self.btn_minimize)
         self.btn_maximize_restore = QtWidgets.QPushButton(self.frame_btns_right)
@@ -346,6 +353,10 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {    \n"
 "    background-color: rgb(85, 170, 255);\n"
 "}")
+        self.btn_maximize_restore.setText("")
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/20x20/icons/20x20/cil-window-maximize.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_maximize_restore.setIcon(icon1)
         self.btn_maximize_restore.setObjectName("btn_maximize_restore")
         self.horizontalLayout_9.addWidget(self.btn_maximize_restore)
         self.btn_close = QtWidgets.QPushButton(self.frame_btns_right)
@@ -360,6 +371,10 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {    \n"
 "    background-color: rgb(85, 170, 255);\n"
 "}")
+        self.btn_close.setText("")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/20x20/icons/20x20/cil-x.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_close.setIcon(icon2)
         self.btn_close.setObjectName("btn_close")
         self.horizontalLayout_9.addWidget(self.btn_close)
         self.horizontalLayout_8.addWidget(self.frame_btns_right)
@@ -709,6 +724,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.frame_label_bottom)
         self.frame_size_grip = QtWidgets.QFrame(self.frame_grip)
         self.frame_size_grip.setMaximumSize(QtCore.QSize(20, 20))
+        self.frame_size_grip.setStyleSheet("QSizeGrip {\n"
+"    background-image: url(:/16x16/icons/16x16/cil-size-grip.png);\n"
+"    background-position: center;\n"
+"    background-repeat: no-reperat;\n"
+"}")
         self.frame_size_grip.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_size_grip.setFrameShadow(QtWidgets.QFrame.Plain)
         self.frame_size_grip.setObjectName("frame_size_grip")
@@ -720,17 +740,13 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.btn_toggle_menu.setText(_translate("MainWindow", "Toggle"))
         self.label_title_bar_top.setText(_translate("MainWindow", "MainWindow - Base"))
-        self.btn_minimize.setText(_translate("MainWindow", "-"))
-        self.btn_maximize_restore.setText(_translate("MainWindow", "#"))
-        self.btn_close.setText(_translate("MainWindow", "X"))
         self.label_top_info_1.setText(_translate("MainWindow", "TextLabel"))
         self.label_top_info_2.setText(_translate("MainWindow", "TextLabel"))
         self.label.setText(_translate("MainWindow", "HOME"))
@@ -764,6 +780,7 @@ class Ui_MainWindow(object):
         self.dwellClickRadioBox.setText(_translate("MainWindow", "Dwell Click"))
         self.dwellScrollRadioBox.setText(_translate("MainWindow", "Dwell Scroll"))
         self.label_8.setText(_translate("MainWindow", "Choose Camera"))
+from ui import files_rc
 
 
 if __name__ == "__main__":

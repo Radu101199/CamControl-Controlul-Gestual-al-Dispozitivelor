@@ -340,7 +340,8 @@ QSlider::handle:vertical:pressed {
                </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
-	background-image: url();
+	background-image: url(:/24x24/icons/24x24/cil-menu.png);
+
 	background-position: center;
 	background-repeat: no-reperat;
 	border: none;
@@ -354,7 +355,10 @@ QPushButton:pressed {
 }</string>
                </property>
                <property name="text">
-                <string>Toggle</string>
+                <string/>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -509,7 +513,11 @@ QPushButton:pressed {
 }</string>
                      </property>
                      <property name="text">
-                      <string>-</string>
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="files.qrc">
+                       <normaloff>:/20x20/icons/20x20/cil-window-minimize.png</normaloff>:/20x20/icons/20x20/cil-window-minimize.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -534,7 +542,11 @@ QPushButton:pressed {
 }</string>
                      </property>
                      <property name="text">
-                      <string>#</string>
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="files.qrc">
+                       <normaloff>:/20x20/icons/20x20/cil-window-maximize.png</normaloff>:/20x20/icons/20x20/cil-window-maximize.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -559,7 +571,11 @@ QPushButton:pressed {
 }</string>
                      </property>
                      <property name="text">
-                      <string>X</string>
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="files.qrc">
+                       <normaloff>:/20x20/icons/20x20/cil-x.png</normaloff>:/20x20/icons/20x20/cil-x.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -844,7 +860,7 @@ QPushButton:pressed {
                    <string notr="true">background: transparent;</string>
                   </property>
                   <property name="currentIndex">
-                   <number>3</number>
+                   <number>0</number>
                   </property>
                   <widget class="QWidget" name="page_home">
                    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1561,6 +1577,13 @@ QPushButton:pressed {
                     <height>20</height>
                    </size>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">QSizeGrip {
+	background-image: url(:/16x16/icons/16x16/cil-size-grip.png);
+	background-position: center;
+	background-repeat: no-reperat;
+}</string>
+                  </property>
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
                   </property>
@@ -1584,6 +1607,8 @@ QPushButton:pressed {
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="files.qrc"/>
+ </resources>
  <connections/>
 </ui>

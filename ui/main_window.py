@@ -35,12 +35,12 @@ class MainWindow(QMainWindow):
 
         # Adauga butoanele
         self.ui.stackedWidget.setMinimumWidth(20)
-        UIFunctions.addNewMenu(self, "Home", "btn_home", "", True)
-        UIFunctions.addNewMenu(self, "Face", "btn_face", "", True)
-        UIFunctions.addNewMenu(self, "Hands", "btn_hands", "", True)
-        UIFunctions.addNewMenu(self, "Keyboard", "btn_keyboard", "", False)
-        UIFunctions.addNewMenu(self, "Voice", "btn_voice", "", False)
-        UIFunctions.addNewMenu(self, "Settings", "btn_settings", "", False)
+        UIFunctions.addNewMenu(self, "Home", "btn_home", "url(:/20x20/icons/20x20/cil-home.png)", True)
+        UIFunctions.addNewMenu(self, "Face", "btn_face", "url(:/24x24/icons/face.png)", True)
+        UIFunctions.addNewMenu(self, "Hands", "btn_hands", "url(:/24x24/icons/palm.png)", True)
+        UIFunctions.addNewMenu(self, "Keyboard", "btn_keyboard", "url(:/24x24/icons/keyboard.png)", False)
+        UIFunctions.addNewMenu(self, "Voice", "btn_voice", "url(:/24x24/icons/voice.png)", False)
+        UIFunctions.addNewMenu(self, "Settings", "btn_settings", "url(:/24x24/icons/settings.png)", False)
 
 
         UIFunctions.selectStandardMenu(self, "btn_home")
