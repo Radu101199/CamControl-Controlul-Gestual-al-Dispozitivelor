@@ -75,9 +75,9 @@ class FaceModule:
         self.head_returned_time = None
 
         thresholds = load_dictionary_from_settings()
-        self.threshold_left_eye = thresholds.get('face_click_left') + 0.05
-        self.threshold_right_eye = thresholds.get('face_click_right') + 0.05
-        self.threshold_smile = thresholds.get('face_smile') + 0.05
+        self.threshold_left_eye = thresholds.get('face_click_left') + 0.1
+        self.threshold_right_eye = thresholds.get('face_click_right') + 0.1
+        self.threshold_smile = thresholds.get('face_smile')
 
 
     def detect(self, frame):
@@ -103,7 +103,7 @@ class FaceModule:
                 if self.smileCenter:
                     self.detect_smile(face_landmarks)
 
-                if head_tilt(face_landmarks, self.frame_markers):
+                if head_tilt(face_landmarks, self.frame_markers, False):
                     self.click_functionality(face_landmarks)
                 if self.dwellScroll:
                     self.initiate_Scroll(face_landmarks)
@@ -162,7 +162,7 @@ class FaceModule:
         ratioBar = np.interp(ratioBar, [0.41, 0.52], [400, 150])
         cv2.rectangle(self.frame_markers, (50, 150), (85, 400), (0, 255, 0), 3)
         cv2.rectangle(self.frame_markers, (50, int(ratioBar)), (85, 400), (0, 255, 0), cv2.FILLED)
-        print(ratio, self.threshold_smile)
+
         if ratio > self.threshold_smile:
             # Incepe timerul daca zembetul este detectat
             if self.smile_start_time is None:
@@ -377,6 +377,7 @@ class FaceModule:
                     + calculate_distance(face_landmarks.landmark[385], face_landmarks.landmark[380])
                     + calculate_distance(face_landmarks.landmark[387], face_landmarks.landmark[373]))
                     /  calculate_distance(face_landmarks.landmark[362], face_landmarks.landmark[263]))
+        # print(ear_opt_left_eye, self.threshold_left_eye)
         if ear_opt_left_eye < self.threshold_left_eye:
             self.nowLeftClick = 1
         else:
@@ -420,12 +421,12 @@ class FaceModule:
         dy = face_landmarks.landmark[195].y - self.y/1080
         dy = dy * 1080
         pyautogui.scroll(-dy/50)
-
-        if self.head_returned(current_distance):
+        print(self.head_returned(current_distance) , head_tilt(face_landmarks, self.frame_markers, True))
+        if self.head_returned(current_distance) or head_tilt(face_landmarks, self.frame_markers, True):
             self.timer_dwell.start()
             self.nowScroll = 0
 
-    def head_returned(self, current_distance, tolerance=0.02, return_duration=3):
+    def head_returned(self, current_distance, tolerance=0.02, return_duration=5):
         # Define the lower and upper bounds of the interval
         lower_bound = self.initial_distance - tolerance
         upper_bound = self.initial_distance + tolerance

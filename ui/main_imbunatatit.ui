@@ -448,6 +448,11 @@ QPushButton:pressed {
                    </property>
                    <item>
                     <widget class="QLabel" name="label_title_bar_top">
+                     <property name="styleSheet">
+                      <string notr="true">QLabel{
+	color: gray;
+}</string>
+                     </property>
                      <property name="text">
                       <string>MainWindow - Base</string>
                      </property>
@@ -860,7 +865,7 @@ QPushButton:pressed {
                    <string notr="true">background: transparent;</string>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>3</number>
                   </property>
                   <widget class="QWidget" name="page_home">
                    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -870,6 +875,10 @@ QPushButton:pressed {
                        <font>
                         <pointsize>40</pointsize>
                        </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QLabel{ color : gray;
+}</string>
                       </property>
                       <property name="text">
                        <string>HOME</string>
@@ -886,6 +895,10 @@ QPushButton:pressed {
                         <pointsize>35</pointsize>
                        </font>
                       </property>
+                      <property name="styleSheet">
+                       <string notr="true">QLabel{ color : gray;
+}</string>
+                      </property>
                       <property name="text">
                        <string>CamControl</string>
                       </property>
@@ -900,6 +913,10 @@ QPushButton:pressed {
                        <font>
                         <pointsize>14</pointsize>
                        </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QLabel{ color : gray;
+}</string>
                       </property>
                       <property name="text">
                        <string>Paun Raducu</string>
@@ -1096,6 +1113,9 @@ QPushButton:pressed {
                     </property>
                    </widget>
                    <widget class="QSlider" name="filterSlider_Y_Face">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>90</x>
@@ -1118,6 +1138,9 @@ QPushButton:pressed {
                     </property>
                    </widget>
                    <widget class="QLabel" name="label_15">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>20</x>
@@ -1131,6 +1154,9 @@ QPushButton:pressed {
                     </property>
                    </widget>
                    <widget class="QLabel" name="label_16">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>20</x>
@@ -1144,6 +1170,9 @@ QPushButton:pressed {
                     </property>
                    </widget>
                    <widget class="QSlider" name="filterSlider_X_Face">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>90</x>
@@ -1166,6 +1195,9 @@ QPushButton:pressed {
                     </property>
                    </widget>
                    <widget class="QSlider" name="filterSlider_Face">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>90</x>
@@ -1188,6 +1220,9 @@ QPushButton:pressed {
                     </property>
                    </widget>
                    <widget class="QLabel" name="label_17">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>20</x>
@@ -1252,6 +1287,9 @@ QPushButton:pressed {
                     </property>
                    </widget>
                    <widget class="QCheckBox" name="dwellClickCheckBox">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>110</x>

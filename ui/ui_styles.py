@@ -7,10 +7,11 @@ class Style():
         background-position: left center;
         background-repeat: no-repeat;
         border: none;
-        border-left: 28px solid rgb(27, 29, 35);
+        border-left: 25px solid rgb(27, 29, 35);
         background-color: rgb(27, 29, 35);
         text-align: left;
         padding-left: 45px;
+        color: gray;
     }
     QPushButton[Active=true] {
         background-image: ICON_REPLACE;

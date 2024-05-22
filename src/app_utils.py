@@ -35,7 +35,7 @@ def calculate_distance(landmark1, landmark2):
     distance = np.linalg.norm(v)
     return distance
 
-def head_tilt(face_landmarks, frame_markers):
+def head_tilt(face_landmarks, frame_markers, scroll: False):
     face_2d = []
     face_3d = []
     for idx, lm in enumerate(face_landmarks.landmark):
@@ -77,6 +77,11 @@ def head_tilt(face_landmarks, frame_markers):
     cv2.putText(frame_markers, "x: " + str(np.round(x, 2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     cv2.putText(frame_markers, "y: " + str(np.round(y, 2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     cv2.putText(frame_markers, "z: " + str(np.round(z, 2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    if scroll is True:
+        print(y)
+        if y < -2 or y > 2:
+            return True
+        return False
     if x < 4 and x > -2 and y > -2.5 and y < 2.5:
         return True
     return False

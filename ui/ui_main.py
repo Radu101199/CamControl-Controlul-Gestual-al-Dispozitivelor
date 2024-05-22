@@ -306,6 +306,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.setSpacing(0)
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.label_title_bar_top = QtWidgets.QLabel(self.frame_label_top_btns)
+        self.label_title_bar_top.setStyleSheet("QLabel{\n"
+"    color: gray;\n"
+"}")
         self.label_title_bar_top.setObjectName("label_title_bar_top")
         self.horizontalLayout_10.addWidget(self.label_title_bar_top)
         self.horizontalLayout_8.addWidget(self.frame_label_top_btns)
@@ -488,6 +491,8 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(40)
         self.label.setFont(font)
+        self.label.setStyleSheet("QLabel{ color : gray;\n"
+"}")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.verticalLayout_2.addWidget(self.label)
@@ -495,6 +500,8 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(35)
         self.label_2.setFont(font)
+        self.label_2.setStyleSheet("QLabel{ color : gray;\n"
+"}")
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.verticalLayout_2.addWidget(self.label_2)
@@ -502,6 +509,8 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_3.setFont(font)
+        self.label_3.setStyleSheet("QLabel{ color : gray;\n"
+"}")
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.verticalLayout_2.addWidget(self.label_3)
@@ -580,6 +589,7 @@ class Ui_MainWindow(object):
         self.speedSlider_Y.setOrientation(QtCore.Qt.Horizontal)
         self.speedSlider_Y.setObjectName("speedSlider_Y")
         self.filterSlider_Y_Face = QtWidgets.QSlider(self.page_settings)
+        self.filterSlider_Y_Face.setEnabled(False)
         self.filterSlider_Y_Face.setGeometry(QtCore.QRect(90, 350, 160, 16))
         self.filterSlider_Y_Face.setMaximum(10)
         self.filterSlider_Y_Face.setProperty("value", 6)
@@ -587,12 +597,15 @@ class Ui_MainWindow(object):
         self.filterSlider_Y_Face.setOrientation(QtCore.Qt.Horizontal)
         self.filterSlider_Y_Face.setObjectName("filterSlider_Y_Face")
         self.label_15 = QtWidgets.QLabel(self.page_settings)
+        self.label_15.setEnabled(False)
         self.label_15.setGeometry(QtCore.QRect(20, 350, 60, 16))
         self.label_15.setObjectName("label_15")
         self.label_16 = QtWidgets.QLabel(self.page_settings)
+        self.label_16.setEnabled(False)
         self.label_16.setGeometry(QtCore.QRect(20, 306, 60, 20))
         self.label_16.setObjectName("label_16")
         self.filterSlider_X_Face = QtWidgets.QSlider(self.page_settings)
+        self.filterSlider_X_Face.setEnabled(False)
         self.filterSlider_X_Face.setGeometry(QtCore.QRect(90, 310, 160, 16))
         self.filterSlider_X_Face.setMaximum(10)
         self.filterSlider_X_Face.setProperty("value", 6)
@@ -600,6 +613,7 @@ class Ui_MainWindow(object):
         self.filterSlider_X_Face.setOrientation(QtCore.Qt.Horizontal)
         self.filterSlider_X_Face.setObjectName("filterSlider_X_Face")
         self.filterSlider_Face = QtWidgets.QSlider(self.page_settings)
+        self.filterSlider_Face.setEnabled(False)
         self.filterSlider_Face.setGeometry(QtCore.QRect(90, 390, 160, 16))
         self.filterSlider_Face.setMaximum(10)
         self.filterSlider_Face.setProperty("value", 0)
@@ -607,6 +621,7 @@ class Ui_MainWindow(object):
         self.filterSlider_Face.setOrientation(QtCore.Qt.Horizontal)
         self.filterSlider_Face.setObjectName("filterSlider_Face")
         self.label_17 = QtWidgets.QLabel(self.page_settings)
+        self.label_17.setEnabled(False)
         self.label_17.setGeometry(QtCore.QRect(20, 390, 60, 16))
         self.label_17.setObjectName("label_17")
         self.btn_save = QtWidgets.QPushButton(self.page_settings)
@@ -624,6 +639,7 @@ class Ui_MainWindow(object):
         self.speedHandsSlider.setOrientation(QtCore.Qt.Horizontal)
         self.speedHandsSlider.setObjectName("speedHandsSlider")
         self.dwellClickCheckBox = QtWidgets.QCheckBox(self.page_settings)
+        self.dwellClickCheckBox.setEnabled(False)
         self.dwellClickCheckBox.setGeometry(QtCore.QRect(110, 550, 111, 21))
         self.dwellClickCheckBox.setObjectName("dwellClickCheckBox")
         self.smileCenterCheckBox = QtWidgets.QCheckBox(self.page_settings)
@@ -740,7 +756,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

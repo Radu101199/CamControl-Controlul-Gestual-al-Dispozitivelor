@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle('CamControl')
         UIFunctions.labelTitle(self, 'CamControl')
-        UIFunctions.labelDescription(self, 'Set text')
+        UIFunctions.labelDescription(self, '')
 
         startSize = QSize(1000, 720)
         self.resize(startSize)
@@ -43,7 +43,6 @@ class MainWindow(QMainWindow):
         UIFunctions.addNewMenu(self, "Settings", "btn_settings", "url(:/24x24/icons/settings.png)", False)
 
 
-        UIFunctions.selectStandardMenu(self, "btn_home")
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_home)
         def moveWindow(event):
             # IF MAXIMIZED CHANGE TO NORMAL
@@ -75,6 +74,7 @@ class MainWindow(QMainWindow):
         self.camera = None
         self.camera_id = 0
         UIFunctions.first_time(self)
+        self.ui.dwellClickCheckBox.hide()
 
 
 

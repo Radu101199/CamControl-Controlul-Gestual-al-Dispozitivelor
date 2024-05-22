@@ -85,6 +85,7 @@ class UIFunctions(QMainWindow):
     def addNewMenu(self, name, objName, icon, isTopMenu):
         font = QFont()
         font.setFamily(u"Segoe UI")
+
         button = QPushButton(str(count),self)
         button.setObjectName(objName)
         sizePolicy3 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -94,8 +95,10 @@ class UIFunctions(QMainWindow):
         button.setSizePolicy(sizePolicy3)
         button.setMinimumSize(QSize(0, 70))
         button.setLayoutDirection(Qt.LeftToRight)
+
         button.setFont(font)
         button.setStyleSheet(Style.style_bt_standard.replace('ICON_REPLACE', icon))
+        print(Style.style_bt_standard.replace('ICON_REPLACE', icon))
         button.setText(name)
         button.setToolTip(name)
         button.clicked.connect(self.Button)
