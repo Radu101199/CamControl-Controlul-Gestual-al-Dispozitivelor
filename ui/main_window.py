@@ -75,6 +75,20 @@ class MainWindow(QMainWindow):
         self.camera_id = 0
         UIFunctions.first_time(self)
         self.ui.dwellClickCheckBox.hide()
+        self.ui.filterSlider_Hands.hide()
+        self.ui.filterSlider_X_Hands.hide()
+        self.ui.filterSlider_Y_Hands.hide()
+        self.ui.filterSlider_Face.hide()
+        self.ui.filterSlider_X_Face.hide()
+        self.ui.filterSlider_Y_Face.hide()
+        self.ui.label_15.hide()
+        self.ui.label_16.hide()
+        self.ui.label_17.hide()
+        self.ui.label_18.hide()
+        self.ui.label_19.hide()
+        self.ui.label_20.hide()
+
+
 
 
 

@@ -226,6 +226,14 @@ class Ui_MainWindow(object):
 "    background-color: rgb(65, 130, 195);\n"
 "}\n"
 "\n"
+"QLabel{ color : gray;\n"
+"}\n"
+"\n"
+"QCheckBox{ color : gray;\n"
+"}\n"
+"\n"
+"QRadioButton{ color : gray;\n"
+"}\n"
 "")
         self.frame_main.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_main.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -298,6 +306,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_8.setSpacing(0)
         self.horizontalLayout_8.setObjectName("horizontalLayout_8")
         self.frame_label_top_btns = QtWidgets.QFrame(self.frame_top_btns)
+        self.frame_label_top_btns.setMinimumSize(QtCore.QSize(794, 42))
         self.frame_label_top_btns.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_label_top_btns.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_label_top_btns.setObjectName("frame_label_top_btns")
@@ -394,10 +403,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.label_top_info_1 = QtWidgets.QLabel(self.frame_info)
         self.label_top_info_1.setStyleSheet("color: rgb(98, 103, 111); ")
+        self.label_top_info_1.setText("")
         self.label_top_info_1.setObjectName("label_top_info_1")
         self.horizontalLayout_11.addWidget(self.label_top_info_1)
         self.label_top_info_2 = QtWidgets.QLabel(self.frame_info)
         self.label_top_info_2.setStyleSheet("color: rgb(98, 103, 111); ")
+        self.label_top_info_2.setText("")
         self.label_top_info_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_top_info_2.setObjectName("label_top_info_2")
         self.horizontalLayout_11.addWidget(self.label_top_info_2)
@@ -560,12 +571,18 @@ class Ui_MainWindow(object):
         self.page_settings.setObjectName("page_settings")
         self.label_4 = QtWidgets.QLabel(self.page_settings)
         self.label_4.setGeometry(QtCore.QRect(140, 50, 60, 16))
+        self.label_4.setStyleSheet("QLabel{ color : gray;\n"
+"}")
         self.label_4.setObjectName("label_4")
         self.label_5 = QtWidgets.QLabel(self.page_settings)
         self.label_5.setGeometry(QtCore.QRect(490, 50, 60, 16))
+        self.label_5.setStyleSheet("QLabel{ color : gray;\n"
+"}")
         self.label_5.setObjectName("label_5")
         self.moveFaceCursorCheckBox = QtWidgets.QCheckBox(self.page_settings)
         self.moveFaceCursorCheckBox.setGeometry(QtCore.QRect(90, 110, 111, 21))
+        self.moveFaceCursorCheckBox.setStyleSheet("QCheckBox{ color : gray;\n"
+"}")
         self.moveFaceCursorCheckBox.setObjectName("moveFaceCursorCheckBox")
         self.moveHandsCursorCheckBox = QtWidgets.QCheckBox(self.page_settings)
         self.moveHandsCursorCheckBox.setGeometry(QtCore.QRect(450, 110, 111, 21))
@@ -578,9 +595,13 @@ class Ui_MainWindow(object):
         self.speedSlider_X.setObjectName("speedSlider_X")
         self.label_6 = QtWidgets.QLabel(self.page_settings)
         self.label_6.setGeometry(QtCore.QRect(20, 220, 60, 16))
+        self.label_6.setStyleSheet("QLabel{ color : gray;\n"
+"}")
         self.label_6.setObjectName("label_6")
         self.label_7 = QtWidgets.QLabel(self.page_settings)
         self.label_7.setGeometry(QtCore.QRect(20, 260, 60, 16))
+        self.label_7.setStyleSheet("QLabel{ color : gray;\n"
+"}")
         self.label_7.setObjectName("label_7")
         self.speedSlider_Y = QtWidgets.QSlider(self.page_settings)
         self.speedSlider_Y.setGeometry(QtCore.QRect(90, 260, 160, 16))
@@ -626,9 +647,22 @@ class Ui_MainWindow(object):
         self.label_17.setObjectName("label_17")
         self.btn_save = QtWidgets.QPushButton(self.page_settings)
         self.btn_save.setGeometry(QtCore.QRect(690, 510, 81, 26))
+        self.btn_save.setStyleSheet("QPushButton{ background-color: rgb(27, 29, 35);\n"
+"                        color: gray;\n"
+"}\n"
+"QPushButton:hover {\n"
+"        background-color: rgb(33, 37, 43);\n"
+"        \n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(85, 170, 255);\n"
+"        \n"
+"    }")
         self.btn_save.setObjectName("btn_save")
         self.label_28 = QtWidgets.QLabel(self.page_settings)
         self.label_28.setGeometry(QtCore.QRect(430, 220, 60, 16))
+        self.label_28.setStyleSheet("QLabel{ color : gray;\n"
+"}")
         self.label_28.setObjectName("label_28")
         self.speedHandsSlider = QtWidgets.QSlider(self.page_settings)
         self.speedHandsSlider.setGeometry(QtCore.QRect(500, 220, 160, 16))
@@ -704,8 +738,18 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.hand_volume_checkBox)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.btn_recalibrate = QtWidgets.QPushButton(self.page_settings)
-        self.btn_recalibrate.setGeometry(QtCore.QRect(730, 240, 81, 50))
-        self.btn_recalibrate.setStyleSheet("QPushButton: rgb(76, 90, 255)")
+        self.btn_recalibrate.setGeometry(QtCore.QRect(730, 250, 81, 31))
+        self.btn_recalibrate.setStyleSheet("QPushButton{ background-color: rgb(27, 29, 35);\n"
+"                        color: gray;\n"
+"}\n"
+"QPushButton:hover {\n"
+"        background-color: rgb(33, 37, 43);\n"
+"        \n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(85, 170, 255);\n"
+"        \n"
+"    }")
         self.btn_recalibrate.setObjectName("btn_recalibrate")
         self.dwellClickRadioBox = QtWidgets.QRadioButton(self.page_settings)
         self.dwellClickRadioBox.setGeometry(QtCore.QRect(50, 450, 97, 21))
@@ -716,6 +760,7 @@ class Ui_MainWindow(object):
         self.dwellScrollRadioBox.setObjectName("dwellScrollRadioBox")
         self.camera_comboBox = QtWidgets.QComboBox(self.page_settings)
         self.camera_comboBox.setGeometry(QtCore.QRect(420, 450, 151, 22))
+        self.camera_comboBox.setStyleSheet("color: gray")
         self.camera_comboBox.setObjectName("camera_comboBox")
         self.label_8 = QtWidgets.QLabel(self.page_settings)
         self.label_8.setGeometry(QtCore.QRect(420, 420, 151, 16))
@@ -763,8 +808,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_title_bar_top.setText(_translate("MainWindow", "MainWindow - Base"))
-        self.label_top_info_1.setText(_translate("MainWindow", "TextLabel"))
-        self.label_top_info_2.setText(_translate("MainWindow", "TextLabel"))
         self.label.setText(_translate("MainWindow", "HOME"))
         self.label_2.setText(_translate("MainWindow", "CamControl"))
         self.label_3.setText(_translate("MainWindow", "Paun Raducu"))

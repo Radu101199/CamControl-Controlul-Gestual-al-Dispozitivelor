@@ -97,9 +97,10 @@ class SetupModule:
             self.index = 0
         if self.calibration_timer is None:
             self.calibration_timer = time.time()
-        if self.check_part(gesture):
+        if self.check_part(gesture) and self.check_bounds(gesture):
             if self.index < 151:
                 threshold = self.operations(gesture)
+                print(threshold)
                 self.calibration[self.index] = threshold
                 self.index = self.index + 1
             if (time.time() - self.calibration_timer) > 10:
@@ -119,11 +120,52 @@ class SetupModule:
     def check_part(self, gesture):
         if 'face' in gesture:
             return (self.bounding_box[0][0] > 660 and self.bounding_box[0][1] > 140 and self.bounding_box[1][0] < 1260 and
-                    self.bounding_box[1][1] < 980 and head_tilt(self.face_landmarks, self.frame_markers))
+                    self.bounding_box[1][1] < 980 and head_tilt(self.face_landmarks, self.frame_markers, False))
         else:
             return (self.bounding_box[0][0] > 660 and self.bounding_box[0][1] > 140 and self.bounding_box[1][
                 0] < 1260 and
                     self.bounding_box[1][1] < 980 and hand_position(self.hand_landmarks, self.label))
+
+    def check_bounds(self, gesture):
+        if gesture == 'face_click_left':
+
+            if self.operations(gesture) > 1.25:
+                cv2.putText(self.frame_markers, "Nu deschide ochiul stang  " + str(
+                    np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                            (700, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                return False
+
+        elif gesture == 'face_click_right':
+            if self.operations(gesture) > 1.25:
+                cv2.putText(self.frame_markers, "Nu deschide ochiul drept " + str(
+                    np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                            (700, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                return False
+        elif gesture == 'face_smile':
+            if self.operations(gesture) < 0.35:
+                cv2.putText(self.frame_markers, "Incepe sa zambesti " + str(
+                    np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                            (700, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                return False
+        elif gesture == 'hand_click':
+            if self.operations(gesture) > 1.5:
+                cv2.putText(self.frame_markers, "Apropie punctele mai mult " + str(
+                    np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                            (700, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                return False
+        elif gesture == 'hand_recenter':
+            if self.operations(gesture) > 0.15:
+                cv2.putText(self.frame_markers, "Apropiete mana mai mult de gest " + str(
+                    np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                            (700, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                return False
+        else: # < 5
+            if self.operations(gesture) < 5:
+                cv2.putText(self.frame_markers, "Mareste distanta dintre degete" + str(
+                    np.round(3.00 - (time.time() - self.delay_calibration), 2)),
+                            (700, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                return False
+        return True
 
     def operations(self, gesture):
         if gesture == 'face_click_left':
@@ -144,7 +186,6 @@ class SetupModule:
                 jaw_width = abs(self.face_landmarks.landmark[132].x - self.face_landmarks.landmark[361].x)
                 lips_width_normalized = lips_width / face_width
                 jaw_width_normalized = jaw_width / face_width
-                print(lips_width_normalized / jaw_width_normalized)
                 return lips_width_normalized / jaw_width_normalized
 
         elif gesture == 'hand_click':
