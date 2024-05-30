@@ -738,7 +738,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.hand_volume_checkBox)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.btn_recalibrate = QtWidgets.QPushButton(self.page_settings)
-        self.btn_recalibrate.setGeometry(QtCore.QRect(730, 250, 81, 31))
+        self.btn_recalibrate.setGeometry(QtCore.QRect(700, 250, 81, 31))
         self.btn_recalibrate.setStyleSheet("QPushButton{ background-color: rgb(27, 29, 35);\n"
 "                        color: gray;\n"
 "}\n"
@@ -765,6 +765,20 @@ class Ui_MainWindow(object):
         self.label_8 = QtWidgets.QLabel(self.page_settings)
         self.label_8.setGeometry(QtCore.QRect(420, 420, 151, 16))
         self.label_8.setObjectName("label_8")
+        self.btn_pdf = QtWidgets.QPushButton(self.page_settings)
+        self.btn_pdf.setGeometry(QtCore.QRect(280, 40, 111, 26))
+        self.btn_pdf.setStyleSheet("QPushButton{ background-color: rgb(27, 29, 35);\n"
+"                        color: gray;\n"
+"}\n"
+"QPushButton:hover {\n"
+"        background-color: rgb(33, 37, 43);\n"
+"        \n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(85, 170, 255);\n"
+"        \n"
+"    }")
+        self.btn_pdf.setObjectName("btn_pdf")
         self.stackedWidget.addWidget(self.page_settings)
         self.horizontalLayout_4.addWidget(self.stackedWidget)
         self.verticalLayout_6.addWidget(self.frame_content)
@@ -839,6 +853,7 @@ class Ui_MainWindow(object):
         self.dwellClickRadioBox.setText(_translate("MainWindow", "Dwell Click"))
         self.dwellScrollRadioBox.setText(_translate("MainWindow", "Dwell Scroll"))
         self.label_8.setText(_translate("MainWindow", "Choose Camera"))
+        self.btn_pdf.setText(_translate("MainWindow", "Gestures PDF"))
 from ui import files_rc
 
 

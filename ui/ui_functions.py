@@ -5,6 +5,7 @@ from PyQt5.QtGui import QFont, QColor
 from .ui_styles import Style
 import subprocess
 # from .setup_window import *
+import platform
 
 count = 1
 ## ==> GLOBALS
@@ -283,9 +284,28 @@ class UIFunctions(QMainWindow):
         # self.setup_window = SetupWindow(self, list_calibration)
 
     @staticmethod
+    def open_pdf():
+        pdf_file_path = 'ui/clasaa5aTicEditat.pdf'
+        system = platform.system()
+        if system == 'Linux':
+            command = ['xdg-open', pdf_file_path]
+        elif system == 'Windows':
+            command = ['start', pdf_file_path]
+        elif system == 'Darwin':  # macOS
+            command = ['open', pdf_file_path]
+        else:
+            raise Exception(f"Unsupported operating system: {system}")
+        subprocess.run(command)
+
+    @staticmethod
     def launch_keyboard():
         applescript_code = '''
         tell application "System Settings"
+            if running then
+                quit
+                run
+                delay 1
+            end if
             if not running then
                 run
                 delay 1

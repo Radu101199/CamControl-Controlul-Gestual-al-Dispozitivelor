@@ -38,8 +38,9 @@ class MainWindow(QMainWindow):
         UIFunctions.addNewMenu(self, "Home", "btn_home", "url(:/20x20/icons/20x20/cil-home.png)", True)
         UIFunctions.addNewMenu(self, "Face", "btn_face", "url(:/24x24/icons/face.png)", True)
         UIFunctions.addNewMenu(self, "Hands", "btn_hands", "url(:/24x24/icons/palm.png)", True)
-        UIFunctions.addNewMenu(self, "Keyboard", "btn_keyboard", "url(:/24x24/icons/keyboard.png)", False)
-        UIFunctions.addNewMenu(self, "Voice", "btn_voice", "url(:/24x24/icons/voice.png)", False)
+        if platform.system() == 'Darwin':
+            UIFunctions.addNewMenu(self, "Keyboard", "btn_keyboard", "url(:/24x24/icons/keyboard.png)", False)
+            UIFunctions.addNewMenu(self, "Voice", "btn_voice", "url(:/24x24/icons/voice.png)", False)
         UIFunctions.addNewMenu(self, "Settings", "btn_settings", "url(:/24x24/icons/settings.png)", False)
 
 
@@ -69,6 +70,7 @@ class MainWindow(QMainWindow):
         # UIFunctions.clickBtnCon(self, 'btn_voice')
         UIFunctions.clickBtnCon(self, 'btn_save')
         UIFunctions.clickBtnCon(self, 'btn_recalibrate')
+        UIFunctions.clickBtnCon(self, 'btn_pdf')
 
 
         self.camera = None
@@ -127,10 +129,10 @@ class MainWindow(QMainWindow):
             if self.camera is not None:
                 if self.camera.is_opened():
                     self.camera.close()
-            self.available_cameras  = self.get_available_cameras()
+            self.available_cameras = self.get_available_cameras()
             self.ui.camera_comboBox.addItems([f'Camera {i}' for i in self.available_cameras])
             self.ui.camera_comboBox.currentIndexChanged.connect(self.change_camera)
-            print(self.available_cameras)
+            # print(self.available_cameras)
 
         # SAVE BTN
         if btn_widget.objectName() == "btn_save":
@@ -147,11 +149,12 @@ class MainWindow(QMainWindow):
             self.launch_feature('btn_voice')
 
         if btn_widget.objectName() == "btn_recalibrate":
-
             UIFunctions.launch_calibration(self)
 
+        if btn_widget.objectName() == "btn_pdf":
+            UIFunctions.open_pdf()
+
     def get_available_cameras(self):
-        # List the first 10 camera indices
         available_cameras = []
         for i in range(10):
             cap = cv2.VideoCapture(i)

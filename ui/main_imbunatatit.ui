@@ -1541,7 +1541,7 @@ QPushButton:hover {
                    <widget class="QPushButton" name="btn_recalibrate">
                     <property name="geometry">
                      <rect>
-                      <x>730</x>
+                      <x>700</x>
                       <y>250</y>
                       <width>81</width>
                       <height>31</height>
@@ -1617,6 +1617,32 @@ QPushButton:hover {
                     </property>
                     <property name="text">
                      <string>Choose Camera</string>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="btn_pdf">
+                    <property name="geometry">
+                     <rect>
+                      <x>280</x>
+                      <y>40</y>
+                      <width>111</width>
+                      <height>26</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton{ background-color: rgb(27, 29, 35);
+						color: gray;
+}
+QPushButton:hover {
+        background-color: rgb(33, 37, 43);
+        
+    }
+    QPushButton:pressed {
+        background-color: rgb(85, 170, 255);
+        
+    }</string>
+                    </property>
+                    <property name="text">
+                     <string>Gestures PDF</string>
                     </property>
                    </widget>
                   </widget>

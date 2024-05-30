@@ -35,7 +35,7 @@ class SetupModule:
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         self.frame_markers = frame
         self.frame_markers = cv2.rectangle(self.frame_markers, (660, 140), (1260, 980), (0, 255, 0), 3)
-
+        self.height, self.width, _ = frame.shape
         # procesarea imaginii cu landmark urile fetei
         results_face = self.face_mesh.process(rgb_frame)
         results_hands = self.hands.process(rgb_frame)
@@ -45,9 +45,10 @@ class SetupModule:
             list_face = [s for s in self.list_calibration if 'face' in s]
             if results_face.multi_face_landmarks:
                 for self.face_landmarks in results_face.multi_face_landmarks:
-                    mpDraw.draw_landmarks(self.frame_markers, self.face_landmarks, face_mesh.FACEMESH_TESSELATION)
+                    # mpDraw.draw_landmarks(self.frame_markers, self.face_landmarks, face_mesh.FACEMESH_TESSELATION)
                     self.bounding_box = calculate_bounding_box(rgb_frame, self.face_landmarks)
                     part = list_face[0]
+                    self.draw_landmarks(part)
                     if self.continue_calibration is True:
                         if self.delay_calibration is None:
                             self.delay_calibration = time.time()
@@ -66,11 +67,13 @@ class SetupModule:
             list_hand = [s for s in self.list_calibration if 'hand' in s]
             if results_hands.multi_hand_landmarks:
                 for self.hand_landmarks in results_hands.multi_hand_landmarks:
-                    mpDraw.draw_landmarks(
-                        frame, self.hand_landmarks, mp_hands.HAND_CONNECTIONS
-                    )
+                    # mpDraw.draw_landmarks(
+                    #     frame, self.hand_landmarks, mp_hands.HAND_CONNECTIONS
+                    # )
+
                     self.bounding_box = calculate_bounding_box(rgb_frame, self.hand_landmarks)
                     part = list_hand[0]
+                    self.draw_landmarks(part)
                     self.label = results_hands.multi_handedness[0].classification[0].label
                     if self.continue_calibration is True:
                         if self.delay_calibration is None:
@@ -128,7 +131,6 @@ class SetupModule:
 
     def check_bounds(self, gesture):
         if gesture == 'face_click_left':
-
             if self.operations(gesture) > 1.25:
                 cv2.putText(self.frame_markers, "Nu deschide ochiul stang  " + str(
                     np.round(3.00 - (time.time() - self.delay_calibration), 2)),
@@ -233,3 +235,44 @@ class SetupModule:
                               ", calibrarea v-a incepe in  " +
                               str(np.round(3.00 - (time.time() - self.delay_calibration), 2)),
                               (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255), 2)
+
+    def draw_landmarks(self, gesture):
+        if gesture == 'face_click_left':
+
+            for idx, landmark in enumerate(self.face_landmarks.landmark):
+                if idx in [159, 145, 33, 133]:  # alege indicii pe care vrei sa ii desenezi
+
+                    cx, cy = int(landmark.x * self.width), int(landmark.y * self.height)
+                    cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
+
+        elif gesture == 'face_click_right':
+            for idx, landmark in enumerate(self.face_landmarks.landmark):
+                if idx in [386, 374, 362, 263]:  # alege indicii pe care vrei sa ii desenezi
+                    cx, cy = int(landmark.x * self.width), int(landmark.y * self.height)
+                    cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
+
+        elif gesture == 'face_smile':
+            for idx, landmark in enumerate(self.face_landmarks.landmark):
+                if idx in [61, 291]:  # alege indicii pe care vrei sa ii desenezi
+
+                    cx, cy = int(landmark.x * self.width), int(landmark.y * self.height)
+                    cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
+
+        elif gesture == 'hand_click':
+            for idx, landmark in enumerate(self.hand_landmarks.landmark):
+                if idx in [4, 6]:  # alege indicii pe care vrei sa ii desenezi
+
+                    cx, cy = int(landmark.x * self.width), int(landmark.y * self.height)
+                    cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
+
+        elif gesture == 'hand_recenter':
+            for idx, landmark in enumerate(self.hand_landmarks.landmark):
+                if idx in [11, 15, 19, 18, 10, 14]:  # alege indicii pe care vrei sa ii desenezi
+                    cx, cy = int(landmark.x * self.width), int(landmark.y * self.height)
+                    cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
+
+        else :
+            for idx, landmark in enumerate(self.hand_landmarks.landmark):
+                if idx in [4, 8]:  # alege indicii pe care vrei sa ii desenezi
+                    cx, cy = int(landmark.x * self.width), int(landmark.y * self.height)
+                    cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
