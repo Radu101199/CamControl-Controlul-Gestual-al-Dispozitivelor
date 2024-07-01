@@ -132,7 +132,6 @@ class MainWindow(QMainWindow):
             self.available_cameras = self.get_available_cameras()
             self.ui.camera_comboBox.addItems([f'Camera {i}' for i in self.available_cameras])
             self.ui.camera_comboBox.currentIndexChanged.connect(self.change_camera)
-            # print(self.available_cameras)
 
         # SAVE BTN
         if btn_widget.objectName() == "btn_save":
@@ -172,14 +171,14 @@ class MainWindow(QMainWindow):
             return
 
         self.camera_id = self.available_cameras[index]
-        print(self.camera_id)
 
 
 
     def launch_feature(self, btn_name):
-        if self.camera is not None:
+        if self.camera is not None and self.ui.stackedWidget.currentWidget().objectName() != 'page_home':
             self.camera = Camera(self, self.camera.part)
             self.frame_timer()
+
         if btn_name == 'btn_voice':
             UIFunctions.launch_siri()
         else:

@@ -22,11 +22,11 @@ class HandModule:
         min_tracking_confidence=0.8,
         max_num_hands=1
     )
-        settings = QSettings("Licenta", "CamControl")
-        self.move = settings.value("moveHandsCursorCheckBox", type=bool)
-        self.speedCursor = settings.value("speedHandsCursor", type=float)
+        self.settings = QSettings("Licenta", "CamControl")
+        self.move = self.settings.value("moveHandsCursorCheckBox", type=bool)
+        self.speedCursor = self.settings.value("speedHandsCursor", type=float)
 
-        slider_values = settings.value("slider_values_hands", type=list)
+        slider_values = self.settings.value("slider_values_hands", type=list)
         self.speed = slider_values[0]
         self.filter = slider_values[3]
         self.filterX = slider_values[1]
@@ -110,12 +110,10 @@ class HandModule:
 
     def check_move(self):
         if self.move and (self.move_detected == 0):
-            #  print("mouse click")
             self.timer_dwell.start(1600)
         self.move_detected = 0
 
     def move_cursor(self, cX, cY, hand_landmarks):
-        # print(cX) # de testat
         filter_move = self.filter
         # variabile pentru reducerea miscarilor mici
         noise_X = filter_move
@@ -154,11 +152,9 @@ class HandModule:
         if (abs(delta_Y) > abs(noise_Y)):
             move_Y = -(delta_Y - noise_Y)
 
-        # print(self.moveCursorCheckBox.checkState())
         # daca este bifata realizarea miscarii
         # x_thumb = hand_landmarks.landmark[4].x * 1920
         # y_thumb = hand_landmarks.landmark[4].y * 1080
-        # print(x_thumb, y_thumb)
         if self.move and cX > 100 and cY > 100 and cX < 1770 and cY < 930:
             cv2.rectangle(self.frame_markers, (self.frame_reduction, self.frame_reduction), (1920 - 150, 1080-150), (255, 0, 255), 2)
             sensitivity = self.speedCursor / 100
@@ -186,7 +182,6 @@ class HandModule:
             f = 0.1
             # coeficientii filtrului
             c = signal.firwin(numtaps, f)
-            # print(c)
             # numarul de coeficienti
             filter_size = len(c)
             # se adauga valoarea curenta dx
@@ -235,7 +230,6 @@ class HandModule:
             f = 0.1
             # coeficientii filtrului
             c = signal.firwin(numtaps, f)
-            # print(c)
             # numarul de coeficienti
             filter_size = len(c)
 
@@ -297,10 +291,9 @@ class HandModule:
         # calculeaza distante intre puncte specifice pentru miscarea mainii sau click
         absStandard = calculate_distance(hand_landmarks.landmark[0], hand_landmarks.landmark[1]) #distanta dintre baza mainii si inceputul degetului mare
         absClick = calculate_distance(hand_landmarks.landmark[4], hand_landmarks.landmark[6]) / absStandard # distanta dintre varful degetului mare si mijlocul degetului aratator
-        absClick2 = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[12])/absStandard # < 0.9
+        # absClick2 = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[12])/absStandard # < 0.9
         absVolume = calculate_distance(hand_landmarks.landmark[8], hand_landmarks.landmark[4]) / absStandard
         # apelarea actiunilor pentru mouse
-        print(absClick, self.threshold_click_hand)
         self.click(absClick, absVolume)
         if hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y > -0.06:
             self.move = False
@@ -308,10 +301,8 @@ class HandModule:
             self.nowRightClick = 0
             self.Scroll(hand_landmarks.landmark[5].y - hand_landmarks.landmark[4].y)
         else:
-            self.move = True
-        # print('Nu a  intrat in if', self.nowLeftClick, self.previousLeftClick)
+            self.move = self.settings.value("moveHandsCursorCheckBox", type=bool)
         if self.nowLeftClick == 1 and self.nowLeftClick != self.previousLeftClick:
-            # print('A intrat in if', self.nowLeftClick, self.previousLeftClick)
             self.leftClick()
 
         if self.nowLeftClick == 0 and self.nowLeftClick != self.previousLeftClick:
@@ -321,9 +312,6 @@ class HandModule:
             self.rightClick()
 
         # daca degetul aratator este strans
-        # print(hand_landmarks.landmark[8].y - hand_landmarks.landmark[5].y)
-
-
         if self.nowVolume == 1:
 
             if self.initiate_volume_timer is None:
@@ -332,7 +320,7 @@ class HandModule:
                 self.controll_volume = True
                 self.set_volume(absVolume)
                 self.initiate_volume_timer = None
-                self.move = True
+                self.move = self.settings.value("moveHandsCursorCheckBox", type=bool)
 
         # actualizare click flag
         self.previousLeftClick = self.nowLeftClick
@@ -387,7 +375,7 @@ class HandModule:
         # verifica daca se ramane in pozitia respectiva pentru mai mult de 1 secunda
         if 10 * (c_end - self.c_start) > 10 and self.doubleClick == 1:
             # self.mouse.click(Button.left, 2)
-            print('double click')
+            # print('double click')
             pyautogui.doubleClick()
             self.doubleClick = 0
 

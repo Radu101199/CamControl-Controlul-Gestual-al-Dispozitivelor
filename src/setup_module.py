@@ -89,7 +89,6 @@ class SetupModule:
                             (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         elif contains_face is False and contains_hand is False:
             save_calibration_to_settings(self.dictionary_calibrated)
-            print(self.dictionary_calibrated)
             self.setup_window.parent.show()
             self.setup_window.camera.close()
             self.setup_window.destroy()
@@ -103,7 +102,6 @@ class SetupModule:
         if self.check_part(gesture) and self.check_bounds(gesture):
             if self.index < 151:
                 threshold = self.operations(gesture)
-                print(threshold)
                 self.calibration[self.index] = threshold
                 self.index = self.index + 1
             if (time.time() - self.calibration_timer) > 10:
@@ -114,8 +112,8 @@ class SetupModule:
                 self.index = None
                 self.list_calibration.pop(0)
         else:
-            self.frame_markers = cv2.putText(self.frame_markers, 'Frame the face inside the rectangle',
-                                             (660, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+            self.frame_markers = cv2.putText(self.frame_markers, 'Frame the part inside the rectangle',
+                                             (660, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0))
             self.calibration_timer = None
             self.index = None
             self.calibration = np.zeros(151)
@@ -157,13 +155,13 @@ class SetupModule:
                 return False
         elif gesture == 'hand_recenter':
             if self.operations(gesture) > 0.15:
-                cv2.putText(self.frame_markers, "Apropiete mana mai mult de gest " + str(
+                cv2.putText(self.frame_markers, "Apropiete punctele mai mult " + str(
                     np.round(3.00 - (time.time() - self.delay_calibration), 2)),
                             (700, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 return False
         else: # < 5
             if self.operations(gesture) < 5:
-                cv2.putText(self.frame_markers, "Mareste distanta dintre degete" + str(
+                cv2.putText(self.frame_markers, "Mareste distanta dintre puncte " + str(
                     np.round(3.00 - (time.time() - self.delay_calibration), 2)),
                             (700, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 return False
@@ -231,10 +229,38 @@ class SetupModule:
                       (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         else :
-            cv2.putText(self.frame_markers,"Afiseaza mana spre camera, in pozitia urmatoare"
+            cv2.putText(self.frame_markers,"Afiseaza mana spre camera, in pozitia din dreapta "
                               ", calibrarea v-a incepe in  " +
                               str(np.round(3.00 - (time.time() - self.delay_calibration), 2)),
                               (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255), 2)
+            self.put_image(gesture)
+
+
+    def put_image(self, gesture):
+        if gesture == 'hand_recenter':
+            img = cv2.imread('handrecenter.png')
+        else:
+            img = cv2.imread('handvolume.png')
+        # Check if the image was successfully loaded
+        if img is not None:
+            # Resize the image if needed
+            img_height, img_width = img.shape[:2]
+            scale_factor = 0.35  # Scale factor for resizing
+            new_width = int(img_width * scale_factor)
+            new_height = int(img_height * scale_factor)
+            img = cv2.resize(img, (new_width, new_height))
+
+            # Define the position where you want to overlay the image on the frame
+            x_offset = 1300
+            y_offset = 150
+
+            # Overlay the image on the frame
+            y1, y2 = y_offset, y_offset + img.shape[0]
+            x1, x2 = x_offset, x_offset + img.shape[1]
+
+            # Ensure the ROI is within the frame boundaries
+            if y2 <= self.frame_markers.shape[0] and x2 <= self.frame_markers.shape[1]:
+                self.frame_markers[y1:y2, x1:x2] = img
 
     def draw_landmarks(self, gesture):
         if gesture == 'face_click_left':

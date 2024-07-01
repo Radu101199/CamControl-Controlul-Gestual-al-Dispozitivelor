@@ -28,7 +28,11 @@ class SetupWindow(QMainWindow):
         self.setup_timer()
 
 
-
+    def closeEvent(self, QCloseEvent):
+        self.parent.show()
+        if self.camera is not None:
+            self.camera.close()
+        self.destroy()
 
 
     def setup_timer(self):
@@ -46,16 +50,9 @@ class SetupWindow(QMainWindow):
         current_time = time.time()
         if current_time - self.start_time > 2:
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_calibration)
-            print(self.list_calibration)
             self.camera = Camera(self, 'setup',0, self.list_calibration)
             self.frame_timer()
             self.setuptimer.stop()
-        else:
-            print(1)
 
-    # def close_window(self):
-    #     UIFunctions.close(self)
     def setup_complete(self):
-        # self.hide()
         self.main_window.show()
-        # self.Open.show()

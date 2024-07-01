@@ -22,7 +22,6 @@ class Camera:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setText("Unable to open Camera!")
-            print("Unable to open Camera!")
             msg.exec_()
 
         self.settings = QSettings("Licenta", "CamControl")
@@ -31,7 +30,6 @@ class Camera:
         elif self.part == 'Hands':
             self.mod = HandModule()
         else:
-            print(self.list_calibration)
             self.mod = SetupModule(main_window, self.list_calibration)
 
 

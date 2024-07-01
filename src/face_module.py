@@ -20,13 +20,14 @@ class FaceModule:
     def __init__(self):
         self.face_mesh = face_mesh.FaceMesh(refine_landmarks=True)
 
-        settings = QSettings("Licenta", "CamControl")
-        self.move = settings.value("moveFaceCursorCheckBox", type=bool)
-        self.dwellClick = settings.value("dwellClickRadioBox", type=bool)
-        self.dwellScroll = settings.value("dwellScrollRadioBox", type=bool)
-        self.smileCenter = settings.value("smileCenterCheckBox", type=bool)
+        self.settings = QSettings("Licenta", "CamControl")
+        self.move = self.settings.value("moveFaceCursorCheckBox", type=bool)
 
-        slider_values = settings.value("slider_values_face", type=list)
+        self.dwellClick = self.settings.value("dwellClickRadioBox", type=bool)
+        self.dwellScroll = self.settings.value("dwellScrollRadioBox", type=bool)
+        self.smileCenter = self.settings.value("smileCenterCheckBox", type=bool)
+
+        slider_values = self.settings.value("slider_values_face", type=list)
         self.speedX = slider_values[0]/20
         self.speedY = slider_values[1]/20
         self.filter = slider_values[4]
@@ -95,7 +96,7 @@ class FaceModule:
                     if idx in [159, 468]:  # alege indicii pe care vrei sa ii desenezi
                         height, width, _ = frame.shape
                         cx, cy = int(landmark.x * width), int(landmark.y * height)
-                        cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
+                        # cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
 
                 self.x = (bounding_box[0][0] + bounding_box[1][0]) / 2
                 self.y = (bounding_box[0][1] + bounding_box[1][1]) / 2
@@ -123,10 +124,10 @@ class FaceModule:
         if checkbox_check and (self.move_detected == 0):
 
             if self.dwellClick:
-                print("mouse click")
+
                 pyautogui.click()  # click
             elif self.dwellScroll:
-                print('Incepe scroll')
+
                 self.nowScroll = 1
                 self.timer_dwell.stop()
         else:
@@ -377,7 +378,7 @@ class FaceModule:
                     + calculate_distance(face_landmarks.landmark[385], face_landmarks.landmark[380])
                     + calculate_distance(face_landmarks.landmark[387], face_landmarks.landmark[373]))
                     /  calculate_distance(face_landmarks.landmark[362], face_landmarks.landmark[263]))
-        # print(ear_opt_left_eye, self.threshold_left_eye)
+
         if ear_opt_left_eye < self.threshold_left_eye:
             self.nowLeftClick = 1
         else:
@@ -397,7 +398,7 @@ class FaceModule:
         self.mouse_down = False
         pyautogui.mouseUp()
     def double_click(self):
-        print('double click')
+        # print('double click')
         pyautogui.doubleClick()
         self.double_click_timer = 0
 
@@ -413,7 +414,7 @@ class FaceModule:
             self.move = False
             self.Scroll(face_landmarks)
         else:
-            self.move = True
+            self.move = self.settings.value("moveFaceCursorCheckBox", type=bool)
             self.initial_distance = None
 
     def Scroll(self, face_landmarks):
@@ -421,7 +422,6 @@ class FaceModule:
         dy = face_landmarks.landmark[195].y - self.y/1080
         dy = dy * 1080
         pyautogui.scroll(-dy/50)
-        print(self.head_returned(current_distance) , head_tilt(face_landmarks, self.frame_markers, True))
         if self.head_returned(current_distance) or head_tilt(face_landmarks, self.frame_markers, True):
             self.timer_dwell.start()
             self.nowScroll = 0

@@ -16,8 +16,8 @@ def calculate_bounding_box(frame, landmarks):
         max_x = max(max_x, x)
         max_y = max(max_y, y)
     # returneaza coltul stanga sus si dreapta jos
-    # print(frame.shape)
-    # print((min_x, min_y),(max_x, max_y))
+
+
     return (min_x, min_y), (max_x, max_y)
 
 #distanta Euclidiana
@@ -78,7 +78,7 @@ def head_tilt(face_landmarks, frame_markers, scroll: False):
     cv2.putText(frame_markers, "y: " + str(np.round(y, 2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     cv2.putText(frame_markers, "z: " + str(np.round(z, 2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     if scroll is True:
-        print(y)
+
         if y < -2 or y > 2:
             return True
         return False
@@ -102,7 +102,7 @@ def save_calibration_to_settings(dictionary):
     existing_dict.update(dictionary)
 
     json_data = json.dumps(existing_dict)
-    print(existing_dict, type(existing_dict))
+
     settings.setValue("mean_calibrations", json_data)
 
 

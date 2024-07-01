@@ -99,7 +99,7 @@ class UIFunctions(QMainWindow):
 
         button.setFont(font)
         button.setStyleSheet(Style.style_bt_standard.replace('ICON_REPLACE', icon))
-        print(Style.style_bt_standard.replace('ICON_REPLACE', icon))
+
         button.setText(name)
         button.setToolTip(name)
         button.clicked.connect(self.Button)
@@ -276,7 +276,7 @@ class UIFunctions(QMainWindow):
         for checkbox_name, checkbox_state in checkboxes:
             if checkbox_state:
                 list_calibration.append(checkbox_name)
-        print(list_calibration)
+
         from ui import SetupWindow
         self.close()
         self.setup_window = SetupWindow(self, list_calibration)
@@ -285,7 +285,7 @@ class UIFunctions(QMainWindow):
 
     @staticmethod
     def open_pdf():
-        pdf_file_path = 'ui/clasaa5aTicEditat.pdf'
+        pdf_file_path = 'ui/PDF-Licenta.pdf'
         system = platform.system()
         if system == 'Linux':
             command = ['xdg-open', pdf_file_path]
@@ -301,39 +301,39 @@ class UIFunctions(QMainWindow):
     def launch_keyboard():
         applescript_code = '''
         tell application "System Settings"
-            if running then
-                quit
-                run
-                delay 1
-            end if
-            if not running then
-                run
-                delay 1
-            end if
-            set current pane to pane id "com.apple.Accessibility-Settings.extension"
-            delay 1
-        end tell
-        tell application "System Events"
-            tell window 1 of application process "System Settings"
-                tell button 2 of group 3 of scroll area 1 of group 1 of list 2 of splitter group 1 of list 1
-                    click
-                    delay 1
-                end tell
-            end tell
-        end tell
+	if running then
+		quit
+		run
+		delay 1
+	end if
+	if not running then
+		run
+		delay 1
+	end if
+	set current pane to pane id "com.apple.Accessibility-Settings.extension"
+	delay 1
+end tell
+tell application "System Events"
+	tell window 1 of application process "System Settings"
+		tell button 2 of group 3 of scroll area 1 of group 1 of group 2 of splitter group 1 of group 1
+			click
+			delay 1
+		end tell
+	end tell
+end tell
 
-        tell application "System Events"
-            tell window 1 of application process "System Settings"
-                tell checkbox "Tastatură de accesibilitate" of group 3 of scroll area 1 of group 1 of list 2 of splitter group 1 of list 1
-                    click
-                    delay 1
-                end tell
-            end tell
-        end tell
+tell application "System Events"
+	tell window 1 of application process "System Settings"
+		tell checkbox "Tastatură de accesibilitate" of group 3 of scroll area 1 of group 1 of group 2 of splitter group 1 of group 1
+			click
+			delay 1
+		end tell
+	end tell
+end tell
 
-        tell application "System Settings"
-            quit
-        end tell
+tell application "System Settings"
+	quit
+end tell
         '''
         # Run the AppleScript code
         subprocess.run(['osascript', '-e', applescript_code])
