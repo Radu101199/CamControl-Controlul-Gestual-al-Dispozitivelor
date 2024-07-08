@@ -77,6 +77,7 @@ class HandModule:
         self.threshold_recenter_hand = thresholds.get('hand_recenter') + 0.05
         self.threshold_volume_hand = thresholds.get('hand_volume') - 2
 
+        self.label = ''
         # reducere frame pentru movement
         self.frame_reduction = 100
     def detect(self, frame):
@@ -95,9 +96,11 @@ class HandModule:
                 # coordonatele x si y ale degetului aratator
                 x = hand_landmarks.landmark[8].x * frame.shape[1]
                 y = hand_landmarks.landmark[8].y * frame.shape[0]
-                self.move_cursor(x, y, hand_landmarks)
-                self.click_functionality(hand_landmarks)
-                self.recenter_cursor(hand_landmarks)
+                self.label = results.multi_handedness[0].classification[0].label
+                if hand_position(hand_landmarks, self.label):
+                    self.move_cursor(x, y, hand_landmarks)
+                    self.click_functionality(hand_landmarks)
+                    self.recenter_cursor(hand_landmarks)
         else:
             self.frame_markers = frame
         return self.frame_markers
@@ -320,7 +323,7 @@ class HandModule:
                 self.controll_volume = True
                 self.set_volume(absVolume)
                 self.initiate_volume_timer = None
-                self.move = self.settings.value("moveHandsCursorCheckBox", type=bool)
+
 
         # actualizare click flag
         self.previousLeftClick = self.nowLeftClick
@@ -403,6 +406,7 @@ class HandModule:
             self.volume_timer = None
             self.initiate_volume_timer = None
             self.controll_volume = False
+            self.move = self.settings.value("moveHandsCursorCheckBox", type=bool)
         else:
             if self.last_volume > int(absVolume):
                 for _ in range(self.last_volume-int(absVolume)):

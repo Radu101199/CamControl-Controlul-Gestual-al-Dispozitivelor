@@ -42,33 +42,33 @@ def head_tilt(face_landmarks, frame_markers, scroll: False):
         if idx == 33 or idx == 263 or idx == 1 or idx == 61 or idx == 291 or idx == 199:
             x, y = int(lm.x * 1920), int(lm.y * 1080)
 
-            # Get the 2D Coordinates
+            # coordonate 2d
             face_2d.append([x, y])
 
-            # Get the 3D Coordinates
+            # coordonate 3d
             face_3d.append([x, y, lm.z])
     face_2d = np.array(face_2d, dtype=np.float64)
     face_3d = np.array(face_3d, dtype=np.float64)
-    # The camera matrix
-    focal_length = 1 * 1920
+    # matricea camerei
+    focal_length = 1920
 
     cam_matrix = np.array([[focal_length, 0, 1080 / 2],
                            [0, focal_length, 1920 / 2],
                            [0, 0, 1]])
 
-    # The distortion parameters
+    # matricea de distorsiune
     dist_matrix = np.zeros((4, 1), dtype=np.float64)
 
-    # Solve PnP
+    # permite transformarea punctelor 3d in proiectii 2d
     success, rot_vec, trans_vec = cv2.solvePnP(face_3d, face_2d, cam_matrix, dist_matrix)
 
-    # Get rotational matrix
+    # obtine matricea de rotatie
     rmat, jac = cv2.Rodrigues(rot_vec)
 
-    # Get angles
+    # se folloseste de aceasta pentru extragerea unghiurilor
     angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
 
-    # Get the y rotation degree
+    # unghiurile sunt convertite apoi din radiani in grade
     x = angles[0] * 360
     y = angles[1] * 360
     z = angles[2] * 360

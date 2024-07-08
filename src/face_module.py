@@ -84,7 +84,6 @@ class FaceModule:
     def detect(self, frame):
         # converteste imaginea din BGR in RGB
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
         # procesarea imaginii cu landmark urile fetei
         results = self.face_mesh.process(rgb_frame)
         if results.multi_face_landmarks:
@@ -93,10 +92,10 @@ class FaceModule:
                 bounding_box = calculate_bounding_box(rgb_frame, face_landmarks)
                 self.frame_markers = cv2.rectangle(frame, bounding_box[0], bounding_box[1], (0, 255, 0), 3)
                 for idx, landmark in enumerate(face_landmarks.landmark):
-                    if idx in [159, 468]:  # alege indicii pe care vrei sa ii desenezi
+                    if idx in [33, 263, 1 , 61 , 291 , 199]:  # alege indicii pe care vrei sa ii desenezi
                         height, width, _ = frame.shape
                         cx, cy = int(landmark.x * width), int(landmark.y * height)
-                        # cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
+                        cv2.circle(self.frame_markers, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
 
                 self.x = (bounding_box[0][0] + bounding_box[1][0]) / 2
                 self.y = (bounding_box[0][1] + bounding_box[1][1]) / 2
@@ -187,7 +186,6 @@ class FaceModule:
 
         # misca cursor
     def move_cursor(self, cX, cY):
-
         # variabile pentru reducerea miscarilor mici
         noise_X = self.filter
         noise_Y = self.filter
@@ -232,6 +230,7 @@ class FaceModule:
             # misca cursorul pe axa y
             move_Y_final, move_y = self.digital_filter_cursor_Y(move_Y, self.speedY)
             pyautogui.moveRel(int(round(move_X_final)), int(round(move_Y_final)))
+            print(move_X_final, move_Y_final)
             # detectare miscare pentru dwell click
             if move_x or move_y:
                 self.move_detected = 1
@@ -262,7 +261,9 @@ class FaceModule:
             x_out = 0
             for i in range(0, filter_size):
                 x_out = x_out + self.filter_cursor_X[i] * c[i]
+
         # scalarea pentru calcularea vitezei finale
+
         x_out = x_out * 1000
 
         # adaugarea valorii absolute ale lui x curent
@@ -273,7 +274,7 @@ class FaceModule:
         sum_X = sum(self.fine_control_X)
 
         # viteza finala bazata pe viteza curenta si suma in urma filtrarii impartita la un factor constant
-        speed_final = speed * abs(sum_X) / (2 * 200)
+        speed_final = speed * abs(sum_X) / 400
         # valoarea de iesire filtrata
         x_out = speed_final * x_out / 1000
 

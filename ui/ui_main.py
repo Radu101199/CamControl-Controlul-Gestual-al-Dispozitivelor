@@ -673,8 +673,8 @@ class Ui_MainWindow(object):
         self.speedHandsSlider.setOrientation(QtCore.Qt.Horizontal)
         self.speedHandsSlider.setObjectName("speedHandsSlider")
         self.dwellClickCheckBox = QtWidgets.QCheckBox(self.page_settings)
-        self.dwellClickCheckBox.setEnabled(False)
-        self.dwellClickCheckBox.setGeometry(QtCore.QRect(110, 550, 111, 21))
+        self.dwellClickCheckBox.setEnabled(True)
+        self.dwellClickCheckBox.setGeometry(QtCore.QRect(30, 450, 111, 21))
         self.dwellClickCheckBox.setObjectName("dwellClickCheckBox")
         self.smileCenterCheckBox = QtWidgets.QCheckBox(self.page_settings)
         self.smileCenterCheckBox.setGeometry(QtCore.QRect(110, 500, 111, 21))
@@ -751,12 +751,8 @@ class Ui_MainWindow(object):
 "        \n"
 "    }")
         self.btn_recalibrate.setObjectName("btn_recalibrate")
-        self.dwellClickRadioBox = QtWidgets.QRadioButton(self.page_settings)
-        self.dwellClickRadioBox.setGeometry(QtCore.QRect(50, 450, 97, 21))
-        self.dwellClickRadioBox.setChecked(True)
-        self.dwellClickRadioBox.setObjectName("dwellClickRadioBox")
         self.dwellScrollRadioBox = QtWidgets.QRadioButton(self.page_settings)
-        self.dwellScrollRadioBox.setGeometry(QtCore.QRect(170, 450, 101, 21))
+        self.dwellScrollRadioBox.setGeometry(QtCore.QRect(110, 550, 101, 21))
         self.dwellScrollRadioBox.setObjectName("dwellScrollRadioBox")
         self.camera_comboBox = QtWidgets.QComboBox(self.page_settings)
         self.camera_comboBox.setGeometry(QtCore.QRect(420, 450, 151, 22))
@@ -779,6 +775,10 @@ class Ui_MainWindow(object):
 "        \n"
 "    }")
         self.btn_pdf.setObjectName("btn_pdf")
+        self.dwellScrollCheckBox = QtWidgets.QCheckBox(self.page_settings)
+        self.dwellScrollCheckBox.setEnabled(True)
+        self.dwellScrollCheckBox.setGeometry(QtCore.QRect(160, 450, 111, 21))
+        self.dwellScrollCheckBox.setObjectName("dwellScrollCheckBox")
         self.stackedWidget.addWidget(self.page_settings)
         self.horizontalLayout_4.addWidget(self.stackedWidget)
         self.verticalLayout_6.addWidget(self.frame_content)
@@ -850,10 +850,10 @@ class Ui_MainWindow(object):
         self.hand_recenter_checkBox.setText(_translate("MainWindow", "Hand Recenter"))
         self.hand_volume_checkBox.setText(_translate("MainWindow", "Hand Volume"))
         self.btn_recalibrate.setText(_translate("MainWindow", "Recalibrate"))
-        self.dwellClickRadioBox.setText(_translate("MainWindow", "Dwell Click"))
         self.dwellScrollRadioBox.setText(_translate("MainWindow", "Dwell Scroll"))
         self.label_8.setText(_translate("MainWindow", "Choose Camera"))
         self.btn_pdf.setText(_translate("MainWindow", "Gestures PDF"))
+        self.dwellScrollCheckBox.setText(_translate("MainWindow", "Dwell Scroll"))
 from ui import files_rc
 
 

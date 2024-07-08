@@ -184,10 +184,10 @@ class UIFunctions(QMainWindow):
         self.ui.dwellClickCheckBox.setChecked(checkbox_state)
 
         radiobox_state = settings.value("dwellClickRadioBox", defaultValue=True, type=bool)
-        self.ui.dwellClickRadioBox.setChecked(radiobox_state)
+        self.ui.dwellClickCheckBox.setChecked(radiobox_state)
 
         radiobox_state = settings.value("dwellScrollRadioBox", defaultValue=True, type=bool)
-        self.ui.dwellScrollRadioBox.setChecked(radiobox_state)
+        self.ui.dwellScrollCheckBox.setChecked(radiobox_state)
 
         # Load the values of five sliders face
         slider_values_face = settings.value("slider_values_face", type=list)
@@ -224,10 +224,10 @@ class UIFunctions(QMainWindow):
         checkbox_state = self.ui.dwellClickCheckBox.isChecked()
         settings.setValue("dwellClickCheckBox", checkbox_state)
 
-        radiobox_state = self.ui.dwellClickRadioBox.isChecked()
+        radiobox_state = self.ui.dwellClickCheckBox.isChecked()
         settings.setValue("dwellClickRadioBox", radiobox_state)
 
-        radiobox_state = self.ui.dwellScrollRadioBox.isChecked()
+        radiobox_state = self.ui.dwellScrollCheckBox.isChecked()
         settings.setValue("dwellScrollRadioBox", radiobox_state)
 
         # Save the values of five sliders face

@@ -1343,8 +1343,8 @@ QPushButton:hover {
                     </property>
                     <property name="geometry">
                      <rect>
-                      <x>110</x>
-                      <y>550</y>
+                      <x>30</x>
+                      <y>450</y>
                       <width>111</width>
                       <height>21</height>
                      </rect>
@@ -1564,27 +1564,11 @@ QPushButton:hover {
                      <string>Recalibrate</string>
                     </property>
                    </widget>
-                   <widget class="QRadioButton" name="dwellClickRadioBox">
-                    <property name="geometry">
-                     <rect>
-                      <x>50</x>
-                      <y>450</y>
-                      <width>97</width>
-                      <height>21</height>
-                     </rect>
-                    </property>
-                    <property name="text">
-                     <string>Dwell Click</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
                    <widget class="QRadioButton" name="dwellScrollRadioBox">
                     <property name="geometry">
                      <rect>
-                      <x>170</x>
-                      <y>450</y>
+                      <x>110</x>
+                      <y>550</y>
                       <width>101</width>
                       <height>21</height>
                      </rect>
@@ -1643,6 +1627,22 @@ QPushButton:hover {
                     </property>
                     <property name="text">
                      <string>Gestures PDF</string>
+                    </property>
+                   </widget>
+                   <widget class="QCheckBox" name="dwellScrollCheckBox">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="geometry">
+                     <rect>
+                      <x>160</x>
+                      <y>450</y>
+                      <width>111</width>
+                      <height>21</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Dwell Scroll</string>
                     </property>
                    </widget>
                   </widget>

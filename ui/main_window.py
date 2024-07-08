@@ -76,8 +76,8 @@ class MainWindow(QMainWindow):
         self.camera = None
         self.camera_id = 0
         UIFunctions.first_time(self)
-        self.ui.dwellClickCheckBox.hide()
         self.ui.filterSlider_Hands.hide()
+        self.ui.dwellScrollRadioBox.hide()
         self.ui.filterSlider_X_Hands.hide()
         self.ui.filterSlider_Y_Hands.hide()
         self.ui.filterSlider_Face.hide()
@@ -130,6 +130,7 @@ class MainWindow(QMainWindow):
                 if self.camera.is_opened():
                     self.camera.close()
             self.available_cameras = self.get_available_cameras()
+            self.ui.camera_comboBox.clear()
             self.ui.camera_comboBox.addItems([f'Camera {i}' for i in self.available_cameras])
             self.ui.camera_comboBox.currentIndexChanged.connect(self.change_camera)
 

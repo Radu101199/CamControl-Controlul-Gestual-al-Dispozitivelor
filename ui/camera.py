@@ -63,7 +63,6 @@ class Camera:
         if image is not None:
 
             image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
             image_width = image.shape[1]
             self.settings.setValue("image_width", image_width)
             image_height = image.shape[0]
